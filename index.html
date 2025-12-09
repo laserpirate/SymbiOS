@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SymbiOS – Climate Resilience Mesh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg:#050814;
+      --card:#0f172a;
+      --accent:#38bdf8;
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      min-height:100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #0b1220 0, #020617 45%, #000 100%);
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+    .card {
+      max-width:720px;
+      width:100%;
+      background:linear-gradient(145deg,#020617,#020617 40%,#082f49 100%);
+      border-radius:18px;
+      padding:28px 24px 22px;
+      border:1px solid rgba(148,163,184,.25);
+      box-shadow:0 24px 80px rgba(15,23,42,.85);
+    }
+    h1 {
+      font-size:1.9rem;
+      margin:0 0 .35rem;
+      letter-spacing:.03em;
+    }
+    .tagline {
+      font-size:.95rem;
+      color:var(--muted);
+      margin-bottom:1.4rem;
+    }
+    .pill {
+      display:inline-flex;
+      align-items:center;
+      gap:.4rem;
+      padding:.22rem .7rem;
+      border-radius:999px;
+      background:rgba(15,23,42,.9);
+      border:1px solid rgba(56,189,248,.45);
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.15em;
+      color:var(--accent);
+      margin-bottom:.9rem;
+    }
+    .pill span.dot {
+      width:.4rem;
+      height:.4rem;
+      border-radius:999px;
+      background:var(--accent);
+      box-shadow:0 0 10px rgba(56,189,248,.8);
+    }
+    .grid {
+      display:grid;
+      grid-template-columns: minmax(0,2.1fr) minmax(0,1.4fr);
+      gap:1.4rem;
+    }
+    @media (max-width:720px){
+      .grid { grid-template-columns:1fr; }
+    }
+    h2 {
+      font-size:.9rem;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      color:var(--muted);
+      margin:0 0 .4rem;
+    }
+    p {
+      margin:.18rem 0;
+      font-size:.92rem;
+      line-height:1.5;
+    }
+    ul {
+      margin:.35rem 0 0;
+      padding-left:1.1rem;
+      font-size:.9rem;
+      color:var(--muted);
+    }
+    .meta {
+      display:flex;
+      flex-wrap:wrap;
+      gap:.6rem 1.1rem;
+      margin-top:1.3rem;
+      border-top:1px solid rgba(148,163,184,.3);
+      padding-top:.75rem;
+      font-size:.78rem;
+      color:var(--muted);
+    }
+    .meta strong { color:var(--text); font-weight:500; }
+    a {
+      color:var(--accent);
+      text-decoration:none;
+    }
+    a:hover { text-decoration:underline; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="pill">
+      <span class="dot"></span>
+      <span>SymbiOS · Climate OS for Coasts</span>
+    </div>
+    <h1>SymbiOS Mesh</h1>
+    <div class="tagline">
+      Eco-sensing + GIS + predictive digital twins that give coastal cities a live picture of what the water is doing now—and what it will do next.
+    </div>
+
+    <div class="grid">
+      <section>
+        <h2>What we&rsquo;re building</h2>
+        <p>
+          SymbiOS turns shorelines into living infrastructure: a mesh of low-cost sensors, edge AI, and landscape-scale models that continuously map flood, surge, and erosion risk.
+        </p>
+        <p>
+          The platform is designed for planners, insurers, and communities who need actionable resilience intelligence—not just static PDFs.
+        </p>
+        <ul>
+          <li>Real-time coastal risk scorecards</li>
+          <li>Neighborhood-scale flood and surge scenarios</li>
+          <li>APIs for insurers, cities, and climate-tech partners</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Stage &amp; contact</h2>
+        <p>
+          Currently a research-driven startup concept in development for the
+          Harvard Innovation Labs venture programs.
+        </p>
+        <p>
+          For decks, pilots, or collaboration:
+          <br><a href="mailto:mmanriquez@gmail.com">mmanriquez@gmail.com</a>
+        </p>
+      </section>
+    </div>
+
+    <div class="meta">
+      <div><strong>Focus:</strong> Coastal resilience · climate tech · data infrastructure</div>
+      <div><strong>Location:</strong> Boston / Global coastlines</div>
+    </div>
+  </main>
+</body>
+</html>
