@@ -1,157 +1,214 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>SymbiOS – Climate Resilience Mesh</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    :root {
-      --bg:#050814;
-      --card:#0f172a;
-      --accent:#38bdf8;
-      --text:#e5e7eb;
-      --muted:#9ca3af;
-    }
-    * { box-sizing:border-box; }
-    body {
-      margin:0;
-      min-height:100vh;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #0b1220 0, #020617 45%, #000 100%);
-      color:var(--text);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:24px;
-    }
-    .card {
-      max-width:720px;
-      width:100%;
-      background:linear-gradient(145deg,#020617,#020617 40%,#082f49 100%);
-      border-radius:18px;
-      padding:28px 24px 22px;
-      border:1px solid rgba(148,163,184,.25);
-      box-shadow:0 24px 80px rgba(15,23,42,.85);
-    }
-    h1 {
-      font-size:1.9rem;
-      margin:0 0 .35rem;
-      letter-spacing:.03em;
-    }
-    .tagline {
-      font-size:.95rem;
-      color:var(--muted);
-      margin-bottom:1.4rem;
-    }
-    .pill {
-      display:inline-flex;
-      align-items:center;
-      gap:.4rem;
-      padding:.22rem .7rem;
-      border-radius:999px;
-      background:rgba(15,23,42,.9);
-      border:1px solid rgba(56,189,248,.45);
-      font-size:.72rem;
-      text-transform:uppercase;
-      letter-spacing:.15em;
-      color:var(--accent);
-      margin-bottom:.9rem;
-    }
-    .pill span.dot {
-      width:.4rem;
-      height:.4rem;
-      border-radius:999px;
-      background:var(--accent);
-      box-shadow:0 0 10px rgba(56,189,248,.8);
-    }
-    .grid {
-      display:grid;
-      grid-template-columns: minmax(0,2.1fr) minmax(0,1.4fr);
-      gap:1.4rem;
-    }
-    @media (max-width:720px){
-      .grid { grid-template-columns:1fr; }
-    }
-    h2 {
-      font-size:.9rem;
-      text-transform:uppercase;
-      letter-spacing:.18em;
-      color:var(--muted);
-      margin:0 0 .4rem;
-    }
-    p {
-      margin:.18rem 0;
-      font-size:.92rem;
-      line-height:1.5;
-    }
-    ul {
-      margin:.35rem 0 0;
-      padding-left:1.1rem;
-      font-size:.9rem;
-      color:var(--muted);
-    }
-    .meta {
-      display:flex;
-      flex-wrap:wrap;
-      gap:.6rem 1.1rem;
-      margin-top:1.3rem;
-      border-top:1px solid rgba(148,163,184,.3);
-      padding-top:.75rem;
-      font-size:.78rem;
-      color:var(--muted);
-    }
-    .meta strong { color:var(--text); font-weight:500; }
-    a {
-      color:var(--accent);
-      text-decoration:none;
-    }
-    a:hover { text-decoration:underline; }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VANA — Plant Intelligence / SymbiOS™</title>
+<meta name="description" content="Ecological intelligence for climate-vulnerable landscapes. SymbiOS™ Module 01."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#090e08;--surface:#0d160c;--border:#1e2e1d;--border2:#1a2a19;
+    --bright:#9ed855;--cream:#e8e0d0;--ivory:#c8c0b0;
+    --dim:#3a5a38;--mid:#4a6a48;--body:#6a8a68;--muted:#2a4a28;
+    --blue:#6ab4e8;--amber:#e8aa8a;--purple:#9a8ae8;--gold:#c8a96e;
+  }
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--cream);font-family:'DM Mono',monospace;min-height:100vh;overflow-x:hidden}
+  ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--muted);border-radius:2px}
+  @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+  .fade1{animation:fadeUp .9s ease both .1s}
+  .fade2{animation:fadeUp .9s ease both .3s}
+  .fade3{animation:fadeUp .9s ease both .5s}
+  .fade4{animation:fadeUp .9s ease both .7s}
+  .fade5{animation:fadeUp .9s ease both .9s}
+  .fade6{animation:fadeUp .9s ease both 1.1s}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:50;height:48px;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 2rem;border-bottom:1px solid var(--border);
+    background:rgba(9,14,8,.92);backdrop-filter:blur(10px)}
+  .nav-brand{display:flex;align-items:baseline;gap:.5rem;text-decoration:none}
+  .nav-vana{font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:1.3rem;color:var(--cream);letter-spacing:.15em}
+  .nav-sub{font-size:.48rem;color:var(--muted);letter-spacing:.1em}
+  .nav-status{font-size:.52rem;color:var(--bright);letter-spacing:.1em;
+    animation:pulse 3s ease infinite}
+
+  main{min-height:100vh;display:flex;align-items:center;
+    padding:6rem 2rem 4rem;position:relative;overflow:hidden}
+  .phyllo{position:absolute;right:-8rem;top:50%;transform:translateY(-50%);
+    width:min(58vw,580px);opacity:.07;pointer-events:none;
+    animation:spin 140s linear infinite}
+
+  .hero{position:relative;z-index:1;max-width:680px;width:100%}
+  .tags{display:flex;gap:.45rem;flex-wrap:wrap;margin-bottom:2rem}
+  .tag{font-size:.54rem;letter-spacing:.14em;padding:3px 9px;border-radius:2px;display:inline-block}
+  .tag-green{background:#1a3a18;color:var(--bright);border:1px solid rgba(158,216,85,.2)}
+  .tag-gold{background:#2a1e0a;color:var(--gold);border:1px solid rgba(200,169,110,.2)}
+  .tag-blue{background:#0a1525;color:var(--blue);border:1px solid rgba(106,180,232,.2)}
+
+  .eyebrow{font-size:.62rem;color:var(--dim);letter-spacing:.15em;margin-bottom:1rem}
+  h1{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
+    font-size:clamp(5rem,14vw,10rem);color:var(--cream);
+    line-height:.88;letter-spacing:-.02em;margin-bottom:1.75rem}
+  .tagline{font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:clamp(1rem,2vw,1.25rem);color:#8a9a82;line-height:1.7;
+    max-width:520px;margin-bottom:2rem}
+  .desc{font-size:.68rem;color:var(--mid);line-height:2;max-width:560px;margin-bottom:2.5rem}
+  .desc strong{color:var(--ivory);font-weight:400}
+
+  .modules{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:2.5rem}
+  .module{font-size:.56rem;letter-spacing:.12em;padding:4px 10px;
+    border:1px solid var(--border);border-radius:2px;color:var(--dim)}
+  .module.active{border-color:var(--bright);color:var(--bright)}
+  .module.soon{color:var(--blue);border-color:rgba(106,180,232,.3)}
+
+  .cta-row{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+  .cta-label{font-size:.6rem;color:var(--muted);letter-spacing:.12em}
+  .notify-form{display:flex;gap:.5rem}
+  .notify-input{background:var(--surface);border:1px solid var(--border);
+    border-radius:3px;padding:.5rem .85rem;font-family:'DM Mono',monospace;
+    font-size:.65rem;color:var(--cream);outline:none;width:220px;
+    transition:border-color .15s}
+  .notify-input:focus{border-color:var(--dim)}
+  .notify-input::placeholder{color:var(--muted)}
+  .notify-btn{background:transparent;border:1px solid var(--dim);
+    color:var(--bright);border-radius:3px;padding:.5rem 1.1rem;
+    font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;
+    cursor:pointer;transition:all .15s}
+  .notify-btn:hover{background:var(--surface);border-color:var(--bright)}
+
+  footer{position:fixed;bottom:0;left:0;right:0;
+    border-top:1px solid var(--border);background:rgba(9,14,8,.9);
+    padding:.75rem 2rem;display:flex;justify-content:space-between;
+    align-items:center;flex-wrap:wrap;gap:.5rem}
+  .footer-l{font-size:.52rem;color:var(--muted)}
+  .footer-r{font-size:.52rem;color:#1a2a19}
+
+  @media(max-width:640px){
+    main{padding:5rem 1.25rem 6rem}
+    .phyllo{display:none}
+    .notify-input{width:160px}
+  }
+</style>
 </head>
 <body>
-  <main class="card">
-    <div class="pill">
-      <span class="dot"></span>
-      <span>SymbiOS · Climate OS for Coasts</span>
-    </div>
-    <h1>SymbiOS Mesh</h1>
-    <div class="tagline">
-      Eco-sensing + GIS + predictive digital twins that give coastal cities a live picture of what the water is doing now—and what it will do next.
+
+<nav>
+  <a class="nav-brand" href="#">
+    <span class="nav-vana">VANA</span>
+    <span class="nav-sub">SymbiOS™ · Module 01</span>
+  </a>
+  <span class="nav-status">● Private Beta</span>
+</nav>
+
+<main>
+  <!-- Phyllotaxis spiral background -->
+  <svg class="phyllo" viewBox="-160 -160 320 320" xmlns="http://www.w3.org/2000/svg">
+    <script>
+    </script>
+  </svg>
+  <!-- Rendered via JS below -->
+
+  <div class="hero">
+    <div class="tags fade1">
+      <span class="tag tag-green">SymbiOS™ · Module 01</span>
+      <span class="tag tag-gold">Climate Technology</span>
+      <span class="tag tag-blue">Harvard GSD · MLA</span>
     </div>
 
-    <div class="grid">
-      <section>
-        <h2>What we&rsquo;re building</h2>
-        <p>
-          SymbiOS turns shorelines into living infrastructure: a mesh of low-cost sensors, edge AI, and landscape-scale models that continuously map flood, surge, and erosion risk.
-        </p>
-        <p>
-          The platform is designed for planners, insurers, and communities who need actionable resilience intelligence—not just static PDFs.
-        </p>
-        <ul>
-          <li>Real-time coastal risk scorecards</li>
-          <li>Neighborhood-scale flood and surge scenarios</li>
-          <li>APIs for insurers, cities, and climate-tech partners</li>
-        </ul>
-      </section>
+    <p class="eyebrow fade1">वन · วน · FOREST · TO RETURN</p>
 
-      <section>
-        <h2>Stage &amp; contact</h2>
-        <p>
-          Currently a research-driven startup concept in development for the
-          Harvard Innovation Labs venture programs.
-        </p>
-        <p>
-          For decks, pilots, or collaboration:
-          <br><a href="mailto:mmanriquez@gmail.com">mmanriquez@gmail.com</a>
-        </p>
-      </section>
+    <h1 class="fade2">VANA</h1>
+
+    <p class="tagline fade3">"The Word for World is Forest."</p>
+
+    <p class="desc fade3">
+      <strong>SymbiOS™</strong> is a computational design platform for ecological intelligence —
+      a hybrid of ArcGIS, BIM, and real-time climate sensing built for
+      landscape architects, urban ecologists, and planners.
+      As a designer, it's the climate adaptation + computation software
+      we wish we had, so we're building it ourselves.<br><br>
+      VANA is Module 01: a field-deployable plant intelligence database
+      for climate-vulnerable coastal contexts across
+      <strong>SE Asia, the Middle East, and the South Pacific</strong> —
+      ground zero for the climate crisis.
+      Species data, ecological precedent, and climate adaptation scoring.
+      At the point of need.
+    </p>
+
+    <div class="modules fade4">
+      <span class="module active">VANA · v0.1</span>
+      <span class="module soon">XĒN · In Development</span>
+      <span class="module">AUXXEN · Planned</span>
+      <span class="module">AUXLOGRAM · Planned</span>
+      <span class="module">SymbiOS·AUX · Concept</span>
     </div>
 
-    <div class="meta">
-      <div><strong>Focus:</strong> Coastal resilience · climate tech · data infrastructure</div>
-      <div><strong>Location:</strong> Boston / Global coastlines</div>
+    <div class="cta-row fade5">
+      <span class="cta-label">REQUEST ACCESS</span>
+      <div class="notify-form">
+        <input class="notify-input" type="email" placeholder="your@email.com"/>
+        <button class="notify-btn" onclick="handleNotify()">NOTIFY ME ↗</button>
+      </div>
     </div>
-  </main>
+  </div>
+</main>
+
+<footer>
+  <span class="footer-l">© 2026 SymbiOS™ · All rights reserved · Proprietary &amp; Confidential</span>
+  <span class="footer-r">Tools for all forms of life — including synthetic ones.</span>
+</footer>
+
+<script>
+const PHI = Math.PI*(3-Math.sqrt(5));
+const svg = document.querySelector('.phyllo');
+const pts = Array.from({length:260},(_,i)=>({
+  x:Math.sqrt(i)*8.8*Math.cos(i*PHI),
+  y:Math.sqrt(i)*8.8*Math.sin(i*PHI),
+  t:i/260
+}));
+pts.forEach(d=>{
+  const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  c.setAttribute('cx',d.x.toFixed(1));
+  c.setAttribute('cy',d.y.toFixed(1));
+  c.setAttribute('r',Math.max(0.7,2.6-d.t*1.8).toFixed(1));
+  c.setAttribute('fill',d.t<0.38?'#c8a96e':'#9ed855');
+  c.setAttribute('opacity',(0.2+(1-d.t)*0.55).toFixed(2));
+  svg.appendChild(c);
+});
+
+function handleNotify(){
+  const input = document.querySelector('.notify-input');
+  const btn   = document.querySelector('.notify-btn');
+  if(input.value && input.value.includes('@')){
+    btn.textContent = 'NOTED ✓';
+    btn.style.color = '#9ed855';
+    btn.style.borderColor = '#9ed855';
+    input.value = '';
+    input.placeholder = 'Request received.';
+    setTimeout(()=>{
+      btn.textContent = 'NOTIFY ME ↗';
+      btn.style.color = '';
+      btn.style.borderColor = '';
+      input.placeholder = 'your@email.com';
+    },3000);
+  } else {
+    input.style.borderColor = '#e85a3a';
+    setTimeout(()=>{input.style.borderColor='';},1500);
+  }
+}
+
+document.querySelector('.notify-input').addEventListener('keydown',e=>{
+  if(e.key==='Enter') handleNotify();
+});
+</script>
 </body>
 </html>
