@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>VANA — Plant Intelligence / SymbiOS™</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#090e08;--sur:#0d160c;--sur2:#0f180e;--bor:#1e2e1d;--bor2:#1a2a19;
+  --bright:#9ed855;--cream:#e8e0d0;--ivory:#c8c0b0;
+  --dim:#3a5a38;--mid:#4a6a48;--body:#6a8a68;--muted:#2a4a28;
+  --blue:#6ab4e8;--amber:#e8aa8a;--purple:#9a8ae8;--gold:#c8a96e;
+  --teal:#55c4a0;--coral:#c45a3a;--orange:#c4904a;
+}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--cream);font-family:'DM Mono',monospace;display:flex;flex-direction:column}
+::-webkit-scrollbar{width:3px;height:3px}::-webkit-scrollbar-thumb{background:var(--muted);border-radius:2px}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+.fu{animation:fadeUp .7s ease both}
+.d1{animation-delay:.1s}.d2{animation-delay:.25s}.d3{animation-delay:.4s}.d4{animation-delay:.55s}.d5{animation-delay:.7s}
+
+/* NAV */
+nav{flex-shrink:0;height:48px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 1.25rem;border-bottom:1px solid var(--bor);background:rgba(9,14,8,.96);
+  backdrop-filter:blur(10px);position:relative;z-index:10}
+.nb{display:flex;align-items:baseline;gap:.4rem}
+.nv{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;
+  color:var(--cream);letter-spacing:.15em}
+.ns{font-size:.46rem;color:var(--muted);letter-spacing:.1em}
+.tabs{display:flex;gap:2px}
+.tab{background:transparent;border:1px solid transparent;border-radius:3px;
+  padding:.28rem .7rem;cursor:pointer;font-family:'DM Mono',monospace;
+  font-size:.56rem;letter-spacing:.1em;color:var(--dim);transition:all .15s}
+.tab.on{background:#1a2e1a;color:var(--bright);border-color:var(--muted)}
+.na{font-size:.48rem;color:var(--muted);white-space:nowrap}
+
+/* CONTENT */
+#content{flex:1;overflow-y:auto;overflow-x:hidden}
+.panel{display:none;padding:1.5rem 1.25rem 3rem;max-width:960px;margin:0 auto}
+.panel.on{display:block}
+
+/* TAGS */
+.tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.tag{font-size:.52rem;letter-spacing:.13em;padding:3px 8px;border-radius:2px}
+.tg{background:#1a3a18;color:var(--bright);border:1px solid rgba(158,216,85,.2)}
+.ta{background:#2a1e0a;color:var(--gold);border:1px solid rgba(200,169,110,.2)}
+.tb{background:#0a1525;color:var(--blue);border:1px solid rgba(106,180,232,.2)}
+
+/* HERO */
+.eyebrow{font-size:.58rem;color:var(--dim);letter-spacing:.15em;margin-bottom:.75rem}
+h1{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
+  font-size:clamp(4.5rem,18vw,9rem);color:var(--cream);line-height:.88;
+  letter-spacing:-.02em;margin-bottom:1.5rem}
+.tagline{font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:clamp(.95rem,3vw,1.2rem);color:#8a9a82;line-height:1.7;margin-bottom:1.5rem}
+.desc{font-size:.64rem;color:var(--mid);line-height:2;margin-bottom:2rem}
+.desc b{color:var(--ivory);font-weight:400}
+
+/* STAT GRID */
+.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;margin-bottom:1.5rem}
+.stat{background:rgba(13,22,12,.85);border:1px solid var(--bor);border-radius:4px;
+  padding:.85rem;text-align:center}
+.stat-n{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
+  font-size:2.2rem;line-height:1;margin-bottom:.2rem}
+.stat-l{font-size:.5rem;color:var(--mid)}
+
+/* GAP CARDS */
+.gap-cards{display:flex;flex-direction:column;gap:.5rem}
+.gap-card{background:var(--sur);border:1px solid var(--bor);border-left:2px solid var(--muted);
+  border-radius:3px;padding:.75rem 1rem}
+.gap-n{font-size:.5rem;color:var(--bright);letter-spacing:.18em;margin-bottom:.3rem}
+.gap-t{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;
+  color:var(--cream);margin-bottom:.3rem}
+.gap-b{font-size:.6rem;color:var(--mid);line-height:1.75}
+
+/* SECTION LABEL */
+.sl{font-size:.52rem;color:var(--dim);letter-spacing:.18em;margin-bottom:1rem;
+  display:flex;align-items:center;gap:.75rem}
+.sl::before{content:'';display:block;width:16px;height:1px;background:var(--muted)}
+.sl::after{content:'';flex:1;height:1px;background:var(--bor2)}
+
+/* FIELD APP */
+.field-bar{background:#0a1209;border-bottom:1px solid var(--bor2);padding:.6rem .75rem;
+  display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin:-1.5rem -1.25rem 1rem}
+.field-badge{font-size:.52rem;color:var(--bright);letter-spacing:.16em;padding:2px 7px;
+  background:#1a3a18;border:1px solid #2a5a28;border-radius:2px;
+  animation:pulse 2.5s ease infinite}
+.field-sub{font-size:.58rem;color:var(--dim)}
+.field-ct{font-size:.56rem;color:var(--bright);margin-left:auto}
+.search-wrap{position:relative;margin-bottom:.65rem}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);
+  color:var(--dim);font-size:.85rem;pointer-events:none}
+#search-input{width:100%;padding:.55rem .75rem .55rem 2rem;background:var(--sur2);
+  border:1px solid var(--bor);border-radius:3px;color:var(--cream);
+  font-family:'DM Mono',monospace;font-size:.65rem;outline:none;transition:border .15s}
+#search-input:focus{border-color:var(--dim)}
+#search-input::placeholder{color:var(--muted)}
+.chips{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.75rem}
+.chip{background:transparent;border:1px solid var(--bor);border-radius:2px;
+  padding:.22rem .6rem;cursor:pointer;font-family:'DM Mono',monospace;
+  font-size:.54rem;color:var(--dim);transition:all .15s}
+.chip.on{background:#1a2e1a;color:var(--bright);border-color:var(--muted)}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.pcard{background:var(--sur);border:1px solid var(--bor);
+  border-left:3px solid var(--bor);border-radius:3px;padding:.75rem;cursor:pointer;transition:all .15s}
+.pcard.sel,.pcard:hover{background:#111a10}
+.pcard-lat{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.85rem;
+  color:var(--cream);line-height:1.15;margin-bottom:2px}
+.pcard-com{font-size:.56rem;color:var(--body);margin-bottom:.4rem}
+.pbadge{font-size:.48rem;color:var(--mid);background:var(--bor2);
+  padding:1px 5px;border-radius:2px;display:inline-block;margin-right:3px}
+
+/* DETAIL PANEL */
+.detail{background:#0a0f09;border:1px solid var(--bor);border-radius:4px;padding:.85rem;margin-top:.75rem}
+.det-img{height:80px;border-radius:3px;margin-bottom:.65rem;
+  display:flex;align-items:center;justify-content:center;border:1px solid}
+.det-mark{font-size:2.5rem;opacity:.2;font-family:'Cormorant Garamond',serif;font-style:italic}
+.det-lat{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;
+  color:var(--cream);line-height:1.1;margin-bottom:2px}
+.det-com{font-size:.6rem;color:var(--body);margin-bottom:.65rem}
+.det-grid{display:grid;grid-template-columns:1fr 1fr;gap:.3rem;margin-bottom:.65rem}
+.det-cell{background:var(--sur);border:1px solid var(--bor2);border-radius:2px;padding:.3rem .4rem}
+.det-k{font-size:.44rem;color:var(--muted);letter-spacing:.1em;margin-bottom:2px}
+.det-v{font-size:.58rem;color:var(--bright)}
+.det-notes{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.82rem;
+  color:#8a9a88;line-height:1.7;margin-bottom:.55rem}
+.det-prec{background:var(--sur);border-left:2px solid var(--bor);border-radius:2px;padding:.5rem}
+.det-pk{font-size:.44rem;color:var(--muted);letter-spacing:.1em;margin-bottom:3px}
+.det-pv{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.78rem;color:var(--mid)}
+
+/* WORKFLOW STEPS */
+.steps{display:flex;flex-direction:column;gap:3px;margin-top:1rem}
+.step{background:var(--sur);border:1px solid var(--bor);border-top:2px solid var(--muted);
+  border-radius:3px;padding:.7rem .85rem}
+.step-n{font-size:.5rem;color:var(--bright);margin-bottom:.25rem}
+.step-loc{font-size:.52rem;color:var(--dim);letter-spacing:.1em;margin-bottom:.3rem}
+.step-txt{font-size:.58rem;color:var(--mid);line-height:1.7}
+
+/* DATA PANEL */
+.data-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem}
+.cell{background:var(--sur);border:1px solid var(--bor);border-radius:4px;padding:.85rem}
+.cell-label{font-size:.5rem;color:var(--dim);letter-spacing:.14em;margin-bottom:.6rem;text-transform:uppercase}
+.data-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:.4rem;margin-top:.75rem}
+.dc{background:var(--sur);border:1px solid var(--bor);border-radius:3px;padding:.7rem}
+.dc-t{font-size:.54rem;color:var(--bright);margin-bottom:.3rem}
+.dc-d{font-size:.55rem;color:var(--mid);line-height:1.65}
+
+/* XEN */
+.xen-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
+  background:var(--bor2);border:1px solid var(--bor2);border-radius:4px;overflow:hidden;margin-bottom:.75rem}
+.xen-cell{background:var(--sur);padding:.85rem}
+.xen-lbl{font-size:.52rem;color:var(--mid);letter-spacing:.08em;margin-top:.4rem}
+.xen-sub{font-size:.48rem;color:var(--dim);margin-top:2px}
+.inf-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin-bottom:.75rem}
+.inf-cell{background:#0a0f09;border:1px solid var(--bor);border-radius:4px;padding:.5rem}
+.inf-lbl{font-size:.46rem;color:var(--dim);letter-spacing:.1em;text-align:center;margin-top:4px}
+
+/* SYMBIOS */
+.mod-list{display:flex;flex-direction:column;gap:3px}
+.mod{background:var(--sur);border:1px solid var(--bor);
+  border-left:3px solid var(--bor);border-radius:3px;padding:.75rem 1rem;
+  display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.mod.active{background:#111a10}
+.mod-id{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;min-width:100px}
+.mod-desc{font-size:.58rem;color:var(--mid);flex:1;line-height:1.65}
+.mod-status{font-size:.5rem;letter-spacing:.1em;white-space:nowrap}
+.stack-tags{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.75rem}
+.stag{font-size:.54rem;color:var(--mid);background:var(--sur);
+  border:1px solid var(--bor);border-radius:2px;padding:3px 7px}
+.founder{background:var(--sur);border:1px solid var(--bor);border-radius:4px;
+  padding:1rem;margin-top:1rem}
+.founder-name{font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:1.05rem;color:var(--dim);margin-bottom:.4rem}
+.founder-txt{font-size:.6rem;color:var(--mid);line-height:2}
+
+@media(max-width:480px){
+  .na{display:none}
+  .tab{padding:.28rem .5rem;font-size:.5rem}
+  .data-grid{grid-template-columns:1fr}
+  .field-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nb">
+    <span class="nv">VANA</span>
+    <span class="ns">SymbiOS™ · Module 01</span>
+  </div>
+  <div class="tabs">
+    <button class="tab on" onclick="show('concept',this)">CONCEPT</button>
+    <button class="tab" onclick="show('field',this)">FIELD</button>
+    <button class="tab" onclick="show('data',this)">DATA</button>
+    <button class="tab" onclick="show('xen',this)">XĒN</button>
+    <button class="tab" onclick="show('sym',this)">SYMBIOS</button>
+  </div>
+  <span class="na">Marko Manriquez · Harvard GSD</span>
+</nav>
+
+<div id="content">
+
+<!-- ══ CONCEPT ══════════════════════════════════════════════════════ -->
+<div id="concept" class="panel on">
+  <div class="tags fu d1">
+    <span class="tag tg">SymbiOS™ · Module 01</span>
+    <span class="tag ta">Climate Technology</span>
+    <span class="tag tb">Harvard GSD · MLA I</span>
+  </div>
+  <p class="eyebrow fu d1">वन · วน · FOREST · TO RETURN</p>
+  <h1 class="fu d2">VANA</h1>
+  <p class="tagline fu d3">"The Word for World is Forest."</p>
+  <p class="desc fu d3">
+    <b>SymbiOS™</b> is a computational design platform for ecological intelligence —
+    a hybrid of ArcGIS, BIM, and real-time climate sensing built for
+    landscape architects, urban ecologists, and planners.
+    As a designer, it's the climate adaptation + computation software
+    we wish we had, so we're building it ourselves.<br><br>
+    <b>VANA</b> is Module 01: a field-deployable plant intelligence database
+    for climate-vulnerable coastal contexts across
+    <b>SE Asia including Thailand, Vietnam, and Indonesia</b> —
+    ground zero for the climate crisis.
+  </p>
+
+  <div class="stat-grid fu d4">
+    <div class="stat"><div class="stat-n" style="color:var(--bright)">10</div><div class="stat-l">Specimens · v0.1</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--blue)">5</div><div class="stat-l">Project Regions</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--teal)">32</div><div class="stat-l">Eco Connections</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--amber)">∞</div><div class="stat-l">Field Queries</div></div>
+  </div>
+
+  <div class="sl fu d4">01 · THE GAP</div>
+  <div class="gap-cards fu d5">
+    <div class="gap-card">
+      <div class="gap-n">01</div>
+      <div class="gap-t">Dispersed Expertise</div>
+      <div class="gap-b">Institutional plant knowledge lives in senior staff and email chains. When that person leaves — the knowledge leaves with them.</div>
+    </div>
+    <div class="gap-card">
+      <div class="gap-n">02</div>
+      <div class="gap-t">No Field Intelligence</div>
+      <div class="gap-b">A landscape architect in the Maldives has no tool to pull precedent data from a similar PLA project in Phuket. That connection exists in no software.</div>
+    </div>
+    <div class="gap-card">
+      <div class="gap-n">03</div>
+      <div class="gap-t">Climate-Blind Palettes</div>
+      <div class="gap-b">Current plant libraries are photo archives. They cannot cross-reference ecological performance, phytoremediation value, or 2050 climate compatibility.</div>
+    </div>
+  </div>
+
+  <!-- Phyllotaxis SVG -->
+  <div style="margin-top:1.5rem;opacity:.5">
+    <svg id="phyllo-concept" viewBox="-160 -160 320 320" style="width:100%;max-height:220px"></svg>
+  </div>
+</div>
+
+<!-- ══ FIELD ══════════════════════════════════════════════════════ -->
+<div id="field" class="panel">
+  <div class="field-bar">
+    <span class="field-badge">● FIELD MODE</span>
+    <span class="field-sub">In situ plant intelligence · Decision at point of need</span>
+    <span class="field-ct" id="field-ct">6 / 6 specimens</span>
+  </div>
+
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input id="search-input" type="text" placeholder="Search species, tag, ecology, salt level, region..."/>
+  </div>
+
+  <div class="chips">
+    <button class="chip on" onclick="filterSalt('all',this)">ALL SALT</button>
+    <button class="chip" onclick="filterSalt('very-high',this)">VERY-HIGH</button>
+    <button class="chip" onclick="filterSalt('high',this)">HIGH</button>
+    <button class="chip" onclick="filterSalt('low',this)">LOW</button>
+  </div>
+
+  <div class="field-grid" id="plant-grid"></div>
+  <div id="detail-panel"></div>
+
+  <div class="sl" style="margin-top:1.5rem">04 · FIELD WORKFLOW</div>
+  <div class="steps">
+    <div class="step"><div class="step-n">01</div><div class="step-loc">NORTH MALÉ ATOLL, MALDIVES</div><div class="step-txt">New resort. Saline water table at 0.3m. Need coastal groundcover for wave wash zone.</div></div>
+    <div class="step"><div class="step-n">02</div><div class="step-loc">VANA FIELD QUERY</div><div class="step-txt">salt-tolerant + coastal + low-water. Returns 4 precedent species from PLA's 2021 Maldives project.</div></div>
+    <div class="step"><div class="step-n">03</div><div class="step-loc">PRECEDENT RETRIEVED</div><div class="step-txt">Pandanus tectorius. "Survived category 2 storm surge with minimal loss." Prop root system stabilising coastal edge.</div></div>
+    <div class="step"><div class="step-n">04</div><div class="step-loc">VALIDATED REMOTELY</div><div class="step-txt">Senior LA confirms from Bangkok. Decision logged. No site delay. No email chain.</div></div>
+  </div>
+</div>
+
+<!-- ══ DATA ══════════════════════════════════════════════════════ -->
+<div id="data" class="panel">
+  <div class="sl">05 · DATA INTELLIGENCE</div>
+  <div class="data-grid">
+    <div class="cell">
+      <div class="cell-label">Species × Eco Services Dependency Web</div>
+      <svg id="chord-svg" viewBox="0 0 300 300" style="width:100%;height:auto"></svg>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Climate Performance Heatmap</div>
+      <svg id="heatmap-svg" viewBox="0 0 260 200" style="width:100%;height:auto"></svg>
+    </div>
+  </div>
+  <div class="data-cards">
+    <div class="dc"><div class="dc-t">Lunar Calendar</div><div class="dc-d">12-month botanical × lunar phase calendar with Thai festival overlays</div></div>
+    <div class="dc"><div class="dc-t">Maintenance Gantt</div><div class="dc-d">Annual schedule for all specimens — bloom, prune, fertilise</div></div>
+    <div class="dc"><div class="dc-t">Thermal Ridge Plot</div><div class="dc-d">Gaussian performance envelopes — optimal °C per species</div></div>
+    <div class="dc"><div class="dc-t">Carbon Sequestration</div><div class="dc-d">tCO₂/ha/yr — ESG and SITES certification basis</div></div>
+  </div>
+</div>
+
+<!-- ══ XEN ══════════════════════════════════════════════════════ -->
+<div id="xen" class="panel">
+  <div class="tags">
+    <span class="tag tb">SymbiOS™ · Module 02 · In Development</span>
+  </div>
+  <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.4rem,5vw,2.2rem);color:var(--cream);font-weight:300;line-height:1.1;margin-bottom:.75rem">Botanical systems<br/>as design source code.</p>
+  <p style="font-size:.62rem;color:var(--mid);line-height:1.9;margin-bottom:1.25rem">XĒN — from αὐξεῖν, to grow — extracts the generative grammar of living systems and makes it available as a computational design palette.</p>
+
+  <div class="sl">BOTANICAL COMPUTATION PATTERNS</div>
+  <div class="xen-grid">
+    <div class="xen-cell">
+      <svg id="lsys-svg" viewBox="0 0 160 180" style="width:100%;height:auto"></svg>
+      <div class="xen-lbl">L-SYSTEM · FERN GRAMMAR</div>
+      <div class="xen-sub">F → F[+X][-X]FX · 5 iterations · SVG/DXF export</div>
+    </div>
+    <div class="xen-cell">
+      <svg id="phyllo-xen" viewBox="-90 -90 180 180" style="width:100%;height:auto"></svg>
+      <div class="xen-lbl">PHYLLOTAXIS SPIRAL</div>
+      <div class="xen-sub">φ = 137.508° · Fibonacci divergence · facade perforation</div>
+    </div>
+  </div>
+
+  <div class="sl">INFLORESCENCE TYPOLOGY</div>
+  <div class="inf-grid">
+    <div class="inf-cell">
+      <svg id="inf-raceme" viewBox="0 0 70 110" style="width:100%;height:auto"></svg>
+      <div class="inf-lbl">RACEME</div>
+    </div>
+    <div class="inf-cell">
+      <svg id="inf-corymb" viewBox="0 0 70 110" style="width:100%;height:auto"></svg>
+      <div class="inf-lbl">CORYMB</div>
+    </div>
+    <div class="inf-cell">
+      <svg id="inf-spike" viewBox="0 0 70 110" style="width:100%;height:auto"></svg>
+      <div class="inf-lbl">SPIKE</div>
+    </div>
+    <div class="inf-cell">
+      <svg id="inf-cap" viewBox="0 0 70 110" style="width:100%;height:auto"></svg>
+      <div class="inf-lbl">CAPITULUM</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SYMBIOS ══════════════════════════════════════════════════════ -->
+<div id="sym" class="panel">
+  <div class="sl">07 · SYMBIOS™ PLATFORM</div>
+  <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(2rem,8vw,3.5rem);color:var(--cream);font-weight:300;line-height:1;margin-bottom:.85rem">SymbiOS™</p>
+  <p style="font-size:.64rem;color:var(--mid);line-height:2;margin-bottom:1.25rem">A modular platform ecosystem at the intersection of ecological intelligence, computational design, and climate technology. Tools for landscape architects, horticulturalists, and computational designers.</p>
+
+  <div class="mod-list" id="mod-list"></div>
+
+  <div class="sl" style="margin-top:1.25rem">CURRENT STACK</div>
+  <div class="stack-tags">
+    <span class="stag">Next.js 15</span><span class="stag">TypeScript</span>
+    <span class="stag">Supabase</span><span class="stag">Vercel</span>
+    <span class="stag">Postgres</span><span class="stag">iNaturalist API</span>
+    <span class="stag">Polycam LiDAR</span><span class="stag">ArcGIS</span>
+  </div>
+
+  <div class="founder">
+    <div class="founder-name">Marko Manriquez</div>
+    <div class="founder-txt">
+      MLA I · Harvard Graduate School of Design<br/>
+      Computational Design · Urban Ecology · Climate Technology<br/>
+      <span style="color:var(--muted)">© 2026 SymbiOS™ · Original IP · All rights reserved</span>
+    </div>
+  </div>
+
+  <div style="margin-top:2rem;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.85rem;color:var(--bor)">
+    Tools for all forms of life — including synthetic ones.
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+// ─── DATA ─────────────────────────────────────────────────────────
+const PLANTS=[
+  {id:"pandanus",n:"Pandanus tectorius",s:"Pandanus",c:"#2a8a5a",
+   saltL:"very-high",climate:"coastal",regions:"Maldives, Fiji, Thailand",
+   tags:"coastal, erosion-control",
+   notes:"Definitive atoll species. Prop roots control erosion at the high-tide interface. Survived category 2 storm surge with minimal loss.",
+   precedent:"North Malé Atoll Villa, 2021"},
+  {id:"mangrove",n:"Rhizophora mucronata",s:"Mangrove",c:"#1a6a6a",
+   saltL:"very-high",climate:"coastal, tidal",regions:"Thailand, Maldives, India",
+   tags:"blue-carbon, coastal-protection",
+   notes:"Blue carbon sequestration for ESG. 7.5 tCO₂/ha/yr. Critical for coastal resilience at resort boundary conditions.",
+   precedent:"Krabi Eco-Corridor, 2023"},
+  {id:"bismarckia",n:"Bismarckia nobilis",s:"Bismarckia",c:"#5a7a2a",
+   saltL:"high",climate:"arid, tropical",regions:"Middle East, Maldives, Thailand",
+   tags:"specimen, structural",
+   notes:"Silver fronds. Arrival statement species. Tolerates compacted sandy soils of reclaimed resort sites.",
+   precedent:"Koh Samui Resort, 2019"},
+  {id:"plumeria",n:"Plumeria obtusa",s:"Plumeria",c:"#c4904a",
+   saltL:"medium",climate:"tropical, subtropical",regions:"Thailand, Maldives, India",
+   tags:"fragrance, spiritual",
+   notes:"PLA signature species. Sacred in Buddhist and Hindu contexts. Night-blooming Sphinx moth pollinator. Drought-deciduous.",
+   precedent:"Multiple — Phuket, Hua Hin, Koh Samui"},
+  {id:"coconut",n:"Cocos nucifera",s:"Coconut",c:"#c4a06a",
+   saltL:"very-high",climate:"coastal, tropical",regions:"Maldives, Fiji, Thailand, India",
+   tags:"resort-classic, cultural",
+   notes:"PLA approach: clusters of 3–5 at varying ages and angles. Nut management required for occupied zones.",
+   precedent:"Multiple — all coastal projects"},
+  {id:"heliconia",n:"Heliconia rostrata",s:"Heliconia",c:"#c45a3a",
+   saltL:"low",climate:"tropical",regions:"Thailand, India, Fiji",
+   tags:"water-feature, bird-habitat",
+   notes:"Hummingbird pollinator. Strong monsoon-season colour in shaded water garden zones.",
+   precedent:"Chiang Mai Wellness Resort, 2020"},
+];
+
+const SVCS=[
+  {id:"carbon",label:"Carbon",c:"#9ed855"},{id:"coastal",label:"Coastal",c:"#6ab4e8"},
+  {id:"phyto",label:"Phytoremedia.",c:"#55c4a0"},{id:"shade",label:"Cooling",c:"#e8aa8a"},
+  {id:"poll",label:"Pollinator",c:"#c4904a"},{id:"culture",label:"Cultural",c:"#9a8ae8"},
+];
+const CONN=[
+  ["pandanus","coastal",.9],["pandanus","phyto",.4],
+  ["mangrove","carbon",1],["mangrove","coastal",.95],["mangrove","phyto",.85],
+  ["bismarckia","shade",.7],["bismarckia","culture",.6],
+  ["plumeria","poll",.9],["plumeria","culture",.85],["plumeria","shade",.4],
+  ["heliconia","poll",.9],["coconut","coastal",.7],["coconut","culture",.9],
+];
+const MODULES=[
+  {id:"VANA",       status:"v0.1 · Active",  c:"#9ed855", desc:"Plant Intelligence DB. Field search. Precedent retrieval. Climate-adaptive filtering."},
+  {id:"XĒN",        status:"In Development", c:"#6ab4e8", desc:"Generative Pattern Library. L-systems. Phyllotaxis. Inflorescence geometry. Grasshopper integration."},
+  {id:"AUXXEN",     status:"Planned",        c:"#9a8ae8", desc:"Growth + Systems. Digital Twin / ecosystem simulator. Climate-driven morphogenesis. Custom growth grammar."},
+  {id:"AUXLOGRAM",  status:"Planned",        c:"#e8aa8a", desc:"Grammar archive. Pattern language documentation. Cross-species morphological index."},
+  {id:"SymbiOS·AUX",status:"Concept",        c:"#a8c870", desc:"Generative Sound + Installation. Botanical sound synthesis. L-system to MIDI. Spatial audio."},
+];
+const TRAITS=["salt","drought","flood","heat"];
+const TRAIT_VALS={
+  pandanus:[5,3,4,5],mangrove:[5,2,5,4],bismarckia:[4,5,1,5],
+  plumeria:[3,4,1,4],coconut:[5,4,2,5],heliconia:[1,1,3,4]
+};
+
+// ─── NAV ──────────────────────────────────────────────────────────
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+  document.getElementById('content').scrollTop=0;
+  if(id==='xen') drawXen();
+  if(id==='data') drawData();
+  if(id==='sym') drawModules();
+}
+
+// ─── FIELD ────────────────────────────────────────────────────────
+let currentSalt='all', currentSearch='', selectedId=null;
+
+function renderPlants(){
+  const q=currentSearch.toLowerCase();
+  const filtered=PLANTS.filter(p=>{
+    const ms=!q||p.s.toLowerCase().includes(q)||p.n.toLowerCase().includes(q)||
+      p.tags.includes(q)||p.saltL.includes(q)||p.regions.toLowerCase().includes(q);
+    const msa=currentSalt==='all'||p.saltL===currentSalt;
+    return ms&&msa;
+  });
+  document.getElementById('field-ct').textContent=`${filtered.length} / ${PLANTS.length} specimens`;
+  const grid=document.getElementById('plant-grid');
+  grid.innerHTML=filtered.map(p=>`
+    <div class="pcard${selectedId===p.id?' sel':''}" onclick="selectPlant('${p.id}')"
+      style="border-left-color:${p.c}">
+      <div class="pcard-lat">${p.n}</div>
+      <div class="pcard-com">${p.s}</div>
+      <span class="pbadge">${p.climate}</span>
+      <span class="pbadge">salt: ${p.saltL}</span>
+    </div>`).join('');
+  renderDetail();
+}
+
+function selectPlant(id){
+  selectedId=selectedId===id?null:id;
+  renderPlants();
+}
+
+function renderDetail(){
+  const dp=document.getElementById('detail-panel');
+  if(!selectedId){dp.innerHTML='';return;}
+  const p=PLANTS.find(x=>x.id===selectedId);
+  if(!p){dp.innerHTML='';return;}
+  dp.innerHTML=`
+    <div class="detail">
+      <div class="det-img" style="background:${p.c}15;border-color:${p.c}25">
+        <span class="det-mark" style="color:${p.c}">✦</span>
+      </div>
+      <div class="det-lat">${p.n}</div>
+      <div class="det-com">${p.s}</div>
+      <div class="det-grid">
+        <div class="det-cell"><div class="det-k">SALT</div><div class="det-v">${p.saltL}</div></div>
+        <div class="det-cell"><div class="det-k">CLIMATE</div><div class="det-v">${p.climate.split(',')[0]}</div></div>
+        <div class="det-cell"><div class="det-k">REGIONS</div><div class="det-v">${p.regions.split(',')[0]}</div></div>
+        <div class="det-cell"><div class="det-k">TAGS</div><div class="det-v">${p.tags.split(',')[0]}</div></div>
+      </div>
+      <div class="det-notes">${p.notes}</div>
+      <div class="det-prec">
+        <div class="det-pk">PRECEDENT</div>
+        <div class="det-pv">${p.precedent}</div>
+      </div>
+    </div>`;
+}
+
+function filterSalt(val,btn){
+  currentSalt=val;
+  document.querySelectorAll('.chips .chip').forEach(c=>c.classList.remove('on'));
+  btn.classList.add('on');
+  renderPlants();
+}
+
+document.getElementById('search-input').addEventListener('input',e=>{
+  currentSearch=e.target.value;
+  renderPlants();
+});
+
+renderPlants();
+
+// ─── MODULES ──────────────────────────────────────────────────────
+function drawModules(){
+  document.getElementById('mod-list').innerHTML=MODULES.map((m,i)=>`
+    <div class="mod${i===0?' active':''}" style="border-left-color:${m.c}">
+      <div class="mod-id" style="color:${m.c}">${m.id}</div>
+      <div class="mod-desc">${m.desc}</div>
+      <div class="mod-status" style="color:${i===0?m.c:'var(--muted)'}">${m.status}</div>
+    </div>`).join('');
+}
+
+// ─── PHYLLOTAXIS ──────────────────────────────────────────────────
+function drawPhyllo(svgId,n,scale,cx,cy){
+  const PHI=Math.PI*(3-Math.sqrt(5));
+  const svg=document.getElementById(svgId);
+  if(!svg)return;
+  Array.from({length:n},(_,i)=>{
+    const x=cx+Math.sqrt(i)*scale*Math.cos(i*PHI);
+    const y=cy+Math.sqrt(i)*scale*Math.sin(i*PHI);
+    const t=i/n;
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',x.toFixed(1));c.setAttribute('cy',y.toFixed(1));
+    c.setAttribute('r',Math.max(0.7,(2.4-t*1.7)).toFixed(1));
+    c.setAttribute('fill',t<0.38?'#c8a96e':'#9ed855');
+    c.setAttribute('opacity',(0.25+(1-t)*0.6).toFixed(2));
+    svg.appendChild(c);
+  });
+}
+drawPhyllo('phyllo-concept',220,8.5,0,0);
+
+// ─── L-SYSTEM ─────────────────────────────────────────────────────
+function drawLSystem(){
+  let s='X';
+  for(let i=0;i<5;i++){let nx='';for(const c of s){nx+=c==='X'?'F[+X][-X]FX':c;if(nx.length>3200)break;}s=nx;}
+  const ang=22*Math.PI/180,stack=[],lines=[];let x=0,y=0,a=-Math.PI/2;
+  for(const c of s){
+    if(c==='F'){const nx=x+8*Math.cos(a),ny=y+8*Math.sin(a);lines.push([x,y,nx,ny,stack.length]);x=nx;y=ny;}
+    else if(c==='+')a+=ang;else if(c==='-')a-=ang;
+    else if(c==='[')stack.push([x,y,a]);else if(c===']'){const st=stack.pop();x=st[0];y=st[1];a=st[2];}
+  }
+  const xs=lines.flatMap(([x1,,x2])=>[x1,x2]),ys=lines.flatMap(([,y1,,y2])=>[y1,y2]);
+  const[minX,maxX,minY,maxY]=[Math.min(...xs),Math.max(...xs),Math.min(...ys),Math.max(...ys)];
+  const sc=Math.min(140/(maxX-minX||1),165/(maxY-minY||1));
+  const ox=(160-(maxX-minX)*sc)/2-minX*sc,oy=(180-(maxY-minY)*sc)/2-minY*sc;
+  const maxD=Math.max(...lines.map(l=>l[4]),1);
+  const svg=document.getElementById('lsys-svg');
+  lines.forEach(l=>{
+    const t=l[4]/maxD;
+    const ln=document.createElementNS('http://www.w3.org/2000/svg','line');
+    ln.setAttribute('x1',(l[0]*sc+ox).toFixed(1));ln.setAttribute('y1',(l[1]*sc+oy).toFixed(1));
+    ln.setAttribute('x2',(l[2]*sc+ox).toFixed(1));ln.setAttribute('y2',(l[3]*sc+oy).toFixed(1));
+    ln.setAttribute('stroke',`rgba(${60+t*60},${100+t*80},${40+t*20},${(0.25+(1-t)*0.65).toFixed(2)})`);
+    ln.setAttribute('stroke-width',Math.max(0.4,2-t*1.6).toFixed(1));
+    ln.setAttribute('stroke-linecap','round');
+    svg.appendChild(ln);
+  });
+}
+
+// ─── INFLORESCENCES ───────────────────────────────────────────────
+function drawInf(){
+  // RACEME
+  const r=document.getElementById('inf-raceme');
+  r.innerHTML=`<line x1="35" y1="105" x2="35" y2="8" stroke="#3a6a2a" stroke-width="1.2" stroke-linecap="round"/>
+  ${[14,26,38,50,62,74,86].map((y,i)=>{const d=i%2===0?1:-1;return`
+    <line x1="35" y1="${y}" x2="${35+d*16}" y2="${y-5}" stroke="#2a5a1a" stroke-width="0.7"/>
+    <ellipse cx="${35+d*16}" cy="${y-8}" rx="3" ry="4" fill="rgba(212,169,110,${0.3+i*0.07})" stroke="#c4996a" stroke-width="0.6"/>
+    <circle cx="${35+d*16}" cy="${y-8}" r="1" fill="#9ed855"/>`}).join('')}`;
+
+  // CORYMB
+  const co=document.getElementById('inf-corymb');
+  co.innerHTML=`<line x1="35" y1="105" x2="35" y2="70" stroke="#3a6a2a" stroke-width="1.2" stroke-linecap="round"/>
+  ${[{x:8,sh:42},{x:18,sh:28},{x:28,sh:18},{x:38,sh:12},{x:48,sh:18},{x:58,sh:28},{x:66,sh:42}].map((f,i)=>`
+    <line x1="35" y1="70" x2="${f.x}" y2="${f.sh+18}" stroke="#2a5a1a" stroke-width="0.6"/>
+    <circle cx="${f.x}" cy="${f.sh+13}" r="4.5" fill="rgba(196,88,58,${0.3+i*0.05})" stroke="#b43a2a" stroke-width="0.5"/>
+    <circle cx="${f.x}" cy="${f.sh+13}" r="1.6" fill="#9ed855"/>`).join('')}`;
+
+  // SPIKE
+  const sp=document.getElementById('inf-spike');
+  sp.innerHTML=`<line x1="35" y1="105" x2="35" y2="8" stroke="#3a6a2a" stroke-width="1.2" stroke-linecap="round"/>
+  ${[18,30,42,54,66,78,90].map((y,i)=>`
+    <circle cx="35" cy="${y}" r="${4.5-i*0.3}" fill="rgba(42,138,90,${0.4+i*0.06})" stroke="#2a8a5a" stroke-width="0.5"/>`).join('')}`;
+
+  // CAPITULUM
+  const ca=document.getElementById('inf-cap');
+  const PETALS=12,R=18;
+  const petals=Array.from({length:PETALS},(_,i)=>{
+    const a=(i/PETALS)*Math.PI*2;
+    const x2=35+R*Math.cos(a),y2=42+R*0.65*Math.sin(a);
+    return`<ellipse cx="${x2.toFixed(1)}" cy="${y2.toFixed(1)}" rx="3.5" ry="2"
+      transform="rotate(${(i/PETALS)*360},${x2.toFixed(1)},${y2.toFixed(1)})"
+      fill="rgba(212,169,110,0.45)" stroke="#c4996a" stroke-width="0.4"/>`;
+  }).join('');
+  const dots=Array.from({length:20},(_,i)=>{
+    const a=(i/20)*Math.PI*2,r2=3+(i%4)*1.5;
+    return`<circle cx="${(35+r2*Math.cos(a)).toFixed(1)}" cy="${(42+r2*0.65*Math.sin(a)).toFixed(1)}" r="1.3" fill="#9ed855" opacity="0.7"/>`;
+  }).join('');
+  ca.innerHTML=`<line x1="35" y1="105" x2="35" y2="62" stroke="#3a6a2a" stroke-width="1.2" stroke-linecap="round"/>
+  ${petals}<circle cx="35" cy="42" r="11" fill="#1a2a10" stroke="#3a5a18" stroke-width="0.6"/>${dots}`;
+}
+
+function drawXen(){
+  if(document.getElementById('lsys-svg').children.length>0)return;
+  drawLSystem();
+  drawPhyllo('phyllo-xen',120,7.5,0,0);
+  drawInf();
+}
+
+// ─── CHORD DIAGRAM ────────────────────────────────────────────────
+function drawChord(){
+  const svg=document.getElementById('chord-svg');
+  const CX=150,CY=150,CR=110,RL=132;
+  function toRad(d){return d*Math.PI/180;}
+  function pol2(cx,cy,r,a){return{x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)};}
+  function clamp2(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+
+  const spPos=PLANTS.map((p,i)=>{const a=toRad(200+i*36);return{...p,a,...pol2(CX,CY,CR,a),la:pol2(CX,CY,RL,a)};});
+  const svPos=SVCS.map((s,i)=>{const a=toRad(18+i*44);return{...s,a,...pol2(CX,CY,CR,a),la:pol2(CX,CY,RL+10,a)};});
+  const spMap=Object.fromEntries(spPos.map(s=>[s.id,s]));
+  const svMap=Object.fromEntries(svPos.map(s=>[s.id,s]));
+
+  let html=`<circle cx="${CX}" cy="${CY}" r="${CR}" fill="none" stroke="var(--bor)" stroke-width="0.5"/>
+  <circle cx="${CX}" cy="${CY}" r="26" fill="var(--bg)" stroke="var(--bor)" stroke-width="0.4"/>`;
+
+  CONN.forEach(([spId,svId,str])=>{
+    const sp=spMap[spId],sv=svMap[svId];if(!sp||!sv)return;
+    const cp1=pol2(CX,CY,CR*0.1,sp.a),cp2=pol2(CX,CY,CR*0.1,sv.a);
+    html+=`<path d="M ${sp.x.toFixed(1)} ${sp.y.toFixed(1)} C ${cp1.x.toFixed(1)} ${cp1.y.toFixed(1)} ${cp2.x.toFixed(1)} ${cp2.y.toFixed(1)} ${sv.x.toFixed(1)} ${sv.y.toFixed(1)}"
+      fill="none" stroke="${sv.c}" stroke-width="${clamp2(str*3,0.5,3.5).toFixed(1)}" stroke-opacity="${clamp2(str*0.7,0.1,0.7).toFixed(2)}"/>`;
+  });
+
+  svPos.forEach(sv=>{
+    html+=`<circle cx="${sv.x.toFixed(1)}" cy="${sv.y.toFixed(1)}" r="7" fill="${sv.c}25" stroke="${sv.c}" stroke-width="1"/>
+    <text x="${sv.la.x.toFixed(1)}" y="${sv.la.y.toFixed(1)}" text-anchor="${sv.la.x<CX?'end':'start'}" dominant-baseline="central" fill="${sv.c}" font-size="7.5" font-family="DM Mono">${sv.label}</text>`;
+  });
+  spPos.forEach(sp=>{
+    html+=`<circle cx="${sp.x.toFixed(1)}" cy="${sp.y.toFixed(1)}" r="6" fill="${sp.c}25" stroke="${sp.c}" stroke-width="0.8"/>
+    <text x="${sp.la.x.toFixed(1)}" y="${sp.la.y.toFixed(1)}" text-anchor="${sp.la.x<CX-10?'end':sp.la.x>CX+10?'start':'middle'}" dominant-baseline="${sp.la.y<CY?'auto':'hanging'}" fill="${sp.c}" font-size="6.5" font-family="DM Mono" font-style="italic">${sp.s}</text>`;
+  });
+
+  html+=`<text x="${CX}" y="${CY-5}" text-anchor="middle" fill="var(--dim)" font-size="7" font-family="DM Mono" letter-spacing="0.14em">SPECIES</text>
+  <text x="${CX}" y="${CY+6}" text-anchor="middle" fill="var(--muted)" font-size="6" font-family="DM Mono">× SERVICES</text>`;
+
+  svg.innerHTML=html;
+}
+
+// ─── HEATMAP ──────────────────────────────────────────────────────
+function drawHeatmap(){
+  const svg=document.getElementById('heatmap-svg');
+  const cW=36,cH=22,lW=58,hH=32;
+  function hc(v){const t=(v-1)/4;return`rgb(${Math.round(9+t*60)},${Math.round(14+t*130)},${Math.round(8+t*30)})`;}
+  let html=TRAITS.map((t,ti)=>`
+    <text x="${lW+ti*cW+cW/2}" y="${hH-8}" text-anchor="middle" fill="var(--dim)" font-size="6.5" font-family="DM Mono">${t}</text>`).join('');
+  PLANTS.forEach((p,si)=>{
+    const y=hH+si*cH;
+    html+=`<text x="${lW-3}" y="${y+cH/2}" dominant-baseline="central" text-anchor="end" fill="${p.c}" font-size="7" font-family="DM Mono" font-style="italic">${p.s}</text>`;
+    const vals=TRAIT_VALS[p.id]||[3,3,3,3];
+    vals.forEach((v,ti)=>{
+      html+=`<rect x="${lW+ti*cW}" y="${y}" width="${cW-1}" height="${cH-1}" fill="${hc(v)}" stroke="var(--bor)" stroke-width="0.3" rx="1"/>
+      <text x="${lW+ti*cW+cW/2}" y="${y+cH/2}" dominant-baseline="central" text-anchor="middle" fill="${v>=4?'#9ed855':'#4a6a48'}" font-size="9" font-family="DM Mono" font-weight="500">${v}</text>`;
+    });
+  });
+  svg.innerHTML=html;
+}
+
+function drawData(){
+  if(document.getElementById('chord-svg').children.length>0)return;
+  drawChord();
+  drawHeatmap();
+}
+</script>
+</body>
+</html>
