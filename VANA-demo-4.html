@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  VA·NA · SymbiOS™ · v0.1 · unlisted preview
+  ============================================================
+  Four-tab demo: CONCEPT, LUNAR, ECO SERVICES, XÉN.
+  Companion file xen.html holds the XÉN compendium.
+
+  © 2026 SymbiOS™ | Inflorescence Intelligence™
+  All rights reserved · Confidential · Unlisted preview
+  ============================================================
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>VA·NA · SymbiOS™ — unlisted preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Mono:wght@300;400;500&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ────────────────────────────────────────────────────────
+   BASE — lifted from VANA-dashboard-v2
+   ──────────────────────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#090e08;--sur:#0d160c;--sur2:#0f180e;--bor:#1e2e1d;--bor2:#1a2a19;
+  --bright:#9ed855;--cream:#e8e0d0;--ivory:#c8c0b0;
+  --dim:#3a5a38;--mid:#4a6a48;--body:#6a8a68;--muted:#2a4a28;
+  --blue:#6ab4e8;--amber:#e8aa8a;--purple:#9a8ae8;--gold:#c8a96e;
+  --teal:#55c4a0;--coral:#c45a3a;--orange:#c4904a;
+  --lavender:#c4b5e0; --lavender-mid:#a89cc8;
+  --gold-pale:#d8d4be;
+}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--cream);font-family:'DM Mono',monospace;display:flex;flex-direction:column}
+::-webkit-scrollbar{width:3px;height:3px}::-webkit-scrollbar-thumb{background:var(--muted);border-radius:2px}
+
+/* ── IP PROTECTION LAYER ── */
+.lede, .tagline, .etymology, .ev-note, .mn-note, .epigraph-quote, .poem-text, .concept-prose {
+  -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+}
+.honeypot { position: absolute; left: -9999px; top: -9999px; opacity: 0; pointer-events: none; }
+
+/* ── NAV ── */
+nav{flex-shrink:0;min-height:48px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 1.5rem;border-bottom:1px solid var(--bor);background:var(--bg);position:relative;z-index:10;gap:1rem;flex-wrap:wrap}
+.nb{display:flex;align-items:baseline;gap:.6rem}
+.nv{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.3rem;color:var(--cream);letter-spacing:.15em}
+.nv-link{text-decoration:none;cursor:pointer;transition:color .15s,text-shadow .15s}
+.nv-link:hover{color:var(--lavender);text-shadow:0 0 16px rgba(196,181,224,0.25)}
+.ns{font-size:.48rem;color:var(--muted);letter-spacing:.1em}
+.tabs{display:flex;gap:1px;background:var(--bor2);border-radius:3px;overflow:hidden;flex-wrap:wrap}
+.tab{background:transparent;border:none;padding:.28rem .75rem;cursor:pointer;
+  font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.1em;
+  color:var(--dim);transition:all .15s;text-decoration:none;display:inline-block}
+.tab.on{background:#1e3a1c;color:var(--bright)}
+.tab:hover:not(.on){color:var(--mid)}
+.tab.external{color:var(--dim)}
+.tab.external:hover{color:var(--lavender-mid)}
+.na{font-size:.48rem;color:var(--muted)}
+
+#content{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 1.5rem 3rem}
+.wrap{max-width:1100px;margin:0 auto}
+.panel{display:none}.panel.on{display:block}
+
+/* Section label */
+.sl{display:flex;align-items:center;gap:1.25rem;padding:2rem 0 1.25rem}
+.sl::before{content:'';display:block;width:16px;height:1px;background:var(--muted);flex-shrink:0}
+.sl span{font-size:.56rem;color:var(--dim);letter-spacing:.2em;white-space:nowrap}
+.sl::after{content:'';flex:1;height:1px;background:var(--bor2)}
+
+/* Cell */
+.cell{background:var(--sur);border:1px solid var(--bor);border-radius:4px;padding:1rem;margin-bottom:.75rem}
+.cl{font-size:.52rem;letter-spacing:.14em;color:var(--dim);margin-bottom:.6rem;text-transform:uppercase}
+.cl.blue{color:var(--blue)}.cl.teal{color:var(--teal)}.cl.amber{color:var(--amber)}
+.cl.coral{color:var(--coral)}.cl.gold{color:#f0e8a0}.cl.purple{color:var(--purple)}
+.cl.lavender{color:var(--lavender)}
+
+/* Stats bar */
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--bor);
+  border:1px solid var(--bor);border-radius:4px;overflow:hidden;margin-bottom:.75rem}
+.stat{background:var(--sur);padding:.85rem .75rem}
+.stat-n{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
+  font-size:1.9rem;line-height:1;margin-bottom:.2rem}
+.stat-l{font-size:.6rem;color:var(--ivory);margin-bottom:1px}
+.stat-s{font-size:.52rem;color:var(--dim)}
+
+/* Two-col grid */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem}
+.g2b{display:grid;grid-template-columns:1fr 1.1fr;gap:.75rem;margin-bottom:.75rem}
+.g2c{display:grid;grid-template-columns:1.2fr 1fr;gap:.75rem}
+
+/* Cultural events */
+.ev{padding:.55rem 0;border-bottom:1px solid var(--bor2)}
+.ev-row{display:flex;gap:.6rem;align-items:baseline;margin-bottom:2px;flex-wrap:wrap}
+.ev-mo{font-size:.56rem;color:var(--muted)}
+.ev-name{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.88rem;color:#f0e8a0}
+.ev-thai{font-size:.56rem;color:var(--dim)}
+.ev-note{font-size:.58rem;color:var(--body);line-height:1.7}
+
+/* Maint notes */
+.mn{padding:.55rem 0;border-bottom:1px solid var(--bor2)}
+.mn-row{display:flex;gap:.6rem;align-items:baseline;margin-bottom:2px;flex-wrap:wrap}
+.mn-mo{font-size:.56rem;color:var(--bright)}
+.mn-phase{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.82rem;color:var(--ivory)}
+.mn-note{font-size:.58rem;color:var(--body);line-height:1.7}
+
+.phyto-label{font-size:.54rem;color:var(--dim);letter-spacing:.14em;margin:.75rem 0 .5rem}
+
+/* Footer */
+.footer{margin-top:2rem;border-top:1px solid var(--bor2);padding-top:.85rem;
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+.ft1{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.9rem;color:var(--muted);margin-bottom:.2rem}
+.ft2{font-size:.52rem;color:#1e3a1c;line-height:1.7}
+.ft-parent-brand{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;color:var(--lavender);margin-bottom:.2rem;letter-spacing:.04em}
+.ft-parent-brand .pipe{color:var(--green-blue,var(--mid));opacity:.6;margin:0 4px;font-style:normal}
+
+/* Zoom modal */
+#zoom-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(4,8,4,.93);
+  align-items:center;justify-content:center;padding:1rem;cursor:zoom-out}
+#zoom-overlay.on{display:flex}
+#zoom-box{background:var(--sur);border:1px solid var(--muted);border-radius:6px;
+  padding:1.1rem;width:min(96vw,1000px);max-height:90vh;overflow-y:auto;cursor:default}
+#zoom-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:.85rem}
+#zoom-title{font-size:.54rem;color:var(--dim);letter-spacing:.16em}
+#zoom-close{background:transparent;border:1px solid var(--bor);color:var(--dim);
+  padding:.2rem .6rem;border-radius:2px;cursor:pointer;font-family:'DM Mono',monospace;font-size:.56rem}
+
+/* ────────────────────────────────────────────────────────
+   CONCEPT PANEL — scoped richer aesthetic
+   ──────────────────────────────────────────────────────── */
+#concept .epigraph {
+  text-align: center;
+  padding: 1.5rem 0 2rem;
+  border-bottom: 1px solid var(--bor2);
+  margin-bottom: 1.5rem;
+}
+#concept .epigraph-script {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  letter-spacing: 0.18em;
+  color: var(--gold-pale);
+  margin-bottom: 18px;
+  text-shadow: 0 0 24px rgba(216, 212, 190, 0.15);
+}
+#concept .epigraph-script .sep { color: var(--mid); margin: 0 12px; opacity: 0.65; font-size: 14px; vertical-align: 2px; }
+#concept .epigraph-script .latin { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.42em; color: #b5cf80; vertical-align: 3px; }
+#concept .epigraph-quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 1.15;
+  color: var(--cream);
+  letter-spacing: -0.005em;
+  margin-bottom: 14px;
+  max-width: 880px;
+  margin-left: auto;
+  margin-right: auto;
+}
+#concept .epigraph-attr {
+  font-family: 'DM Mono', monospace;
+  font-size: 9.5px;
+  color: var(--lavender-mid);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+#concept .epigraph-attr .work {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 11.5px;
+  text-transform: none;
+  color: var(--dim);
+  letter-spacing: 0.05em;
+  margin-left: 6px;
+}
+#concept .concept-tech {
+  background: rgba(154,138,232,0.04);
+  border-left: 2px solid var(--lavender-mid);
+  padding: 1.1rem 1.3rem;
+  margin: 0 0 1.4rem;
+  border-radius: 0 4px 4px 0;
+}
+#concept .concept-tech .tech-label {
+  font-size: 9.5px; letter-spacing: 0.22em;
+  color: var(--lavender-mid); margin-bottom: 0.55rem; text-transform: uppercase;
+}
+#concept .concept-prose {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px; line-height: 1.65;
+  color: var(--cream); letter-spacing: 0.005em;
+  font-weight: 300;
+}
+#concept .concept-prose em {
+  color: var(--lavender);
+  font-style: italic;
+  font-weight: 400;
+}
+#concept .concept-prose .first {
+  color: var(--bright);
+  font-style: italic;
+  font-weight: 400;
+}
+#concept .concept-prose + .concept-prose { margin-top: 0.7rem; }
+
+#concept .lede {
+  color: var(--cream);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  line-height: 1.7;
+  font-weight: 300;
+  letter-spacing: 0.005em;
+  margin-bottom: 1.6rem;
+  max-width: 880px;
+}
+#concept .lede em { color: var(--lavender); font-style: italic; font-weight: 400; font-size: 17px; }
+
+#concept .hero-block {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+#concept .etymology-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+#concept .etymology {
+  padding: 0.75rem 0.9rem;
+  border-left: 2px solid var(--lavender-mid);
+  background: rgba(168, 156, 200, 0.04);
+}
+#concept .etymology .term { display: block; color: var(--lavender); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 18px; letter-spacing: 0.05em; margin-bottom: 1px; }
+#concept .etymology .origin { display: block; color: var(--muted); font-size: 8px; letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 3px; }
+#concept .etymology .gloss { display: block; color: var(--cream); font-style: italic; font-family: 'Cormorant Garamond', serif; font-size: 13px; line-height: 1.35; }
+#concept .etymology .gloss .accent { color: var(--bright); }
+
+#concept .tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 20px;
+  color: var(--lavender);
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+  margin-top: 1rem;
+}
+#concept .tagline .accent { color: var(--bright); font-weight: 500; }
+
+#concept .anim-side {
+  position: relative;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  padding: 1rem;
+  background: linear-gradient(180deg, rgba(9,14,8,0.6), rgba(9,14,8,0.95));
+  border: 1px solid var(--bor);
+  border-radius: 4px;
+  min-height: 320px;
+}
+#concept .anim-canvas { display: flex; justify-content: center; align-items: center; width: 100%; flex: 1; }
+#concept .anim-canvas svg { width: 100%; max-width: 340px; height: auto; }
+#concept .anim-tag {
+  position: absolute; top: 12px; right: 14px;
+  font-family: 'DM Mono', monospace; font-size: 8.5px;
+  letter-spacing: 0.30em; color: var(--bright);
+  text-transform: uppercase; font-weight: 500;
+}
+#concept .anim-tag .live-dot {
+  display: inline-block; width: 5px; height: 5px;
+  border-radius: 50%; background: var(--bright);
+  margin-right: 5px; animation: livePulse 1.6s ease-in-out infinite;
+}
+@keyframes livePulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+#concept .anim-caption {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--lavender);
+  letter-spacing: 0.02em;
+  text-align: center;
+  margin-top: 6px;
+}
+#concept .anim-caption .formula {
+  display: block; margin-top: 4px;
+  font-size: 8.5px; color: var(--teal);
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.04em; text-transform: none; font-style: normal;
+}
+#concept .anim-watermark {
+  position: absolute; bottom: 6px; left: 8px;
+  font-family: 'DM Mono', monospace; font-size: 7px;
+  color: var(--muted); letter-spacing: 0.18em; opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Tree animation */
+#concept .animated-tree line {
+  stroke-dasharray: 50;
+  stroke-dashoffset: 50;
+  animation: branchDraw 12s ease-out infinite;
+}
+@keyframes branchDraw {
+  0%   { stroke-dashoffset: 50; }
+  16%  { stroke-dashoffset: 0; }
+  92%  { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 50; }
+}
+#concept .animated-tree circle.leaf {
+  opacity: 0;
+  animation: leafSeasons 12s linear infinite;
+}
+@keyframes leafSeasons {
+  0%, 16%   { opacity: 0; fill: #b5cf80; }
+  20%       { opacity: 0.5; fill: #b5cf80; }
+  30%       { opacity: 0.95; fill: #b5cf80; }
+  40%       { opacity: 1; fill: #5a7d3a; }
+  60%       { opacity: 1; fill: #5a7d3a; }
+  68%       { opacity: 1; fill: #c9a961; }
+  76%       { opacity: 1; fill: #c25a48; }
+  85%       { opacity: 1; fill: #8a3540; }
+  92%       { opacity: 0; fill: #8a3540; }
+  100%      { opacity: 0; fill: #b5cf80; }
+}
+
+#concept .specimens-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--bor);
+  margin-bottom: 0.75rem;
+  border-radius: 4px;
+  overflow: hidden;
+}
+#concept .spec {
+  background: var(--sur);
+  padding: 0.85rem;
+  display: flex; flex-direction: column;
+  min-height: 230px;
+}
+#concept .spec .canvas { flex: 1; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem; min-height: 130px; }
+#concept .spec .canvas svg { width: 100%; max-height: 170px; }
+#concept .spec .primary {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 0.18em; color: var(--lavender);
+  text-transform: uppercase; font-weight: 500;
+  margin-bottom: 2px;
+}
+#concept .spec .binomial {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 12px;
+  color: var(--bright); letter-spacing: 0.01em;
+  margin-bottom: 4px;
+}
+#concept .spec .meta {
+  font-size: 8.5px; color: var(--mid);
+  line-height: 1.5; font-family: 'DM Mono', monospace;
+}
+
+@media(max-width:640px){
+  .stats{grid-template-columns:repeat(3,1fr)}
+  .g2,.g2b,.g2c{grid-template-columns:1fr}
+  .na{display:none}
+  .tab{padding:.26rem .5rem;font-size:.48rem}
+  #concept .hero-block { grid-template-columns: 1fr; }
+  #concept .etymology-row { grid-template-columns: 1fr; }
+  #concept .specimens-row { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<a class="honeypot" href="/trap.html" tabindex="-1" aria-hidden="true">do not follow</a>
+
+<nav>
+  <div class="nb">
+    <a class="nv nv-link" href="#concept" onclick="event.preventDefault(); show('concept', document.querySelector('.tab[data-panel=&quot;concept&quot;]'));">VA·NA</a>
+    <span class="ns">SymbiOS™ · v0.1 · stealth</span>
+  </div>
+  <div class="tabs">
+    <button class="tab on" data-panel="concept" onclick="show('concept',this)">CONCEPT</button>
+    <button class="tab"     data-panel="lunar" onclick="show('lunar',this)">LUNAR</button>
+    <button class="tab"     data-panel="eco-services" onclick="show('eco-services',this)">ECO SERVICES</button>
+    <a class="tab external" href="xen.html">XÉN</a>
+  </div>
+  <span class="na">Marko Manriquez · Founder · Spring 2026</span>
+</nav>
+
+<!-- Zoom modal -->
+<div id="zoom-overlay" onclick="closeZoom()">
+  <div id="zoom-box" onclick="event.stopPropagation()">
+    <div id="zoom-bar">
+      <span id="zoom-title"></span>
+      <button id="zoom-close" onclick="closeZoom()">✕ CLOSE</button>
+    </div>
+    <div id="zoom-content"></div>
+  </div>
+</div>
+
+<div id="content">
+<div class="wrap">
+
+<!-- ════════════════════════════════════════════════════════════
+     CONCEPT
+     ════════════════════════════════════════════════════════════ -->
+<div id="concept" class="panel on">
+  <div class="sl"><span>00 · CONCEPT</span></div>
+
+  <div class="epigraph">
+    <p class="epigraph-script">
+      <span>वन</span><span class="sep">·</span><span>วน</span><span class="sep">·</span><span>森林</span><span class="sep">·</span><span class="latin">FOREST</span>
+    </p>
+    <p class="epigraph-quote">"The word for world is forest."</p>
+    <p class="epigraph-attr">Ursula K. Le Guin <span class="work">novella · 1972</span></p>
+  </div>
+
+  <div class="concept-tech">
+    <div class="tech-label">PLATFORM · IN ONE PARAGRAPH</div>
+    <p class="concept-prose"><span class="first">SymbiOS™</span> is a computational design platform for ecological intelligence — a hybrid of <em>ArcGIS, BIM, and real-time climate sensing</em> built for landscape architects, urban ecologists, and planners. As a designer, it's the climate adaptation + computation software we wish we had, so we're building it ourselves.</p>
+    <p class="concept-prose"><em>VANA</em> is Module 01: a field-deployable plant intelligence database for climate-vulnerable coastal contexts across <em>SE Asia, the Middle East, and the South Pacific</em> — ground zero for the climate crisis. Species data, ecological precedent, and climate adaptation scoring. <em>At the point of need.</em></p>
+  </div>
+
+  <p class="lede">Plants are <em>fractal beings</em>; infinite at all scales. What does it sound like to listen to their leaves — to their <em>wind-song</em> — to finally begin to understand them? <em>VA·NA</em> is the nexus of computational design and living landscape. Roots and recursion, leaves and lexicons — merging procedurally, parametrically. We extract the generative grammar of living systems and expose it as a computational palette.</p>
+
+  <div class="hero-block">
+    <div>
+      <div class="etymology-row">
+        <div class="etymology">
+          <span class="term">VA·NA</span>
+          <span class="origin">Sanskrit · วนา · Thai</span>
+          <span class="gloss">"forest" · <span class="accent">"woodland"</span></span>
+        </div>
+        <div class="etymology">
+          <span class="term">XÉN</span>
+          <span class="origin">Greek · αύξεῖν · auxein</span>
+          <span class="gloss">"to grow" · <span class="accent">"to increase"</span></span>
+        </div>
+      </div>
+      <p class="tagline">A small piece of something<br/><span class="accent">considerably larger.</span></p>
+    </div>
+    <div class="anim-side">
+      <div class="anim-tag"><span class="live-dot"></span>live · 12s loop</div>
+      <div class="anim-canvas" id="concept-hero-anim"></div>
+      <div class="anim-caption">
+        Quercus rubra · annual cycle
+        <span class="formula">grow → spring → summer → autumn → winter → reset</span>
+      </div>
+      <div class="anim-watermark">© SymbiOS · 2026</div>
+    </div>
+  </div>
+
+  <div class="cl lavender" style="margin-top:1.5rem">A small sample · four specimens of an expanded compendium</div>
+  <div class="specimens-row" id="concept-specimens"></div>
+  <div style="font-size:.56rem;color:var(--dim);font-style:italic;font-family:'Cormorant Garamond',serif;text-align:center;margin-top:0.5rem">
+    See the full compendium on the <a href="xen.html" style="color:var(--bright);text-decoration:none;border-bottom:1px solid var(--bor)">XÉN</a> tab — 89 specimens, two live animations, eight algorithmic families.
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     LUNAR
+     ════════════════════════════════════════════════════════════ -->
+<div id="lunar" class="panel">
+  <div class="sl"><span>02 · LUNAR · BOTANICAL · CULTURAL CALENDAR</span></div>
+  <div style="font-size:.6rem;color:var(--body);line-height:1.9;max-width:660px;margin-bottom:1rem">
+    Lunar phases for regional SE Asia 2026 — mid-month approximation. Buddhist festivals (✦) coincide with full moons. Bloom dots show active species. Poetic notation — not navigational data.
+  </div>
+  <div class="cell" style="overflow-x:auto;margin-bottom:.75rem">
+    <div class="cl">12-Month Lunar × Botanical Calendar</div>
+    <svg id="lunar-cal" viewBox="0 0 912 185" style="width:100%;min-width:620px;height:auto"></svg>
+  </div>
+  <div class="g2">
+    <div class="cell">
+      <div class="cl gold">Buddhist & Cultural Calendar — Regional SE Asia</div>
+      <div id="cultural-events"></div>
+    </div>
+    <div class="cell">
+      <div class="cl blue">Moon Phase Reference · Botanical Rhythms</div>
+      <svg id="moon-ref" viewBox="0 0 280 310" style="width:100%;height:auto"></svg>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     ECO SERVICES
+     ════════════════════════════════════════════════════════════ -->
+<div id="eco-services" class="panel">
+  <div class="sl"><span>05 · ECOSYSTEM SERVICES INTELLIGENCE</span></div>
+  <div class="cell" style="margin-bottom:.75rem">
+    <div class="cl">Species × Ecosystem Services Dependency Web</div>
+    <div style="font-size:.56rem;color:var(--dim);margin-bottom:.5rem">Bezier chord diagram. Line weight = contribution strength. 32 connections across 10 species and 8 services.</div>
+    <svg id="chord" viewBox="0 0 840 510" style="width:100%;height:auto"></svg>
+  </div>
+  <div class="phyto-label">PHYTOREMEDIATION PERFORMANCE — ANTHROPOGENIC vs ECOLOGICAL</div>
+  <div class="g2" style="margin-bottom:.75rem">
+    <div class="cell">
+      <div class="cl coral">Anthropogenic Pollutant Remediation</div>
+      <div style="font-size:.56rem;color:var(--body);line-height:1.7;margin-bottom:.6rem">Human-origin contaminants: heavy metals, greywater, N·P runoff, VOC absorption, PM2.5, effluents, microplastics. Score 1–5.</div>
+      <svg id="radar1" viewBox="0 0 220 260" style="width:100%;height:auto"></svg>
+    </div>
+    <div class="cell">
+      <div class="cl teal">Ecological & Climate Resilience</div>
+      <div style="font-size:.56rem;color:var(--body);line-height:1.7;margin-bottom:.6rem">Mycorrhizal networks, migratory bird habitat, flood buffer, coastal saline buffering, tidal carbon cycling. Score 1–5.</div>
+      <svg id="radar2" viewBox="0 0 220 275" style="width:100%;height:auto"></svg>
+    </div>
+  </div>
+  <div class="cell">
+    <div class="cl">Ecosystem Services Performance Matrix — MEA/CICES</div>
+    <svg id="svc-table" viewBox="0 0 700 200" style="width:100%;height:auto"></svg>
+  </div>
+</div>
+
+<div class="footer">
+  <div>
+    <div class="ft1">VANA v0.1 · SymbiOS<sup style="font-size:.55rem;vertical-align:super">™</sup> Module 01</div>
+    <div class="ft-parent-brand">SymbiOS™ <span class="pipe">|</span> Inflorescence Intelligence™</div>
+    <div class="ft2">© 2026 · All rights reserved · Confidential preview — unauthorized reproduction prohibited</div>
+  </div>
+  <div style="text-align:right">
+    <div class="ft2" style="margin-bottom:2px">Stealth-stage research · incubating in Brooklyn</div>
+    <div class="ft2">Inquiries by introduction only</div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+</div><!-- /content -->
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════
+// VA·NA · SymbiOS™ demo-3b SPA
+// Engine: lifted from VANA-dashboard-v2 base + CONCEPT panel additions
+// ═══════════════════════════════════════════════════════════════════════
+
+// ─── DASHBOARD HELPERS ────────────────────────────────────────────────
+const NS='http://www.w3.org/2000/svg';
+function el(tag,attrs={},txt){
+  const e=document.createElementNS(NS,tag);
+  Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
+  if(txt!==undefined)e.textContent=txt;
+  return e;
+}
+function pol(cx,cy,r,a){return{x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)};}
+function toRad(d){return d*Math.PI/180;}
+function gauss(x,u,s){return Math.exp(-0.5*((x-u)/s)**2);}
+function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+function svgMoon(cx,cy,phase,r=8){
+  cx=parseFloat(cx); cy=parseFloat(cy); r=parseFloat(r);
+  const LIGHT='#f4eccc',DARK='#060810',rr=r-0.3;
+  const illum=0.5*(1-Math.cos(phase*2*Math.PI));
+  const g=el('g');
+  if(illum<0.03){
+    g.appendChild(el('circle',{cx,cy,r:rr,fill:DARK}));
+    g.appendChild(el('circle',{cx,cy,r:rr,fill:'none',stroke:'#252540','stroke-width':.5}));
+    return g;
+  }
+  if(illum>0.97){
+    g.appendChild(el('circle',{cx,cy,r:rr,fill:LIGHT}));
+    g.appendChild(el('circle',{cx,cy,r:rr,fill:'none',stroke:'#b8b07a','stroke-width':.5}));
+    return g;
+  }
+  const waxing=phase<0.5,termRx=Math.abs(rr*Math.cos(phase*2*Math.PI));
+  const arcSweep=waxing?1:0,termSweep=waxing?(phase>0.25?1:0):(phase>0.75?0:1);
+  const d=`M ${cx} ${(cy-rr).toFixed(2)} A ${rr} ${rr} 0 0 ${arcSweep} ${cx} ${(cy+rr).toFixed(2)} A ${termRx.toFixed(2)} ${rr} 0 0 ${termSweep} ${cx} ${(cy-rr).toFixed(2)} Z`;
+  g.appendChild(el('circle',{cx,cy,r:rr,fill:DARK}));
+  g.appendChild(el('path',{d,fill:LIGHT}));
+  g.appendChild(el('circle',{cx,cy,r:rr,fill:'none',stroke:'#3a3a5a','stroke-width':.4}));
+  return g;
+}
+function toRuns(arr){
+  if(!arr||!arr.length)return[];
+  const s=[...arr].sort((a,b)=>a-b),runs=[];
+  let st=s[0],en=s[0];
+  for(let i=1;i<s.length;i++){if(s[i]===en+1)en=s[i];else{runs.push([st,en]);st=s[i];en=s[i];}}
+  runs.push([st,en]);return runs;
+}
+
+// ─── DATA ──────────────────────────────────────────────────────────────
+const SP=[
+  {id:"pandanus", n:"Pandanus tectorius", s:"Pandanus",  c:"#2a8a5a",salt:5,drought:3,flood:4,heat:5,carbon:2,poll:1,phyto:2,optT:28,tRange:5},
+  {id:"mangrove", n:"Rhizophora mucronata",s:"Mangrove", c:"#1a6a6a",salt:5,drought:2,flood:5,heat:4,carbon:5,poll:1,phyto:5,optT:26,tRange:4},
+  {id:"terminalia",n:"Terminalia catappa", s:"Terminalia",c:"#7a6a2a",salt:4,drought:3,flood:2,heat:4,carbon:4,poll:4,phyto:2,optT:27,tRange:6},
+  {id:"bismarckia",n:"Bismarckia nobilis", s:"Bismarckia",c:"#5a7a2a",salt:4,drought:5,flood:1,heat:5,carbon:3,poll:1,phyto:1,optT:30,tRange:7},
+  {id:"plumeria",  n:"Plumeria obtusa",    s:"Plumeria", c:"#c4904a",salt:3,drought:4,flood:1,heat:4,carbon:2,poll:5,phyto:1,optT:29,tRange:6},
+  {id:"heliconia", n:"Heliconia rostrata", s:"Heliconia",c:"#c45a3a",salt:1,drought:1,flood:3,heat:4,carbon:2,poll:5,phyto:1,optT:24,tRange:3},
+  {id:"coconut",   n:"Cocos nucifera",     s:"Coconut",  c:"#c4a06a",salt:5,drought:4,flood:2,heat:5,carbon:3,poll:4,phyto:2,optT:27,tRange:6},
+  {id:"banyan",    n:"Ficus benghalensis", s:"Banyan",   c:"#3a7a3a",salt:2,drought:3,flood:2,heat:4,carbon:5,poll:3,phyto:2,optT:26,tRange:5},
+  {id:"agave",     n:"Agave attenuata",    s:"Agave",    c:"#7a9aaa",salt:3,drought:5,flood:0,heat:4,carbon:1,poll:2,phyto:1,optT:32,tRange:9},
+  {id:"papyrus",   n:"Cyperus papyrus",    s:"Papyrus",  c:"#5a8a5a",salt:1,drought:0,flood:5,heat:4,carbon:3,poll:2,phyto:5,optT:25,tRange:4},
+];
+const MAINT=[
+  {s:"Plumeria",  c:"#c4904a",bloom:[4,5,6,7,8,10],prune:[2],fertilize:[3,9],dormant:[0,1],monitor:[5,6,7]},
+  {s:"Heliconia", c:"#c45a3a",bloom:[3,4,5,6,7,8,9],prune:[],fertilize:[2,8],dormant:[],monitor:[0,1,11],water:[0,1,2,3,4,5,6,7,8,9,10,11]},
+  {s:"Mangrove",  c:"#1a6a6a",bloom:[3,4,5,6,7,8],prune:[10],fertilize:[],dormant:[],monitor:[0,1,2,10,11]},
+  {s:"Terminalia",c:"#7a6a2a",bloom:[2,3,4,8,9,10],prune:[1],fertilize:[2,7],dormant:[],monitor:[0,11]},
+  {s:"Pandanus",  c:"#2a8a5a",bloom:[0,1,2,3,4,5,6,7,8,9,10,11],prune:[3,9],fertilize:[],dormant:[],monitor:[5,6]},
+  {s:"Coconut",   c:"#c4a06a",bloom:[0,1,2,3,4,5,6,7,8,9,10,11],prune:[0,6],fertilize:[2,8],dormant:[],monitor:[4,5,9,10]},
+  {s:"Bismarckia",c:"#5a7a2a",bloom:[],prune:[9],fertilize:[2,8],dormant:[0,1,11],monitor:[0,1,11],water:[4,5,6,7,8]},
+  {s:"Banyan",    c:"#3a7a3a",bloom:[3,4],prune:[0,1],fertilize:[2,9],dormant:[],monitor:[5,6,7,8],water:[4,5,6,7]},
+  {s:"Agave",     c:"#7a9aaa",bloom:[4,5,6],prune:[],fertilize:[3],dormant:[],monitor:[0,1,2,3,4,5,6,7,8,9,10,11]},
+  {s:"Papyrus",   c:"#5a8a5a",bloom:[3,4,5,6,7,8],prune:[0,6],fertilize:[],dormant:[],monitor:[9,10],water:[0,1,2,3,4,5,6,7,8,9,10,11]},
+];
+const SVCS=[
+  {id:"carbon", label:"Carbon Seq.",  color:"#9ed855"},
+  {id:"coastal",label:"Coastal Prot.",color:"#6ab4e8"},
+  {id:"phyto",  label:"Phytoremedia.",color:"#55c4a0"},
+  {id:"storm",  label:"Stormwater",  color:"#4a9ad8"},
+  {id:"shade",  label:"Urban Cooling",color:"#e8aa8a"},
+  {id:"poll",   label:"Pollinator",  color:"#c4904a"},
+  {id:"culture",label:"Cultural",    color:"#9a8ae8"},
+  {id:"bio",    label:"Biodiversity",color:"#c45a3a"},
+];
+const CONN=[
+  ["mangrove","carbon",1.0],["mangrove","coastal",.95],["mangrove","phyto",.85],["mangrove","storm",.9],["mangrove","bio",.8],
+  ["pandanus","coastal",.9],["pandanus","storm",.5],["pandanus","bio",.6],
+  ["terminalia","shade",.85],["terminalia","carbon",.7],["terminalia","poll",.8],["terminalia","bio",.7],
+  ["coconut","coastal",.7],["coconut","culture",.9],["coconut","carbon",.5],
+  ["plumeria","poll",.9],["plumeria","culture",.85],["plumeria","shade",.4],
+  ["heliconia","poll",.9],["heliconia","bio",.7],["heliconia","storm",.3],
+  ["banyan","shade",.95],["banyan","carbon",.9],["banyan","culture",.95],["banyan","bio",.85],
+  ["papyrus","phyto",.9],["papyrus","storm",.85],["papyrus","bio",.6],
+  ["bismarckia","shade",.7],["bismarckia","culture",.6],["bismarckia","carbon",.4],
+  ["agave","coastal",.3],["agave","shade",.2],
+];
+const MONTHS=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+const MOS=["J","F","M","A","M","J","J","A","S","O","N","D"];
+const TRAITS=["salt","drought","flood","heat","carbon","poll","phyto"];
+const TRAIT_L=["Salt Tol.","Drought","Flood Tol.","Heat Tol.","Carbon","Pollinator","Phytoremedia."];
+const LUNAR=[
+  {phase:.52,event:"Makha Bucha",  thai:"มาฆบูชา",  season:"COOL / DRY",  sc:"#6ab4e8"},
+  {phase:.50,event:"Full Moon",    thai:"เพ็ญ",      season:"COOL / DRY",  sc:"#6ab4e8"},
+  {phase:.14,event:"Hot Season",   thai:"ฤดูร้อน",   season:"HOT / DRY",   sc:"#e85a3a"},
+  {phase:.50,event:"Songkran ✦",  thai:"สงกรานต์", season:"HOT / DRY",   sc:"#e85a3a"},
+  {phase:.47,event:"Visakha ✦",   thai:"วิสาขบูชา",season:"PRE-MONSOON", sc:"#c4904a"},
+  {phase:.20,event:"Monsoon",      thai:"ฝน",        season:"MONSOON",     sc:"#3a8a6a"},
+  {phase:.50,event:"Asanha ✦",    thai:"อาสาฬหบูชา",season:"MONSOON",    sc:"#3a8a6a"},
+  {phase:.73,event:"Khao Phansa", thai:"เข้าพรรษา", season:"MONSOON",     sc:"#3a8a6a"},
+  {phase:.03,event:"Peak Monsoon",thai:"มรสุม",      season:"MONSOON",     sc:"#3a8a6a"},
+  {phase:.40,event:"Ork Phansa",  thai:"ออกพรรษา", season:"TRANSITION",  sc:"#9a8ae8"},
+  {phase:.50,event:"Loi Krathong ✦",thai:"ลอยกระทง",season:"COOL STARTS",sc:"#6ab4e8"},
+  {phase:.23,event:"Cool Season", thai:"หนาว",       season:"COOL / DRY",  sc:"#6ab4e8"},
+];
+const ANTHRO_AXES=["Heavy Metals","Greywater","N·P Runoff","VOC Absorption","PM2.5","Effluents","Microplastics"];
+const ANTHRO_SP=[
+  {s:"Papyrus", c:"#5a8a5a",v:[2,5,5,2,1,3,4]},
+  {s:"Mangrove",c:"#1a6a6a",v:[4,4,3,1,2,4,3]},
+  {s:"Vetiver", c:"#8a7a2a",v:[5,3,4,1,2,5,2]},
+  {s:"Banyan",  c:"#3a7a3a",v:[1,2,2,3,5,1,1]},
+];
+const ECO_AXES=["Mycorrhizal","Migratory Bird","Flood Buffer","Saline Buffer","Biotic Filter","Carbon Cycling","Soil Microbiome"];
+const ECO_SP=[
+  {s:"Mangrove",  c:"#1a6a6a",v:[3,4,5,5,5,5,4]},
+  {s:"Pandanus",  c:"#2a8a5a",v:[3,4,3,5,3,2,3]},
+  {s:"Terminalia",c:"#7a6a2a",v:[4,5,2,2,3,2,4]},
+  {s:"Heliconia", c:"#c45a3a",v:[4,3,3,1,3,1,4]},
+  {s:"Coconut",   c:"#c4a06a",v:[2,3,2,4,2,2,3]},
+];
+const BLOOM_SP=[
+  {s:"Plumeria", c:"#c4904a",months:[4,5,6,7,8,10]},
+  {s:"Heliconia",c:"#c45a3a",months:[3,4,5,6,7,8,9]},
+  {s:"Mangrove", c:"#1a6a6a",months:[3,4,5,6,7,8]},
+  {s:"Terminalia",c:"#7a6a2a",months:[2,3,4,8,9,10]},
+  {s:"Pandanus", c:"#2a8a5a",months:[0,1,2,3,4,5,6,7,8,9,10,11]},
+];
+
+// ─── NAV ──────────────────────────────────────────────────────────────
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  if(btn) btn.classList.add('on');
+  document.getElementById('content').scrollTop=0;
+  if(history.replaceState) history.replaceState(null,'','#'+id);
+}
+// Hash-on-load: if user lands via #symbios etc., switch to that panel
+function readHash() {
+  const h = (location.hash || '').replace('#','');
+  if (!h) return;
+  const valid = ['concept','lunar','eco-services'];
+  if (valid.includes(h)) {
+    const btn = document.querySelector('.tab[data-panel="'+h+'"]');
+    show(h, btn);
+  }
+}
+
+// ─── ZOOM ─────────────────────────────────────────────────────────────
+function zoom(title,srcId){
+  document.getElementById('zoom-title').textContent=title+' · ENLARGED';
+  const src=document.getElementById(srcId);
+  const zc=document.getElementById('zoom-content');
+  zc.innerHTML='';
+  if(src){const clone=src.cloneNode(true);clone.style.width='100%';clone.style.height='auto';zc.appendChild(clone);}
+  document.getElementById('zoom-overlay').classList.add('on');
+}
+function closeZoom(){document.getElementById('zoom-overlay').classList.remove('on');}
+
+// ═══════════════════════════════════════════════════════════════════════
+// CONCEPT PANEL — Quercus hero animation + sample specimens
+// Lifted from splash; scoped to #concept
+// ═══════════════════════════════════════════════════════════════════════
+function seedRandom(seed) {
+  let s = seed >>> 0;
+  return function() {
+    s = (s + 0x6D2B79F5) | 0;
+    let t = Math.imul(s ^ s >>> 15, 1 | s);
+    t = (t + Math.imul(t ^ t >>> 7, 61 | t)) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function csSvg(w, h) {
+  const e = document.createElementNS(NS, 'svg');
+  e.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  e.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  return e;
+}
+function csLine(svg, x1, y1, x2, y2, c, w) {
+  const e = document.createElementNS(NS, 'line');
+  e.setAttribute('x1', x1.toFixed(2)); e.setAttribute('y1', y1.toFixed(2));
+  e.setAttribute('x2', x2.toFixed(2)); e.setAttribute('y2', y2.toFixed(2));
+  e.setAttribute('stroke', c); e.setAttribute('stroke-width', w);
+  e.setAttribute('stroke-linecap', 'round');
+  svg.appendChild(e); return e;
+}
+function csCircle(svg, cx, cy, r, fill, opacity) {
+  const e = document.createElementNS(NS, 'circle');
+  e.setAttribute('cx', cx.toFixed(2)); e.setAttribute('cy', cy.toFixed(2));
+  e.setAttribute('r', r.toFixed(2)); e.setAttribute('fill', fill || 'none');
+  if (opacity !== undefined) e.setAttribute('opacity', opacity);
+  svg.appendChild(e); return e;
+}
+function csPath(svg, d, stroke, fill, sw, opacity) {
+  const e = document.createElementNS(NS, 'path');
+  e.setAttribute('d', d); e.setAttribute('fill', fill || 'none');
+  if (stroke) e.setAttribute('stroke', stroke);
+  if (sw) e.setAttribute('stroke-width', sw);
+  e.setAttribute('stroke-linecap','round'); e.setAttribute('stroke-linejoin','round');
+  if (opacity !== undefined) e.setAttribute('opacity', opacity);
+  svg.appendChild(e); return e;
+}
+function drawBranch(svg, opts) {
+  const {
+    cx, cy, dir = -90, length, decay, decayJitter = 0,
+    angle, angleJitter = 0, branchCount = 2,
+    asymmetry = 0, gravityPull = 0, iterations,
+    width, widthDecay = 0.7, minWidth = 0.4,
+    color = '#7cb342', leafColor = null, leafSize = 4,
+    leafOpacity = 1, skipLeafProb = 0, rng,
+  } = opts;
+  function step(x, y, theta, len, depth, w) {
+    if (depth === 0 || len < 0.6) {
+      if (leafColor && rng() > skipLeafProb)
+        csCircle(svg, x, y, leafSize * (0.55 + rng() * 0.7), leafColor, leafOpacity);
+      return;
+    }
+    const j = (rng() - 0.5) * 2 * angleJitter;
+    const nx = x + Math.cos((theta + j) * Math.PI / 180) * len;
+    const ny = y + Math.sin((theta + j) * Math.PI / 180) * len;
+    csLine(svg, x, y, nx, ny, color, Math.max(w, minWidth).toFixed(2));
+    for (let i = 0; i < branchCount; i++) {
+      const baseAngle = branchCount === 1 ? 0 : (i - (branchCount - 1) / 2) * angle * 2;
+      const asym = asymmetry * angle * (rng() - 0.5);
+      const newDir = (theta + j) + baseAngle + asym + gravityPull;
+      const newLen = len * (decay + (rng() - 0.5) * decayJitter);
+      step(nx, ny, newDir, newLen, depth - 1, w * widthDecay);
+    }
+  }
+  step(cx, cy, dir, length, iterations, width);
+}
+
+const Q_SEASON = { branch: '#5a4a30', leaf: '#5a7d3a', leafSize: 4.2 };
+
+function drawQuercus(svg, w, h, opts = {}) {
+  const { iterations = 6, seedNum = 0x71c2, scale = 1.0, tagLeaves = false } = opts;
+  const rng = seedRandom(seedNum);
+  drawBranch(svg, {
+    cx: w/2, cy: h-10, dir: -90,
+    length: h * 0.22 * scale,
+    decay: 0.74, decayJitter: 0.10,
+    angle: 32, angleJitter: 12, branchCount: 3,
+    asymmetry: 0.4, iterations,
+    width: 4.5 * scale, widthDecay: 0.62, minWidth: 0.5,
+    color: Q_SEASON.branch, leafColor: Q_SEASON.leaf,
+    leafSize: Q_SEASON.leafSize, leafOpacity: 1.0,
+    rng
+  });
+  if (tagLeaves) svg.querySelectorAll('circle').forEach(c => c.classList.add('leaf'));
+}
+function quercusAnimated(svg, w, h) {
+  drawQuercus(svg, w, h, { iterations: 7, seedNum: 0x71c5, tagLeaves: true });
+  svg.querySelectorAll('line').forEach((line, i, all) => {
+    line.style.animationDelay = ((i / all.length) * 1.6) + 's';
+  });
+  svg.querySelectorAll('circle.leaf').forEach((leaf, i, all) => {
+    leaf.style.animationDelay = ((i / all.length) * 0.5) + 's';
+  });
+}
+
+// Sample specimen generators (compact)
+function speciesHelianthus(svg, w, h) {
+  const cx=w/2, cy=h/2;
+  for (let i=0; i<24; i++) {
+    const a=i*(360/24)*Math.PI/180;
+    const r1=Math.min(w,h)*0.36, r2=Math.min(w,h)*0.46;
+    const x1=cx+Math.cos(a)*r1, y1=cy+Math.sin(a)*r1;
+    const x2=cx+Math.cos(a)*r2, y2=cy+Math.sin(a)*r2;
+    csPath(svg, `M${x1} ${y1} Q${cx+Math.cos(a+0.04)*((r1+r2)/2)} ${cy+Math.sin(a+0.04)*((r1+r2)/2)} ${x2} ${y2} L${cx+Math.cos(a-0.04)*((r1+r2)/2)} ${cy+Math.sin(a-0.04)*((r1+r2)/2)} Z`, '#c9a961', '#c9a961', 0.5, 0.95);
+  }
+  csCircle(svg, cx, cy, Math.min(w,h)*0.36, '#3d2818', 0.95);
+  for (let i=0; i<280; i++) {
+    const a=i*137.508*Math.PI/180, r=Math.min(w,h)*0.022*Math.sqrt(i);
+    const x=cx+Math.cos(a)*r, y=cy+Math.sin(a)*r;
+    const t=i/280, rad=1.0+(1-t)*1.8;
+    csCircle(svg, x, y, rad, t<0.7?'#5a4a30':'#8b7340', 0.9);
+  }
+}
+function speciesPineCone(svg, w, h) {
+  const cx=w/2, cy=h/2;
+  for (let i=0; i<90; i++) {
+    const a=i*137.508*Math.PI/180, r=Math.min(w,h)*0.028*Math.sqrt(i);
+    const x=cx+Math.cos(a)*r, y=cy+Math.sin(a)*r;
+    const t=i/90, taper=1-Math.pow(t,1.3)*0.3, sz=(5+(1-t)*2)*taper;
+    const ang=Math.atan2(y-cy, x-cx);
+    const dx=Math.cos(ang), dy=Math.sin(ang);
+    const px=Math.cos(ang+Math.PI/2), py=Math.sin(ang+Math.PI/2);
+    csPath(svg, `M${x+dx*sz} ${y+dy*sz} L${x+px*sz*0.7} ${y+py*sz*0.7} L${x-dx*sz*0.5} ${y-dy*sz*0.5} L${x-px*sz*0.7} ${y-py*sz*0.7} Z`, '#5a4a30', '#8b7340', 0.6, 0.92);
+    csCircle(svg, x+dx*sz*0.6, y+dy*sz*0.6, 0.8, '#c9a961', 0.95);
+  }
+}
+function speciesRomanesco(svg, w, h) {
+  const cx=w/2, cy=h/2;
+  function spiral(cx, cy, n, scale, depth, rotation) {
+    for (let i=0; i<n; i++) {
+      const a=i*137.508*Math.PI/180+rotation, r=scale*Math.sqrt(i);
+      const x=cx+Math.cos(a)*r, y=cy+Math.sin(a)*r;
+      const t=i/n, sz=scale*0.95*(1-t*0.4);
+      if (depth>0 && i%3===0 && i>4) spiral(x, y, Math.floor(n*0.35), scale*0.45, depth-1, rotation+1.2);
+      else {
+        const baseColor=depth===2?'#b5cf80':(depth===1?'#7cb342':'#5a7d3a');
+        for (let k=0; k<3; k++) csCircle(svg, x, y, sz-k*sz*0.25, k===0?baseColor:'none', 0.95-k*0.15);
+      }
+    }
+  }
+  spiral(cx, cy, 60, 8, 2, 0);
+}
+function speciesOakIter(svg, w, h) {
+  drawQuercus(svg, w, h, { iterations: 5, scale: 0.85, seedNum: 0x9a01 });
+}
+
+// Hero animation render
+(function(){
+  const heroCanvas = document.getElementById('concept-hero-anim');
+  if (!heroCanvas) return;
+  const heroSvg = csSvg(360, 320);
+  heroSvg.classList.add('animated-tree');
+  heroCanvas.appendChild(heroSvg);
+  quercusAnimated(heroSvg, 360, 320);
+})();
+
+// Sample specimens render
+(function(){
+  const cont = document.getElementById('concept-specimens');
+  if (!cont) return;
+  const samples = [
+    { primary:'SUNFLOWER', binomial:'Helianthus annuus', meta:'280 seeds · θ = 137.508°', fn: speciesHelianthus },
+    { primary:'PINE CONE', binomial:'Pinus strobus', meta:'90 scales · 8/13 parastichies', fn: speciesPineCone },
+    { primary:'ROMANESCO', binomial:'Brassica oleracea botrytis', meta:'recursive · depth = 2', fn: speciesRomanesco },
+    { primary:'RED OAK', binomial:'Quercus rubra', meta:'F → F[+F][−F][≈F] · n = 5', fn: speciesOakIter },
+  ];
+  samples.forEach(sm => {
+    const div = document.createElement('div');
+    div.className = 'spec';
+    const canvas = document.createElement('div');
+    canvas.className = 'canvas';
+    const svg = csSvg(180, 220);
+    canvas.appendChild(svg);
+    div.appendChild(canvas);
+    div.insertAdjacentHTML('beforeend', `
+      <div class="primary">${sm.primary}</div>
+      <div class="binomial">${sm.binomial}</div>
+      <div class="meta">${sm.meta}</div>
+    `);
+    cont.appendChild(div);
+    sm.fn(svg, 180, 220);
+  });
+})();
+
+// ═══════════════════════════════════════════════════════════════════════
+// DASHBOARD PANEL RENDERERS — lifted verbatim from dashboard-v2
+// ═══════════════════════════════════════════════════════════════════════
+
+
+// ─── ECO SERVICES: CHORD ──────────────────────────────────────────────
+(function(){
+  const svg=document.getElementById('chord');
+  if(!svg) return;
+  const W=840,H=510,CX=305,CY=250,CR=196,RL=232;
+  const spPos=SP.map((sp,i)=>{const a=toRad(197+i*15);return{...sp,a,...pol(CX,CY,CR,a),la:pol(CX,CY,RL,a)};});
+  const svPos=SVCS.map((sv,i)=>{const a=toRad(18+i*20.5);return{...sv,a,...pol(CX,CY,CR,a),la:pol(CX,CY,RL+8,a)};});
+  const spMap=Object.fromEntries(spPos.map(s=>[s.id,s]));
+  const svMap=Object.fromEntries(svPos.map(s=>[s.id,s]));
+  svg.appendChild(el('circle',{cx:CX,cy:CY,r:CR,fill:'none',stroke:'#1a2a19','stroke-width':.6}));
+  svg.appendChild(el('circle',{cx:CX,cy:CY,r:CR+12,fill:'none',stroke:'#1a2a19','stroke-width':.3,'stroke-dasharray':'3 5'}));
+  svg.appendChild(el('circle',{cx:CX,cy:CY,r:40,fill:'#090e08',stroke:'#1a2a19','stroke-width':.5}));
+  CONN.forEach(([spId,svId,str])=>{
+    const sp=spMap[spId],sv=svMap[svId];if(!sp||!sv)return;
+    const cp1=pol(CX,CY,CR*.12,sp.a),cp2=pol(CX,CY,CR*.12,sv.a);
+    svg.appendChild(el('path',{d:`M ${sp.x.toFixed(1)} ${sp.y.toFixed(1)} C ${cp1.x.toFixed(1)} ${cp1.y.toFixed(1)} ${cp2.x.toFixed(1)} ${cp2.y.toFixed(1)} ${sv.x.toFixed(1)} ${sv.y.toFixed(1)}`,fill:'none',stroke:sv.color,'stroke-width':clamp(str*3.5,.5,4).toFixed(1),'stroke-opacity':clamp(str*.65,.08,.65).toFixed(2)}));
+  });
+  svPos.forEach(sv=>{
+    svg.appendChild(el('circle',{cx:sv.x.toFixed(1),cy:sv.y.toFixed(1),r:9,fill:sv.color+'20',stroke:sv.color,'stroke-width':1.2}));
+    svg.appendChild(el('text',{x:sv.la.x.toFixed(1),y:sv.la.y.toFixed(1),'text-anchor':sv.la.x<CX?'end':'start','dominant-baseline':'central',fill:sv.color,'font-size':10,'font-family':'DM Mono','letter-spacing':'.05em'},sv.label));
+  });
+  spPos.forEach(sp=>{
+    svg.appendChild(el('circle',{cx:sp.x.toFixed(1),cy:sp.y.toFixed(1),r:8,fill:sp.c+'22',stroke:sp.c,'stroke-width':1}));
+    const ta=sp.la.x<CX-20?'end':sp.la.x>CX+20?'start':'middle';
+    const db=sp.la.y<CY?'auto':'hanging';
+    svg.appendChild(el('text',{x:sp.la.x.toFixed(1),y:sp.la.y.toFixed(1),'text-anchor':ta,'dominant-baseline':db,fill:sp.c,'font-size':9,'font-family':'DM Mono','font-style':'italic'},sp.s));
+  });
+  svg.appendChild(el('text',{x:CX,y:CY-12,'text-anchor':'middle',fill:'#3a5a38','font-size':10,'font-family':'DM Mono','letter-spacing':'.18em'},'SPECIES'));
+  svg.appendChild(el('text',{x:CX,y:CY+2,'text-anchor':'middle',fill:'#2a4a28','font-size':9,'font-family':'DM Mono'},'× ECO SERVICES'));
+  svg.appendChild(el('text',{x:575,y:18,fill:'#4a6a48','font-size':8.5,'font-family':'DM Mono','letter-spacing':'.15em'},'SPECIES'));
+  spPos.forEach((sp,i)=>{
+    svg.appendChild(el('circle',{cx:578,cy:35+i*23,r:6,fill:sp.c+'20',stroke:sp.c,'stroke-width':.8}));
+    svg.appendChild(el('text',{x:589,y:35+i*23,'dominant-baseline':'central',fill:sp.c,'font-size':8.5,'font-family':'DM Mono','font-style':'italic'},sp.s));
+  });
+  svg.appendChild(el('text',{x:575,y:275,fill:'#4a6a48','font-size':8.5,'font-family':'DM Mono','letter-spacing':'.15em'},'ECO SERVICES'));
+  svPos.forEach((sv,i)=>{
+    svg.appendChild(el('rect',{x:575,y:289+i*23,width:10,height:10,rx:2,fill:sv.color,opacity:.55}));
+    svg.appendChild(el('text',{x:589,y:294+i*23,'dominant-baseline':'central',fill:sv.color,'font-size':8.5,'font-family':'DM Mono'},sv.label));
+  });
+})();
+
+// ─── ECO SERVICES: RADAR ──────────────────────────────────────────────
+function drawRadar(svgId,axes,species,size=220){
+  const svg=document.getElementById(svgId);
+  if(!svg) return;
+  const CX=size/2,CY=size/2,R=size*.30,N=axes.length;
+  function pts(r){return Array.from({length:N},(_,i)=>{const a=(i/N)*2*Math.PI-Math.PI/2,p=pol(CX,CY,r,a);return`${p.x.toFixed(1)},${p.y.toFixed(1)}`;}).join(' ');}
+  [1,2,3,4,5].forEach(ring=>svg.appendChild(el('polygon',{points:pts(ring/5*R),fill:'none',stroke:'#1a2a19','stroke-width':ring===5?.8:.4})));
+  axes.forEach((ax,i)=>{
+    const a=(i/N)*2*Math.PI-Math.PI/2,ep=pol(CX,CY,R,a),lp=pol(CX,CY,R+26,a);
+    const anchor=lp.x<CX-8?'end':lp.x>CX+8?'start':'middle';
+    svg.appendChild(el('line',{x1:CX,y1:CY,x2:ep.x.toFixed(1),y2:ep.y.toFixed(1),stroke:'#1e2e1d','stroke-width':.5}));
+    ax.split(' ').forEach((w,wi)=>svg.appendChild(el('text',{x:lp.x.toFixed(1),y:(lp.y+(wi-(ax.split(' ').length-1)/2)*8.5).toFixed(1),'text-anchor':anchor,'dominant-baseline':'central',fill:'#3a5a38','font-size':6.5,'font-family':'DM Mono'},w)));
+  });
+  species.forEach(sp=>{
+    const d=sp.v.map((v,i)=>{const a=(i/N)*2*Math.PI-Math.PI/2,p=pol(CX,CY,(v/5)*R,a);return`${i===0?'M':'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`;}).join(' ')+' Z';
+    svg.appendChild(el('path',{d,fill:sp.c+'18',stroke:sp.c,'stroke-width':1.1,'stroke-opacity':.9}));
+  });
+  species.forEach((sp,i)=>{
+    svg.appendChild(el('rect',{x:4,y:size+6+i*14,width:10,height:6,rx:1.5,fill:sp.c,opacity:.7}));
+    svg.appendChild(el('text',{x:18,y:size+9+i*14,'dominant-baseline':'central',fill:sp.c,'font-size':7.5,'font-family':'DM Mono','font-style':'italic',opacity:.9},sp.s));
+  });
+}
+drawRadar('radar1',ANTHRO_AXES,ANTHRO_SP);
+drawRadar('radar2',ECO_AXES,ECO_SP);
+
+// ─── ECO SERVICES: TABLE ──────────────────────────────────────────────
+(function(){
+  const svg=document.getElementById('svc-table');
+  if(!svg) return;
+  const rows=[
+    {cat:"REGULATING",color:"#9ed855",items:["Carbon sequestration — Mangrove, Banyan, Terminalia, Coconut","Stormwater management — Papyrus, Mangrove, Pandanus","Urban heat mitigation — Banyan, Terminalia","Coastal protection — Mangrove, Pandanus, Coconut"]},
+    {cat:"SUPPORTING",color:"#6ab4e8",items:["Pollinator habitat — Plumeria, Heliconia, Terminalia","Soil stabilization — Mangrove, Pandanus, Coconut","Biodiversity keystone — Banyan, Terminalia","Nutrient cycling — Terminalia, Mangrove"]},
+    {cat:"PROVISIONING",color:"#e8aa8a",items:["Phytoremediation — Papyrus, Mangrove","Tidal water filtration — Mangrove fringe","Erosion control — Pandanus, Mangrove","ESG / carbon credits — Mangrove, Banyan"]},
+    {cat:"CULTURAL",color:"#9a8ae8",items:["Spiritual / heritage — Banyan, Plumeria, Coconut","SITES / LEED — native species all categories","Wellbeing + biophilic design","Post-occupancy resilience"]},
+  ];
+  const colW=700/4;
+  rows.forEach((row,ci)=>{
+    const x=ci*colW;
+    svg.appendChild(el('text',{x:x+4,y:14,'font-size':8,'font-family':'DM Mono','font-weight':500,fill:row.color,'letter-spacing':'.1em'},row.cat));
+    svg.appendChild(el('line',{x1:x,y1:18,x2:x+colW-2,y2:18,stroke:row.color,'stroke-width':.5,'stroke-opacity':.5}));
+    row.items.forEach((item,j)=>{
+      const y=28+j*42,text1=item.split(' — ')[0],text2=item.split(' — ')[1]||'';
+      svg.appendChild(el('text',{x:x+4,y:y,'font-size':7.5,'font-family':'DM Mono',fill:row.color},text1));
+      if(text2) svg.appendChild(el('text',{x:x+4,y:y+11,'font-size':7,'font-family':'DM Mono',fill:'#5a7a58'},text2));
+      svg.appendChild(el('line',{x1:x+2,y1:y+16,x2:x+colW-4,y2:y+16,stroke:'#1a2a19','stroke-width':.3}));
+    });
+  });
+})();
+
+// Apply hash-on-load AFTER all panels are rendered
+readHash();
+window.addEventListener('hashchange', readHash);
+</script>
+</body>
+</html>
