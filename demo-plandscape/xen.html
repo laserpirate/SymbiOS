@@ -1,38 +1,3322 @@
 <!DOCTYPE html>
+<!--
+  ============================================================
+  VA·NA · SymbiOS™ · Module 02 · XÉN · expanded compendium
+  ============================================================
+  A demonstration that botanical form is computational form.
+  Every specimen on this page is procedurally generated from
+  a small set of rules and parameters.
+
+  Algorithms demonstrated:
+    · L-systems (deterministic + stochastic)
+    · Phyllotaxis (golden angle, Fibonacci parastichies)
+    · Recursive subdivision (Romanesco, ferns)
+    · Voronoi-derivative venation
+    · Space colonization (Runions / Palubicki)
+    · Diffusion-limited aggregation (lichens, mycorrhizae)
+    · Reaction-diffusion approximation (leaf patterns)
+    · Hallé-Oldeman architectural models (6 of 23)
+
+  All randomness is seeded → reproducible specimens.
+  ============================================================
+  © 2026 SymbiOS™ | Inflorescence Intelligence™
+  All rights reserved · Confidential · Unlisted preview
+-->
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>XĒN · Compendium · SymbiOS™</title>
-<meta http-equiv="refresh" content="0; url=../demo-plandscape/xen.html"/>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>VA·NA · XÉN — unlisted preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:#090e08;color:#c8c0b0;font-family:'DM Mono',monospace;
-  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;text-align:center}
-.wrap{max-width:520px}
-.glyph{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:6rem;color:#d8d4be;line-height:1;margin-bottom:1rem;letter-spacing:.05em}
-.msg{font-family:'Cormorant Garamond',serif;font-style:italic;color:#6a8a68;font-size:1.1rem;line-height:1.7;margin-bottom:1.5rem}
-.btn{display:inline-flex;gap:.5rem;align-items:center;background:#0d160c;border:1px solid #1e2e1d;
-  border-radius:3px;padding:.6rem 1rem;color:#9ed855;text-decoration:none;
-  font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.13em;transition:all .15s}
-.btn:hover{background:#1a2e1a;border-color:#2a4a28}
-.foot{margin-top:2.5rem;font-family:'Cormorant Garamond',serif;font-style:italic;color:#a89cc8;font-size:.9rem}
-.foot-meta{font-family:'DM Mono',monospace;font-size:.46rem;color:#2a4a28;letter-spacing:.14em;font-style:normal;margin-top:.4rem}
+:root {
+  --bg: #0a1410;
+  --green-primary: #7cb342;
+  --green-soft: #8fbc66;
+  --green-light: #b5cf80;
+  --green-mid: #6a9a3a;
+  --green-dark: #2d4a2b;
+  --green-blue: #4a8a78;
+  --sage: #9aae88;
+  --silver-green: #b8c2a8;
+  --olive: #6a7838;
+  --amber: #c9a961;
+  --amber-soft: #d8bb78;
+  --amber-dark: #8b7340;
+  --gold-pale: #d8d4be;
+  --red-accent: #a04030;
+  --red-soft: #c25a48;
+  --crimson: #8a3540;
+  --rose: #b07090;
+  --plum: #6a4a6e;
+  --root-color: #8b7340;
+  --root-soft: #a89060;
+  --bark-brown: #5a4a30;
+  /* Accent colors for plant common names — lavender/periwinkle, chromatically aligned with greens */
+  --lavender: #c4b5e0;          /* bright primary for common names */
+  --lavender-mid: #a89cc8;
+  --periwinkle: #9aa8d4;
+  --text-primary: #d8e0d0;       /* brightened from #c8d4be for legibility */
+  --text-secondary: #a8b8a4;     /* new — for meta/captions */
+  --text-muted: #7a8870;         /* brightened from #5a6b54 */
+  --text-faint: #5a6b54;         /* brightened from #3d4a39 */
+  --line: rgba(124, 179, 66, 0.10);
+  --line-strong: rgba(124, 179, 66, 0.22);
+}
+
+/* === IP PROTECTION LAYER (Tier 2 · unlisted preview) === */
+/* Protections.md tracks every toggle. Disable by removing this block. */
+.lede, .tagline, .etymology, .section-intro, .anim-caption {
+  -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+}
+/* Honeypot — invisible link to flag scrapers. */
+.honeypot { position: absolute; left: -9999px; top: -9999px; opacity: 0; pointer-events: none; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  background: var(--bg); color: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; line-height: 1.65; letter-spacing: 0.02em;
+}
+header.top {
+  display: grid; grid-template-columns: auto 1fr auto;
+  align-items: center; padding: 18px 36px;
+  border-bottom: 1px solid var(--line); gap: 32px;
+  position: sticky; top: 0; z-index: 10;
+  background: rgba(10,20,16,0.92); backdrop-filter: blur(8px);
+}
+.brand { font-family: 'Cormorant Garamond', serif; font-size: 24px; letter-spacing: 0.18em; font-weight: 500; }
+.brand-link { color: inherit; text-decoration: none; transition: color 0.2s, text-shadow 0.2s; }
+.brand-link:hover { color: var(--lavender); text-shadow: 0 0 16px rgba(196,181,224,0.25); }
+.brand .module { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-muted); letter-spacing: 0.18em; margin-left: 14px; }
+nav.tabs { display: flex; justify-content: center; gap: 18px; font-size: 10px; letter-spacing: 0.18em; flex-wrap: wrap; }
+nav.tabs a { color: var(--text-muted); text-decoration: none; padding: 5px 0; transition: color 0.2s; }
+nav.tabs a:hover { color: var(--green-soft); }
+nav.tabs a.active { color: var(--green-primary); background: rgba(124,179,66,0.08); padding: 5px 10px; border: 1px solid var(--green-primary); }
+.author { font-size: 10px; color: var(--text-muted); letter-spacing: 0.10em; text-align: right; }
+main { max-width: 1440px; margin: 0 auto; padding: 64px 60px 100px; }
+h1.section-title { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 56px; line-height: 1.08; margin-bottom: 28px; color: var(--text-primary); }
+p.lede { color: var(--text-primary); font-size: 14px; max-width: 1000px; margin-bottom: 64px; line-height: 1.7; }
+p.lede em, p.lede .greek { color: var(--lavender); font-style: italic; font-family: 'Cormorant Garamond', serif; font-size: 17px; }
+p.lede .greek { font-style: normal; }
+.section-header {
+  display: flex; align-items: baseline; gap: 14px;
+  font-size: 11px; letter-spacing: 0.26em; color: var(--lavender-mid);
+  margin: 72px 0 18px; text-transform: uppercase;
+  font-weight: 500;
+}
+.section-header .meta { color: var(--text-muted); letter-spacing: 0.12em; margin-left: 8px; font-size: 11px; text-transform: none; font-style: italic; font-family: 'Cormorant Garamond', serif; }
+.section-header::after { content: ''; flex: 1; height: 1px; background: var(--line-strong); align-self: center; margin-left: 14px; }
+.section-intro { color: var(--text-primary); font-size: 13px; max-width: 880px; margin-bottom: 28px; line-height: 1.75; }
+.section-intro em { color: var(--lavender); font-style: italic; font-family: 'Cormorant Garamond', serif; font-size: 16px; }
+.section-formula {
+  display: inline-block;
+  margin-bottom: 28px;
+  padding: 10px 16px;
+  border: 1px solid var(--line-strong);
+  background: rgba(74, 138, 120, 0.06);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  color: var(--green-blue);
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+}
+.section-formula .label-tag {
+  color: var(--text-muted);
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-right: 10px;
+}
+.section-formula .var-name { color: var(--amber); }
+.section-formula .arrow { color: var(--green-soft); padding: 0 4px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line-strong); }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line-strong); }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line-strong); }
+.grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--line-strong); }
+.specimen { background: var(--bg); padding: 24px; display: flex; flex-direction: column; position: relative; min-height: 340px; }
+.specimen.tall { min-height: 400px; }
+.specimen .canvas { flex: 1; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; min-height: 180px; }
+.specimen .canvas svg { width: 100%; max-height: 320px; display: block; }
+/* === LABEL BLOCK — designed for 50+ year-old reading-glasses legibility === */
+.specimen .label { margin-bottom: 6px; }
+.specimen .label .primary {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  color: var(--lavender);             /* bright lavender — the common name pops */
+  text-transform: uppercase;
+  font-weight: 500;
+  line-height: 1.3;
+  margin-bottom: 3px;
+}
+.specimen .label .binomial {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 16px;                    /* larger serif italic — clearly the Latin binomial */
+  color: var(--green-soft);
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+.specimen .label .descriptor {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+}
+.specimen .meta {
+  font-size: 11px;                    /* bumped from 9px → 11px */
+  color: var(--text-muted);
+  margin-top: 8px;
+  line-height: 1.5;
+  font-family: 'JetBrains Mono', monospace;
+}
+.specimen .meta .arrow { color: var(--green-mid); }
+.specimen .meta .num { color: var(--amber); }
+.specimen .meta .formula {
+  display: block;
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+  color: var(--green-blue);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+}
+.specimen .badge {
+  position: absolute; top: 16px; right: 16px;
+  font-size: 9px; letter-spacing: 0.20em; padding: 3px 8px;     /* bumped from 7.5px */
+  border: 1px solid var(--line-strong); color: var(--text-secondary);
+  text-transform: uppercase; background: rgba(10,20,16,0.7);
+  font-weight: 500;
+}
+.specimen .badge.native { color: #a8d878; border-color: var(--green-primary); }
+.specimen .badge.introduced { color: #e0c87a; border-color: var(--amber); }
+.specimen .badge.invasive { color: #d87060; border-color: var(--red-soft); }
+.specimen .badge.tropical { color: var(--amber-soft); border-color: var(--amber); }
+.specimen .badge.algorithm { color: #88c8b8; border-color: var(--green-blue); }
+.specimen .badge.arid { color: var(--amber-soft); border-color: var(--amber); }
+.specimen .badge.epiphyte { color: #d8d4be; border-color: var(--silver-green); }
+.specimen .badge.lifecycle { color: var(--lavender); border-color: var(--lavender-mid); }
+
+/* ============ GROWTH STAGES + SEASONAL ANIMATION ============ */
+/* Showcase tree — Quercus rubra animated through growth + 4 seasons.
+   Demonstrates VVIM voxels are DYNAMIC representations,
+   not static models. */
+.specimen.lifecycle { min-height: 360px; }
+.specimen.lifecycle .canvas { min-height: 220px; }
+.specimen.lifecycle .stage-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--lavender);
+  margin-bottom: 4px;
+  letter-spacing: 0.02em;
+}
+.specimen.lifecycle .stage-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--green-soft);
+  text-transform: uppercase;
+}
+.specimen.lifecycle .meta { margin-top: 10px; }
+
+/* Growing animation — strokes draw in, leaves bloom, seasons cycle, leaves drop.
+   12-second loop: grow (0-2s) → spring (2-4s) → summer (4-6s) → fall (6-9s) → winter (9-11s) → reset */
+.animated-tree line {
+  stroke-dasharray: 50;
+  stroke-dashoffset: 50;
+  animation: branchDraw 12s ease-out infinite;
+}
+@keyframes branchDraw {
+  0%      { stroke-dashoffset: 50; }
+  16%     { stroke-dashoffset: 0; }
+  92%     { stroke-dashoffset: 0; }
+  100%    { stroke-dashoffset: 50; }
+}
+.animated-tree circle.leaf {
+  opacity: 0;
+  animation: leafSeasons 12s linear infinite;
+}
+@keyframes leafSeasons {
+  0%, 16%   { opacity: 0; fill: #b5cf80; }                          /* not yet — still growing */
+  20%       { opacity: 0.5; fill: #b5cf80; }                         /* spring buds */
+  30%       { opacity: 0.95; fill: #b5cf80; }                        /* spring full */
+  40%       { opacity: 1; fill: #5a7d3a; }                            /* summer — deep green */
+  60%       { opacity: 1; fill: #5a7d3a; }
+  68%       { opacity: 1; fill: #c9a961; }                            /* early fall — amber */
+  76%       { opacity: 1; fill: #c25a48; }                            /* peak fall — crimson */
+  85%       { opacity: 1; fill: #8a3540; }                            /* late fall — brown red */
+  92%       { opacity: 0; fill: #8a3540; }                            /* winter — leaves dropped */
+  100%      { opacity: 0; fill: #b5cf80; }
+}
+/* Seasonal label cycles through season names */
+.season-indicator {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--lavender);
+  letter-spacing: 0.02em;
+  z-index: 2;
+  pointer-events: none;
+}
+.season-indicator .season-text {
+  display: inline-block;
+  animation: seasonText 12s linear infinite;
+}
+@keyframes seasonText {
+  0%, 14%    { content: 'sprouting'; opacity: 0.5; }
+  16%, 35%   { opacity: 1; }
+  /* keyframes for content swap handled via JS */
+}
+
+/* ============ HERO SECTION ============ */
+.hero {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 64px;
+  align-items: stretch;
+  margin-bottom: 64px;
+  padding-bottom: 56px;
+  border-bottom: 1px solid var(--line-strong);
+}
+.hero .text-side { padding-top: 8px; display: flex; flex-direction: column; }
+.hero .text-side h1.section-title { margin-bottom: 28px; }
+.hero .text-side .lede { margin-bottom: 32px; }
+.hero .anim-side {
+  position: relative;
+  background: rgba(124, 179, 66, 0.025);
+  border: 1px solid var(--line-strong);
+  padding: 36px 24px 26px;
+  min-height: 460px;
+  display: flex;
+  flex-direction: column;
+}
+.hero .anim-side .anim-canvas {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 0;
+}
+.hero .anim-side .anim-canvas svg {
+  width: 100%;
+  height: 100%;
+  max-height: 380px;
+}
+.hero .anim-tag {
+  position: absolute;
+  top: 14px;
+  left: 22px;
+  font-size: 10px;
+  letter-spacing: 0.30em;
+  color: var(--green-soft);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.hero .anim-tag .live-dot {
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green-primary);
+  margin-right: 6px;
+  animation: livePulse 1.6s ease-in-out infinite;
+}
+@keyframes livePulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+.hero .anim-caption {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 17px;
+  color: var(--lavender);
+  letter-spacing: 0.02em;
+  text-align: center;
+  margin-top: 8px;
+}
+.hero .anim-caption .formula {
+  display: block;
+  margin-top: 6px;
+  font-size: 10.5px;
+  color: var(--green-blue);
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  font-style: normal;
+}
+
+/* Etymology blocks */
+.etymology-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+.etymology {
+  padding: 14px 18px;
+  border-left: 2px solid var(--lavender-mid);
+  background: rgba(168, 156, 200, 0.05);
+  line-height: 1.55;
+}
+.etymology .term {
+  display: block;
+  color: var(--lavender);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 22px;
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
+.etymology .origin {
+  display: block;
+  color: var(--text-muted);
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.etymology .gloss {
+  display: block;
+  color: var(--text-primary);
+  font-style: italic;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  line-height: 1.4;
+}
+.etymology .gloss .accent {
+  color: var(--green-soft);
+}
+
+/* Tagline */
+.tagline {
+  margin-top: auto;
+  padding-top: 24px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 32px;
+  color: var(--lavender);
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+.tagline .pause {
+  color: var(--green-soft);
+  margin: 0 4px;
+}
+.tagline .accent {
+  color: var(--green-soft);
+  font-weight: 500;
+}
+
+/* ============ ITERATION ROW ANIMATION ============ */
+/* Each iteration cell's tree grows in, leaves appear, hold, reset.
+   Cascading delay across cells (n=1 first, n=5 last) — feels like a wave. */
+.iter-cell svg line.iter-stroke {
+  stroke-dasharray: 50;
+  stroke-dashoffset: 50;
+  animation: iterDraw 6s ease-out infinite;
+}
+.iter-cell svg circle.iter-leaf {
+  opacity: 0;
+  animation: iterLeaf 6s ease-out infinite;
+}
+@keyframes iterDraw {
+  0%, 4%   { stroke-dashoffset: 50; }
+  22%      { stroke-dashoffset: 0; }
+  88%      { stroke-dashoffset: 0; }
+  100%     { stroke-dashoffset: 50; }
+}
+@keyframes iterLeaf {
+  0%, 22%  { opacity: 0; }
+  35%      { opacity: 0.92; }
+  88%      { opacity: 0.92; }
+  100%     { opacity: 0; }
+}
+
+/* ============ MIMOSA PUDICA FOLDING ============ */
+/* The "shy plant" — leaflets fold visibly on a slow cycle.
+   Demonstrates VANA can model behavior, not just morphology. */
+.mimosa-leaflet {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: mimosaFold 9s ease-in-out infinite;
+}
+@keyframes mimosaFold {
+  0%, 30%  { transform: scaleY(1); opacity: 0.92; }
+  42%      { transform: scaleY(0.5); opacity: 0.75; }
+  52%      { transform: scaleY(0.12); opacity: 0.5; }
+  68%      { transform: scaleY(0.12); opacity: 0.5; }
+  82%      { transform: scaleY(0.55); opacity: 0.75; }
+  92%, 100%{ transform: scaleY(1); opacity: 0.92; }
+}
+.mimosa-touched-tag {
+  position: absolute;
+  bottom: 14px; right: 14px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--lavender);
+  letter-spacing: 0.02em;
+  animation: mimosaTagFade 9s ease-in-out infinite;
+}
+@keyframes mimosaTagFade {
+  0%, 35%   { opacity: 0; transform: translateY(4px); }
+  48%, 65%  { opacity: 1; transform: translateY(0); }
+  82%, 100% { opacity: 0; transform: translateY(4px); }
+}
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; gap: 36px; }
+  .hero .anim-side { min-height: 380px; }
+  .etymology-row { grid-template-columns: 1fr; }
+  .tagline { font-size: 26px; }
+}
+@media (max-width: 640px) {
+  header.top {
+    position: relative;
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 10px 14px;
+  }
+  .brand { font-size: 17px; letter-spacing: 0.12em; }
+  .brand .module { display: none; }
+  nav.tabs {
+    gap: 10px;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    justify-content: flex-start;
+  }
+  nav.tabs a { padding: 3px 0; }
+  nav.tabs a.active { padding: 3px 7px; }
+  .author { display: none; }
+  footer.coda { flex-direction: column; gap: 16px; }
+}
+.iter-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--line-strong); }
+.iter-cell { background: var(--bg); padding: 20px; display: flex; flex-direction: column; min-height: 260px; }
+.iter-cell .iter-num { font-size: 11px; letter-spacing: 0.20em; color: var(--lavender); margin-bottom: 6px; font-weight: 500; }
+.iter-cell .iter-num .arrow { color: var(--text-faint); }
+.iter-cell .canvas { flex: 1; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 10px; }
+.iter-cell .canvas svg { width: 100%; max-height: 180px; }
+.iter-cell .meta { font-size: 11px; color: var(--text-secondary); }
+.specimen.root .canvas { align-items: flex-start; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line-strong); }
+.specimen.full { min-height: 600px; padding: 26px; }
+.specimen.full .canvas-stack { flex: 1; display: flex; flex-direction: column; }
+.specimen.full .canopy, .specimen.full .roots { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 200px; }
+.specimen.full .canopy svg, .specimen.full .roots svg { width: 100%; max-height: 260px; }
+.specimen.full .canopy svg { align-self: flex-end; }
+.specimen.full .roots svg { align-self: flex-start; }
+.specimen.full .divider { height: 1px; background: var(--line-strong); position: relative; margin: 6px 0 4px; }
+.specimen.full .divider::before { content: 'soil line · gravity flip ↓'; position: absolute; right: 0; top: -16px; font-size: 7.5px; letter-spacing: 0.22em; color: var(--text-faint); text-transform: uppercase; }
+footer.coda { margin-top: 96px; padding-top: 32px; border-top: 1px solid var(--line); font-size: 13px; color: var(--text-secondary); display: flex; justify-content: space-between; gap: 32px; line-height: 1.7; }
+footer.coda em { color: var(--lavender); font-style: italic; font-family: 'Cormorant Garamond', serif; font-size: 16px; }
+footer.coda .stats { font-size: 10.5px; letter-spacing: 0.16em; color: var(--text-muted); }
+footer.coda .parent-line {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.9;
+}
+footer.coda .parent-line .parent-brand {
+  display: inline-block;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  color: var(--lavender);
+  text-transform: none;
+  margin-bottom: 2px;
+}
+footer.coda .parent-line .pipe {
+  color: var(--green-mid);
+  margin: 0 4px;
+  font-style: normal;
+  opacity: 0.7;
+}
+@media (max-width: 1100px) { .grid-5 { grid-template-columns: repeat(3, 1fr); } .grid-4 { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 720px) { main { padding: 32px 16px 60px; } h1.section-title { font-size: 36px; } .grid-5, .grid-4, .grid-3 { grid-template-columns: 1fr 1fr; } .grid-2, .pair { grid-template-columns: 1fr; } .iter-row { grid-template-columns: 1fr 1fr; } }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="glyph">XĒN</div>
-  <p class="msg">Redirecting to the compendium…<br>89 specimens · morphology · venation · architecture</p>
-  <a class="btn" href="../demo-plandscape/xen.html">OPEN COMPENDIUM →</a>
-  <div style="margin-top:.7rem">
-    <a class="btn" href="index.html" style="color:#3a5a38;border-color:#1a2a19">← BACK TO COMPANION</a>
-  </div>
-  <div class="foot">
-    SymbiOS™ &nbsp;|&nbsp; Inflorescence Intelligence™
-    <div class="foot-meta">© 2026 · ALL RIGHTS RESERVED</div>
-  </div>
-</div>
+<a class="honeypot" href="/trap.html" tabindex="-1" aria-hidden="true">do not follow</a>
+
+<header class="top">
+  <div class="brand"><a class="brand-link" href="index.html#concept">VA·NA</a> <span class="module">SymbiOS™ · Module 02 · XÉN expanded</span></div>
+  <nav class="tabs">
+    <a href="index.html#concept">CONCEPT</a><a href="index.html#symbios">SYMBIOS</a><a href="index.html#lunar">LUNAR</a><a href="index.html#maintenance">MAINTENANCE</a><a href="index.html#field-data">FIELD DATA / IoT</a><a href="index.html#eco-services">ECO SERVICES</a><a href="xen.html" class="active">XÉN</a>
+  </nav>
+  <div class="author">Marko Manriquez</div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="text-side">
+      <h1 class="section-title">Botanical systems<br/>as design source code.</h1>
+      <p class="lede">Plants are <em>fractal beings</em>; infinite at all scales. What does it sound like to listen to their leaves and <em>wind-song</em> — to finally begin to understand them...? <em>XÉN</em> is the nexus of computational design and living landscapes (ecologies) — roots and recursion, leaves and lexicons, merging procedurally and parametrically. It extracts the generative grammar of living systems and exposes it as a computational palette — a few iterations, a few parameter knobs, and form emerges. Mirror it about the soil line, reverse the gravity vector, and you have the rhizosphere.</p>
+      <div class="etymology-row">
+        <div class="etymology">
+          <span class="term">VA·NA</span>
+          <span class="origin">Sanskrit · วนา · Thai</span>
+          <span class="gloss">"forest" · <span class="accent">"woodland"</span></span>
+        </div>
+        <div class="etymology">
+          <span class="term">XÉN</span>
+          <span class="origin">Greek · αύξεῖν · auxein</span>
+          <span class="gloss">"to grow" · <span class="accent">"to increase"</span></span>
+        </div>
+      </div>
+      <div class="tagline">One algorithm.<span class="pause"> · </span><br/><span class="accent">Many fractal forests.</span></div>
+    </div>
+    <div class="anim-side">
+      <div class="anim-tag"><span class="live-dot"></span>live · 12s loop</div>
+      <div class="anim-canvas" id="hero-anim-canvas"></div>
+      <div class="anim-caption">Quercus rubra · annual cycle
+        <span class="formula">grow → spring → summer → autumn → winter → reset</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-header">Generative Iteration <span class="meta">F → F[+F][−F]F · θ=22.5° · n=1…5</span></div>
+  <div class="section-intro">A single rule, applied to itself five times. The first axiom is a stem. By the fifth substitution, a tree. <em>The grammar was always there</em> — iteration just makes it legible.</div>
+  <div class="iter-row" id="iter-row"></div>
+
+  <div class="section-header">Algorithmic Families <span class="meta">six computational primitives</span></div>
+  <div class="section-intro">Plants are not all built the same way. <em>L-systems</em> handle recursive branching. <em>Phyllotaxis</em> distributes seeds with the golden angle. <em>Voronoi</em> derivatives govern leaf venation. <em>Space colonization</em> grows trees toward light. <em>Diffusion-limited aggregation</em> draws lichen. <em>Reaction-diffusion</em> patterns leaf spots. Each family is a fundamentally different computation.</div>
+  <div class="grid-3" id="algo-families"></div>
+
+  <div class="section-header">Phyllotactic Systems <span class="meta">φ = 137.508° · same equation across scales</span></div>
+  <div class="section-intro">The golden angle distributes leaves on a stem, seeds on a sunflower, scales on a pinecone, florets on a romanesco — and the same equation produces all of them. <em>Scale changes; the rule does not.</em></div>
+  <div class="grid-3" id="phyllotaxis"></div>
+
+  <div class="section-header">Leaf Venation Atlas <span class="meta">vascular grammar · 5 topologies</span></div>
+  <div class="grid-5" id="venation"></div>
+
+  <div class="section-header">Architectural Models <span class="meta">Hallé · Oldeman · Tomlinson 1978 · 6 of 23</span></div>
+  <div class="section-intro">Three botanists discovered the world's trees fall into 23 discrete architectural classes. <em>Tree form is a finite enumeration</em>, not a continuum.</div>
+  <div class="grid-3" id="architectural"></div>
+
+  <div class="section-header">Lifecycle Modeling <span class="meta">growth stages · seasonal cycle · animated</span></div>
+  <div class="section-intro">Most parametric tree models you can buy are <em>static snapshots</em>. VVIM voxels are dynamic — the same grammar runs forward in time. Increase iteration count → the tree ages. Cycle leaf parameters → the seasons turn. Below: <em>Quercus rubra</em> (Red Oak) at five life stages, then four seasons, then a <em>live animation</em> of the full annual cycle.</div>
+  <div class="section-formula"><span class="label-tag">Quercus rubra · L-system grammar</span><span class="var-name">F</span> <span class="arrow">→</span> F[<span class="var-name">+</span>F][<span class="var-name">−</span>F][<span class="var-name">≈</span>F] <span class="arrow">·</span> θ = 32° <span class="arrow">·</span> ε ∈ [−12°, +12°] <span class="arrow">·</span> n ∈ {0…7} = age</div>
+
+  <div class="section-header">Growth Stages <span class="meta">n = 0 → 7 · time as iteration depth</span></div>
+  <div class="grid-5" id="growth-stages"></div>
+
+  <div class="section-header">Seasonal Cycle <span class="meta">same n = 7 mature tree · leaf parameters cycle</span></div>
+  <div class="grid-4" id="seasonal-cycle"></div>
+
+  <div class="section-header">Animated · live cycle <span class="meta">12-second loop · grow → spring → summer → fall → winter</span></div>
+  <div class="grid-2" id="animated-showcase"></div>
+
+  <div class="section-header">Arboreal Typologies <span class="meta">nine species · same recursion · different parameter manifolds</span></div>
+  <div class="grid-3" id="arboreal"></div>
+
+  <div class="section-header">Understory & Shrub Strata</div>
+  <div class="grid-4" id="understory"></div>
+
+  <div class="section-header">Vine & Climbing Systems <span class="meta">non-self-supporting · stochastic search</span></div>
+  <div class="grid-4" id="vines"></div>
+
+  <div class="section-header">Curiosa · Reactive Forms <span class="meta">behavioral specimens · plants as little machines</span></div>
+  <div class="section-intro">Most botanical models simulate <em>shape</em>. These three model <em>behavior</em>. Mimosa folds when touched. Nepenthes digests its prey. Phragmites colonizes everything within reach. <em>Form is grammar; behavior is grammar in motion.</em></div>
+  <div class="grid-3" id="curiosa"></div>
+
+  <div class="section-header">Cactus & Succulent <span class="meta">arid morphologies · stem-as-photosynthate</span></div>
+  <div class="grid-4" id="arid"></div>
+
+  <div class="section-header">Epiphytes & Air Plants <span class="meta">soil-decoupled · canopy-dwellers</span></div>
+  <div class="section-intro">Epiphytes drop the soil constraint entirely. They live on bark, on branches, on power lines — drawing moisture from air, nutrients from rain. The algorithm changes: <em>no taproot, no fibrous mat</em>. Holdfasts replace anchors. Aerial roots replace water-seeking laterals. The whole rhizospheric subroutine is bypassed.</div>
+  <div class="grid-4" id="epiphytes"></div>
+
+  <div class="section-header">Inflorescence Atlas <span class="meta">eight flower-arrangement topologies</span></div>
+  <div class="grid-4" id="inflorescence"></div>
+
+  <div class="section-header">Rhizospheric Architecture <span class="meta">canopy mirrored · gravity reversed · F → F⁻¹</span></div>
+  <div class="section-intro">Each root system is the canopy code with one parameter inverted: gravity bias. Where leaves bend up toward light, roots bend down toward water. <em>Same algorithm, opposite sign.</em></div>
+  <div class="grid-3" id="roots"></div>
+
+  <div class="section-header">Mycorrhizal Networks <span class="meta">DLA fractals · the wood-wide web</span></div>
+  <div class="section-intro">Below the soil line, fungi connect trees. The drawing algorithm is <em>diffusion-limited aggregation</em> — random walkers stuck on contact, repeated. Same physics builds lichens, mineral dendrites, and the network beneath every forest.</div>
+  <div class="grid-3" id="mycelium"></div>
+
+  <div class="section-header">Native / Invasive · Comparative Stack <span class="meta">Rumney Marsh case · canopy + rhizosphere</span></div>
+  <div class="section-intro">Applied case: two grasses competing in a New England salt marsh. Different parameter sets in the same grammar. <em>One built the marsh. One is dismantling it.</em></div>
+  <div class="pair" id="comparison"></div>
+
+  <footer class="coda">
+    <div>
+      Each pattern <em>parametric</em>. Adjust grammar → regenerate form. Export as SVG · DXF · 3D mesh for Rhino · Grasshopper · ArcGIS Pro.
+      <div class="parent-line">
+        <span class="parent-brand">SymbiOS™ <span class="pipe">|</span> Inflorescence Intelligence™</span><br/>
+        © 2026 · All rights reserved · Confidential preview — unauthorized reproduction prohibited
+      </div>
+    </div>
+    <div class="stats">89 SPECIMENS · 8 ALGORITHMIC FAMILIES · 2 LIVE ANIMATIONS · vana · xén · 2026</div>
+  </footer>
+</main>
+
+<script>
+// ============================================================
+// VANA · XÉN · botanical pattern generators
+// ============================================================
+const NS = 'http://www.w3.org/2000/svg';
+
+// --- seeded PRNG (mulberry32) for reproducible specimens
+function seedRandom(seed) {
+  let s = seed >>> 0;
+  return function() {
+    s = (s + 0x6D2B79F5) | 0;
+    let t = Math.imul(s ^ s >>> 15, 1 | s);
+    t = (t + Math.imul(t ^ t >>> 7, 61 | t)) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+// --- SVG element helpers
+function svgEl(w, h) {
+  const el = document.createElementNS(NS, 'svg');
+  el.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  el.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  return el;
+}
+function L(svg, x1, y1, x2, y2, c, w, o) {
+  const el = document.createElementNS(NS, 'line');
+  el.setAttribute('x1', x1.toFixed(2)); el.setAttribute('y1', y1.toFixed(2));
+  el.setAttribute('x2', x2.toFixed(2)); el.setAttribute('y2', y2.toFixed(2));
+  el.setAttribute('stroke', c); el.setAttribute('stroke-width', w);
+  el.setAttribute('stroke-linecap', 'round');
+  if (o !== undefined) el.setAttribute('opacity', o);
+  svg.appendChild(el); return el;
+}
+function C(svg, cx, cy, r, fill, stroke, sw, o) {
+  const el = document.createElementNS(NS, 'circle');
+  el.setAttribute('cx', cx.toFixed(2)); el.setAttribute('cy', cy.toFixed(2));
+  el.setAttribute('r', r.toFixed(2));
+  el.setAttribute('fill', fill || 'none');
+  if (stroke) el.setAttribute('stroke', stroke);
+  if (sw) el.setAttribute('stroke-width', sw);
+  if (o !== undefined) el.setAttribute('opacity', o);
+  svg.appendChild(el); return el;
+}
+function P(svg, d, stroke, fill, sw, o) {
+  const el = document.createElementNS(NS, 'path');
+  el.setAttribute('d', d);
+  el.setAttribute('fill', fill || 'none');
+  if (stroke) el.setAttribute('stroke', stroke);
+  if (sw) el.setAttribute('stroke-width', sw);
+  el.setAttribute('stroke-linecap', 'round');
+  el.setAttribute('stroke-linejoin', 'round');
+  if (o !== undefined) el.setAttribute('opacity', o);
+  svg.appendChild(el); return el;
+}
+function E(svg, cx, cy, rx, ry, rot, fill, stroke, sw, o) {
+  const el = document.createElementNS(NS, 'ellipse');
+  el.setAttribute('cx', cx); el.setAttribute('cy', cy);
+  el.setAttribute('rx', rx); el.setAttribute('ry', ry);
+  if (rot) el.setAttribute('transform', `rotate(${rot} ${cx} ${cy})`);
+  el.setAttribute('fill', fill || 'none');
+  if (stroke) el.setAttribute('stroke', stroke);
+  if (sw) el.setAttribute('stroke-width', sw);
+  if (o !== undefined) el.setAttribute('opacity', o);
+  svg.appendChild(el); return el;
+}
+
+// ============================================================
+// CORE: UNIVERSAL RECURSIVE BRANCH (L-system kernel)
+// All trees, shrubs, and roots route through here.
+// Species emerge by tuning the parameter manifold.
+// ============================================================
+function drawBranch(svg, opts) {
+  const {
+    cx, cy, dir = -90, length, decay, decayJitter = 0,
+    angle, angleJitter = 0, branchCount = 2,
+    asymmetry = 0, gravityPull = 0, iterations,
+    width, widthDecay = 0.7, minWidth = 0.4,
+    color = '#7cb342', leafColor = null, leafSize = 4,
+    leafOpacity = 1, skipLeafProb = 0, rng,
+  } = opts;
+  function step(x, y, theta, len, depth, w) {
+    if (depth === 0 || len < 0.6) {
+      if (leafColor && rng() > skipLeafProb)
+        C(svg, x, y, leafSize * (0.55 + rng() * 0.7), leafColor, null, null, leafOpacity);
+      return;
+    }
+    const j = (rng() - 0.5) * 2 * angleJitter;
+    const nx = x + Math.cos((theta + j) * Math.PI / 180) * len;
+    const ny = y + Math.sin((theta + j) * Math.PI / 180) * len;
+    L(svg, x, y, nx, ny, color, Math.max(w, minWidth).toFixed(2));
+    for (let i = 0; i < branchCount; i++) {
+      const baseAngle = branchCount === 1 ? 0 : (i - (branchCount - 1) / 2) * angle * 2;
+      const asym = asymmetry * angle * (rng() - 0.5);
+      const newDir = (theta + j) + baseAngle + asym + gravityPull;
+      const newLen = len * (decay + (rng() - 0.5) * decayJitter);
+      step(nx, ny, newDir, newLen, depth - 1, w * widthDecay);
+    }
+  }
+  step(cx, cy, dir, length, iterations, width);
+}
+
+// ============================================================
+// ENGINE: PHYLLOTAXIS (golden angle)
+// ============================================================
+function phyllotaxis(svg, opts) {
+  const { cx, cy, n, angle = 137.508, scale, render } = opts;
+  for (let i = 0; i < n; i++) {
+    const a = i * angle * Math.PI / 180;
+    const r = scale * Math.sqrt(i);
+    const x = cx + Math.cos(a) * r;
+    const y = cy + Math.sin(a) * r;
+    render(x, y, i, n, a, r);
+  }
+}
+
+// ============================================================
+// ENGINE: DIFFUSION-LIMITED AGGREGATION
+// ============================================================
+function dla(svg, opts) {
+  const { cx, cy, particles = 400, radius = 80, drawColor, lineWidth = 0.7, opacity = 0.85, rng, seedPoints = null } = opts;
+  const stuck = seedPoints ? [...seedPoints] : [{x: cx, y: cy, parent: null}];
+  for (let p = 0; p < particles; p++) {
+    let a = rng() * Math.PI * 2;
+    let r = radius * 0.95;
+    let x = cx + Math.cos(a) * r;
+    let y = cy + Math.sin(a) * r;
+    let steps = 0;
+    while (steps < 800) {
+      x += (rng() - 0.5) * 2.4;
+      y += (rng() - 0.5) * 2.4;
+      const dr = Math.sqrt((x - cx) ** 2 + (y - cy) ** 2);
+      if (dr > radius) {
+        a = rng() * Math.PI * 2;
+        x = cx + Math.cos(a) * radius * 0.95;
+        y = cy + Math.sin(a) * radius * 0.95;
+      }
+      let nearest = null, nd = Infinity;
+      for (const s of stuck) {
+        const d = (s.x - x) ** 2 + (s.y - y) ** 2;
+        if (d < nd) { nd = d; nearest = s; }
+      }
+      if (nd < 4) {
+        const np = { x, y, parent: nearest };
+        stuck.push(np);
+        L(svg, nearest.x, nearest.y, x, y, drawColor, lineWidth, opacity);
+        break;
+      }
+      steps++;
+    }
+  }
+  return stuck;
+}
+
+// ============================================================
+// ENGINE: SPACE COLONIZATION (Runions-style tree)
+// ============================================================
+function spaceColonize(svg, opts) {
+  const {
+    cx, cy, attractors, rootDir = -90, segLen = 4,
+    influence = 30, kill = 4, iterations = 80,
+    color, lineWidth = 1.2, leafColor, rng
+  } = opts;
+  const nodes = [{ x: cx, y: cy, parent: null, dir: rootDir }];
+  let attrs = attractors.slice();
+  for (let it = 0; it < iterations && attrs.length > 0; it++) {
+    const influenced = new Map();
+    for (let ai = attrs.length - 1; ai >= 0; ai--) {
+      const a = attrs[ai];
+      let nearest = null, nd = Infinity, nIdx = -1;
+      for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
+        const d = Math.sqrt((n.x - a.x) ** 2 + (n.y - a.y) ** 2);
+        if (d < nd) { nd = d; nearest = n; nIdx = i; }
+      }
+      if (nd < kill) { attrs.splice(ai, 1); continue; }
+      if (nd < influence) {
+        if (!influenced.has(nIdx)) influenced.set(nIdx, { node: nearest, dx: 0, dy: 0, count: 0 });
+        const info = influenced.get(nIdx);
+        info.dx += (a.x - nearest.x) / nd;
+        info.dy += (a.y - nearest.y) / nd;
+        info.count++;
+      }
+    }
+    if (influenced.size === 0) break;
+    influenced.forEach(info => {
+      const len = Math.sqrt(info.dx ** 2 + info.dy ** 2);
+      if (len < 1e-4) return;
+      const nx = info.node.x + (info.dx / len) * segLen;
+      const ny = info.node.y + (info.dy / len) * segLen;
+      const newNode = { x: nx, y: ny, parent: info.node };
+      nodes.push(newNode);
+      L(svg, info.node.x, info.node.y, nx, ny, color, lineWidth, 0.92);
+    });
+  }
+  return nodes;
+}
+
+// ============================================================
+// ITERATION DEMO (n=1..5)
+// ============================================================
+function speciesIteration(svg, w, h, n) {
+  const rng = seedRandom(0xa1 + n);
+  drawBranch(svg, {
+    cx: w / 2, cy: h - 14, dir: -90,
+    length: Math.min(28, h * 0.18),
+    decay: 0.72, decayJitter: 0.04,
+    angle: 22.5, angleJitter: 2,
+    branchCount: 2, iterations: n,
+    width: 2.4, widthDecay: 0.68, color: '#7cb342',
+    leafColor: n >= 4 ? '#b5cf80' : null, leafSize: 1.6, rng
+  });
+}
+
+// ============================================================
+// ALGORITHMIC FAMILIES
+// ============================================================
+
+// 1. L-SYSTEM
+function algoLSystem(svg, w, h) {
+  const rng = seedRandom(0x101);
+  drawBranch(svg, {
+    cx: w/2, cy: h-12, dir: -90,
+    length: h*0.22, decay: 0.74, decayJitter: 0.03,
+    angle: 25, angleJitter: 4, branchCount: 2,
+    iterations: 6, width: 2.6, widthDecay: 0.66,
+    color: '#5a7d3a', leafColor: '#7cb342', leafSize: 1.8, rng
+  });
+}
+
+// 2. PHYLLOTAXIS — golden angle disc
+function algoPhyllotaxis(svg, w, h) {
+  const cx = w/2, cy = h/2;
+  phyllotaxis(svg, {
+    cx, cy, n: 220, angle: 137.508, scale: 6.5,
+    render: (x, y, i, n) => {
+      const t = i / n;
+      const r = 1.2 + (1 - t) * 3.2;
+      const fill = t < 0.5 ? '#c9a961' : (t < 0.85 ? '#8fbc66' : '#7cb342');
+      C(svg, x, y, r, fill, null, null, 0.9);
+    }
+  });
+}
+
+// 3. VORONOI — k-NN graph on point cloud (leaf venation approximation)
+function algoVoronoi(svg, w, h) {
+  const rng = seedRandom(0x303);
+  const points = [];
+  const N = 60;
+  const cx = w/2, cy = h/2;
+  for (let i = 0; i < N; i++) {
+    let x, y, attempts = 0;
+    do {
+      x = cx + (rng() - 0.5) * w * 0.85;
+      y = cy + (rng() - 0.5) * h * 0.7;
+      attempts++;
+    } while (((x-cx)/(w*0.42))**2 + ((y-cy)/(h*0.36))**2 > 1 && attempts < 30);
+    points.push({x, y});
+  }
+  E(svg, cx, cy, w*0.42, h*0.36, 0, 'rgba(124,179,66,0.05)', '#5a7d3a', 0.8, 0.9);
+  L(svg, cx - w*0.4, cy, cx + w*0.4, cy, '#5a7d3a', 1.4, 0.85);
+  for (let i = 0; i < N; i++) {
+    const p = points[i];
+    const dists = points.map((q, j) => ({j, d: (p.x-q.x)**2 + (p.y-q.y)**2})).sort((a,b)=>a.d-b.d);
+    for (let k = 1; k <= 3; k++) {
+      if (dists[k]) {
+        const q = points[dists[k].j];
+        L(svg, p.x, p.y, q.x, q.y, '#7cb342', 0.5, 0.55);
+      }
+    }
+    C(svg, p.x, p.y, 0.9, '#b5cf80', null, null, 0.7);
+  }
+}
+
+// 4. SPACE COLONIZATION
+function algoSpaceCol(svg, w, h) {
+  const rng = seedRandom(0x404);
+  const attrs = [];
+  for (let i = 0; i < 220; i++) {
+    const a = rng() * Math.PI;
+    const r = rng() * w * 0.36;
+    const x = w/2 + Math.cos(a + Math.PI) * r * (1 + rng()*0.4);
+    const y = h*0.4 + Math.sin(a + Math.PI) * r * 0.7;
+    attrs.push({x, y});
+    C(svg, x, y, 0.8, '#3d4a39', null, null, 0.6);
+  }
+  spaceColonize(svg, {
+    cx: w/2, cy: h-10, attractors: attrs,
+    segLen: 3.5, influence: 28, kill: 3.5, iterations: 90,
+    color: '#5a7d3a', lineWidth: 1.0, leafColor: '#7cb342', rng
+  });
+}
+
+// 5. DLA
+function algoDLA(svg, w, h) {
+  const rng = seedRandom(0x505);
+  dla(svg, {
+    cx: w/2, cy: h/2, particles: 320, radius: Math.min(w,h)*0.42,
+    drawColor: '#9aae88', lineWidth: 0.7, opacity: 0.85, rng
+  });
+  C(svg, w/2, h/2, 1.4, '#b5cf80', null, null, 0.95);
+}
+
+// 6. REACTION-DIFFUSION (Turing approximation)
+function algoReactionDiff(svg, w, h) {
+  const rng = seedRandom(0x606);
+  const pts = [];
+  const minD = 8, maxAttempts = 30;
+  for (let i = 0; i < 600; i++) {
+    let ok = false, x, y;
+    for (let a = 0; a < maxAttempts && !ok; a++) {
+      x = rng() * w; y = rng() * h;
+      ok = true;
+      for (const p of pts) {
+        if ((p.x-x)**2 + (p.y-y)**2 < minD*minD) { ok = false; break; }
+      }
+    }
+    if (ok) pts.push({x, y});
+  }
+  const bg = document.createElementNS(NS, 'rect');
+  bg.setAttribute('x', 0); bg.setAttribute('y', 0);
+  bg.setAttribute('width', w); bg.setAttribute('height', h);
+  bg.setAttribute('fill', 'rgba(90,125,58,0.15)');
+  svg.appendChild(bg);
+  pts.forEach(p => {
+    const sz = 2.5 + rng() * 3.5;
+    C(svg, p.x, p.y, sz, '#c9a961', '#8b7340', 0.4, 0.85);
+    if (rng() > 0.6) C(svg, p.x, p.y, sz * 0.4, '#5a4a30', null, null, 0.9);
+  });
+}
+
+// ============================================================
+// PHYLLOTACTIC SYSTEMS
+// ============================================================
+
+function speciesHelianthus(svg, w, h) {
+  const cx = w/2, cy = h/2;
+  for (let i = 0; i < 24; i++) {
+    const a = i * (360/24) * Math.PI/180;
+    const r1 = Math.min(w,h)*0.36, r2 = Math.min(w,h)*0.46;
+    const x1 = cx+Math.cos(a)*r1, y1 = cy+Math.sin(a)*r1;
+    const x2 = cx+Math.cos(a)*r2, y2 = cy+Math.sin(a)*r2;
+    P(svg, `M${x1} ${y1} Q${cx+Math.cos(a+0.04)*((r1+r2)/2)} ${cy+Math.sin(a+0.04)*((r1+r2)/2)} ${x2} ${y2} L${cx+Math.cos(a-0.04)*((r1+r2)/2)} ${cy+Math.sin(a-0.04)*((r1+r2)/2)} Z`, '#c9a961', '#c9a961', 0.5, 0.95);
+  }
+  C(svg, cx, cy, Math.min(w,h)*0.36, '#3d2818', null, null, 0.95);
+  phyllotaxis(svg, {
+    cx, cy, n: 280, angle: 137.508, scale: Math.min(w,h)*0.022,
+    render: (x, y, i, n) => {
+      const t = i / n;
+      const r = 1.0 + (1 - t) * 1.8;
+      C(svg, x, y, r, t < 0.7 ? '#5a4a30' : '#8b7340', null, null, 0.9);
+    }
+  });
+}
+
+function speciesPineCone(svg, w, h) {
+  const cx = w/2, cy = h/2;
+  phyllotaxis(svg, {
+    cx, cy, n: 90, angle: 137.508, scale: Math.min(w,h)*0.028,
+    render: (x, y, i, n) => {
+      const t = i / n;
+      const taper = 1 - Math.pow(t, 1.3) * 0.3;
+      const sz = (5 + (1-t)*2) * taper;
+      const a = Math.atan2(y-cy, x-cx);
+      const dx = Math.cos(a), dy = Math.sin(a);
+      const px = Math.cos(a + Math.PI/2), py = Math.sin(a + Math.PI/2);
+      const tip = `${x+dx*sz} ${y+dy*sz}`;
+      const left = `${x+px*sz*0.7} ${y+py*sz*0.7}`;
+      const back = `${x-dx*sz*0.5} ${y-dy*sz*0.5}`;
+      const right = `${x-px*sz*0.7} ${y-py*sz*0.7}`;
+      P(svg, `M${tip} L${left} L${back} L${right} Z`, '#5a4a30', '#8b7340', 0.6, 0.92);
+      C(svg, x+dx*sz*0.6, y+dy*sz*0.6, 0.8, '#c9a961', null, null, 0.95);
+    }
+  });
+}
+
+function speciesAnanas(svg, w, h) {
+  const cx = w/2, cy = h*0.55;
+  const cols = 14, rows = 16;
+  const bodyW = w*0.5, bodyH = h*0.7;
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const offset = r % 2 === 0 ? 0 : 0.5;
+      const x = cx - bodyW/2 + (c + offset) * (bodyW/cols);
+      const y = cy - bodyH/2 + r * (bodyH/rows) + 4;
+      const t = (r+1) / rows;
+      const taperX = Math.sin(t * Math.PI) * 0.85 + 0.15;
+      const dx = (x - cx) * taperX + cx;
+      if (Math.abs(dx - cx) > bodyW/2 * taperX) continue;
+      const sz = 6;
+      P(svg, `M${dx} ${y-sz/2} L${dx+sz/2} ${y} L${dx} ${y+sz/2} L${dx-sz/2} ${y} Z`, '#6a7838', '#c9a961', 0.5, 0.92);
+      C(svg, dx, y, 0.6, '#c9a961', null, null);
+    }
+  }
+  const rng = seedRandom(0x707);
+  const crownTop = cy - bodyH/2;
+  for (let i = 0; i < 12; i++) {
+    const a = -90 + (i - 5.5) * 14 + (rng()-0.5)*8;
+    const len = 28 + rng()*12;
+    const tipX = cx + Math.cos(a*Math.PI/180) * len;
+    const tipY = crownTop + Math.sin(a*Math.PI/180) * len;
+    P(svg, `M${cx} ${crownTop} Q${cx+Math.cos((a+5)*Math.PI/180)*len*0.5} ${crownTop+Math.sin((a+5)*Math.PI/180)*len*0.5} ${tipX} ${tipY}`, '#5a7d3a', null, 1.6, 0.9);
+  }
+}
+
+function speciesRomanesco(svg, w, h) {
+  const cx = w/2, cy = h/2;
+  function spiral(cx, cy, n, scale, depth, rotation) {
+    for (let i = 0; i < n; i++) {
+      const a = i * 137.508 * Math.PI/180 + rotation;
+      const r = scale * Math.sqrt(i);
+      const x = cx + Math.cos(a) * r;
+      const y = cy + Math.sin(a) * r;
+      const t = i / n;
+      const sz = scale * 0.95 * (1 - t * 0.4);
+      if (depth > 0 && i % 3 === 0 && i > 4) {
+        spiral(x, y, Math.floor(n*0.35), scale*0.45, depth-1, rotation + 1.2);
+      } else {
+        const baseColor = depth === 2 ? '#b5cf80' : (depth === 1 ? '#7cb342' : '#5a7d3a');
+        for (let k = 0; k < 3; k++) {
+          C(svg, x, y, sz - k*sz*0.25, k === 0 ? baseColor : 'none', '#3d4a2a', 0.4, 0.95-k*0.15);
+        }
+      }
+    }
+  }
+  spiral(cx, cy, 60, 8, 2, 0);
+}
+
+function speciesAloe(svg, w, h) {
+  const cx = w/2, cy = h/2;
+  const N = 50;
+  for (let i = 0; i < N; i++) {
+    const a = i * 137.508 * Math.PI / 180;
+    const r = Math.min(w,h) * 0.04 + Math.sqrt(i) * Math.min(w,h) * 0.038;
+    const x = cx + Math.cos(a) * r;
+    const y = cy + Math.sin(a) * r;
+    if (r > Math.min(w,h)*0.42) continue;
+    const len = 24 - r*0.18;
+    if (len < 4) continue;
+    const tipX = cx + Math.cos(a) * (r + len);
+    const tipY = cy + Math.sin(a) * (r + len);
+    const px = -Math.sin(a), py = Math.cos(a);
+    const wd = 4;
+    P(svg, `M${x+px*wd} ${y+py*wd} L${tipX} ${tipY} L${x-px*wd} ${y-py*wd} Z`, '#6a9a3a', '#3d4a2a', 0.5, 0.85);
+    for (let t = 0.3; t < 1; t += 0.18) {
+      const tx = x + (tipX - x) * t;
+      const ty = y + (tipY - y) * t;
+      C(svg, tx + px*(wd*(1-t)), ty + py*(wd*(1-t)), 0.6, '#c9a961', null, null, 0.9);
+    }
+  }
+  C(svg, cx, cy, 4, '#5a7d3a', null, null);
+}
+
+function speciesEcheveria(svg, w, h) {
+  const cx = w/2, cy = h/2;
+  const rings = [
+    { count: 14, r: 38, sz: 14, color: '#9aae88' },
+    { count: 11, r: 26, sz: 12, color: '#a8be96' },
+    { count: 8,  r: 16, sz: 9,  color: '#b8c8a4' },
+    { count: 5,  r: 7,  sz: 6,  color: '#c8d4be' },
+  ];
+  rings.forEach((ring, ri) => {
+    const offset = ri * Math.PI / ring.count;
+    for (let i = 0; i < ring.count; i++) {
+      const a = i * 2*Math.PI / ring.count + offset;
+      const x = cx + Math.cos(a) * ring.r;
+      const y = cy + Math.sin(a) * ring.r;
+      const tipX = cx + Math.cos(a) * (ring.r + ring.sz);
+      const tipY = cy + Math.sin(a) * (ring.r + ring.sz);
+      const px = -Math.sin(a), py = Math.cos(a);
+      const wd = ring.sz * 0.55;
+      P(svg, `M${x} ${y} Q${tipX-px*wd*0.3} ${tipY-py*wd*0.3} ${tipX} ${tipY} Q${tipX+px*wd*0.3} ${tipY+py*wd*0.3} ${x} ${y} Z`, ring.color, '#5a7d3a', 0.5, 0.92);
+      C(svg, tipX, tipY, 1.2, '#a04030', null, null, 0.7);
+    }
+  });
+  C(svg, cx, cy, 2.5, '#5a7d3a', null, null);
+}
+
+// ============================================================
+// LEAF VENATION
+// ============================================================
+function venationPinnate(svg, w, h) {
+  const cx = w/2, cy = h/2;
+  P(svg, `M${cx-w*0.36} ${cy} Q${cx-w*0.32} ${cy-h*0.36} ${cx} ${cy-h*0.42} Q${cx+w*0.32} ${cy-h*0.36} ${cx+w*0.36} ${cy} Q${cx+w*0.32} ${cy+h*0.36} ${cx} ${cy+h*0.42} Q${cx-w*0.32} ${cy+h*0.36} ${cx-w*0.36} ${cy} Z`, '#5a7d3a', 'rgba(124,179,66,0.06)', 1.0, 0.95);
+  L(svg, cx, cy-h*0.40, cx, cy+h*0.40, '#5a7d3a', 1.4, 0.92);
+  const ribs = 9;
+  for (let i = 0; i < ribs; i++) {
+    const t = i / (ribs-1);
+    const y = cy - h*0.34 + t * h*0.68;
+    const taper = Math.sin(t * Math.PI);
+    const reach = w*0.30 * taper;
+    const side = i % 2 === 0 ? 1 : -1;
+    P(svg, `M${cx} ${y} Q${cx + side*reach*0.5} ${y + reach*0.15} ${cx + side*reach} ${y + reach*0.18}`, '#7cb342', null, 0.8, 0.85);
+    P(svg, `M${cx} ${y+4} Q${cx - side*reach*0.5} ${y+4 + reach*0.15} ${cx - side*reach} ${y+4 + reach*0.18}`, '#7cb342', null, 0.8, 0.85);
+  }
+}
+
+function venationPalmate(svg, w, h) {
+  const cx = w/2, cy = h*0.55;
+  const lobes = 5;
+  let path = '';
+  for (let i = 0; i <= lobes*8; i++) {
+    const t = i / (lobes*8);
+    const a = -Math.PI/2 + (t * Math.PI*0.85 - Math.PI*0.42);
+    const r = h*0.4 * (0.7 + 0.3 * Math.cos(lobes * (a + Math.PI/2)));
+    const x = cx + Math.cos(a) * r;
+    const y = cy + Math.sin(a) * r;
+    path += (i === 0 ? 'M' : 'L') + `${x.toFixed(1)} ${y.toFixed(1)} `;
+  }
+  P(svg, path + 'Z', '#5a7d3a', 'rgba(124,179,66,0.06)', 1.0, 0.92);
+  for (let i = 0; i < 5; i++) {
+    const a = -Math.PI/2 + (i - 2) * 0.55;
+    const r = h*0.34;
+    const tx = cx + Math.cos(a) * r;
+    const ty = cy + Math.sin(a) * r;
+    L(svg, cx, cy, tx, ty, '#7cb342', 1.2, 0.9);
+    for (let j = 1; j < 4; j++) {
+      const t = j/4;
+      const px = cx + (tx-cx)*t, py = cy + (ty-cy)*t;
+      const perpAng = Math.atan2(ty-cy, tx-cx) + Math.PI/2;
+      const sublen = 8 * (1 - t);
+      L(svg, px, py, px + Math.cos(perpAng)*sublen, py + Math.sin(perpAng)*sublen, '#8fbc66', 0.5, 0.7);
+      L(svg, px, py, px - Math.cos(perpAng)*sublen, py - Math.sin(perpAng)*sublen, '#8fbc66', 0.5, 0.7);
+    }
+  }
+  L(svg, cx, cy, cx, cy + h*0.12, '#5a4a30', 1.6);
+}
+
+function venationParallel(svg, w, h) {
+  const cx = w/2, cy = h/2;
+  P(svg, `M${cx-w*0.12} ${cy-h*0.42} Q${cx} ${cy-h*0.45} ${cx+w*0.12} ${cy-h*0.42} Q${cx+w*0.18} ${cy} ${cx+w*0.10} ${cy+h*0.42} Q${cx} ${cy+h*0.45} ${cx-w*0.10} ${cy+h*0.42} Q${cx-w*0.18} ${cy} ${cx-w*0.12} ${cy-h*0.42} Z`, '#5a7d3a', 'rgba(124,179,66,0.06)', 1.0, 0.92);
+  for (let i = -4; i <= 4; i++) {
+    const x = cx + i * (w*0.04);
+    const taper = Math.cos(i * 0.32);
+    P(svg, `M${x} ${cy-h*0.42*Math.abs(taper)} Q${x} ${cy} ${x} ${cy+h*0.42*Math.abs(taper)}`, '#7cb342', null, i===0 ? 1.2 : 0.6, 0.85);
+  }
+}
+
+function venationReticulate(svg, w, h) {
+  const cx = w/2, cy = h/2;
+  const rng = seedRandom(0xab1);
+  P(svg, `M${cx-w*0.34} ${cy} Q${cx-w*0.30} ${cy-h*0.38} ${cx} ${cy-h*0.42} Q${cx+w*0.30} ${cy-h*0.38} ${cx+w*0.34} ${cy} Q${cx+w*0.30} ${cy+h*0.38} ${cx} ${cy+h*0.42} Q${cx-w*0.30} ${cy+h*0.38} ${cx-w*0.34} ${cy} Z`, '#5a7d3a', 'rgba(124,179,66,0.06)', 1.0, 0.92);
+  L(svg, cx, cy-h*0.40, cx, cy+h*0.40, '#5a7d3a', 1.3, 0.9);
+  const ribs = 5;
+  const ribPoints = [];
+  for (let i = 0; i < ribs; i++) {
+    const t = (i+0.5) / ribs;
+    const y = cy - h*0.32 + t * h*0.64;
+    for (const side of [-1, 1]) {
+      const reach = w*0.28 * Math.sin(t * Math.PI);
+      const tx = cx + side * reach;
+      const ty = y + reach * 0.15;
+      P(svg, `M${cx} ${y} Q${cx + side*reach*0.5} ${y + reach*0.07} ${tx} ${ty}`, '#7cb342', null, 0.9, 0.85);
+      for (let k = 1; k <= 4; k++) {
+        const t2 = k/5;
+        ribPoints.push({x: cx + side*reach*0.5*t2 + side*reach*0.5*t2*0.5, y: y + reach*0.15*t2});
+      }
+      ribPoints.push({x: tx, y: ty});
+    }
+  }
+  for (let i = 0; i < ribPoints.length; i++) {
+    const p = ribPoints[i];
+    for (let j = i+1; j < ribPoints.length; j++) {
+      const q = ribPoints[j];
+      const d = Math.sqrt((p.x-q.x)**2 + (p.y-q.y)**2);
+      if (d > 8 && d < 22) {
+        const mx = (p.x+q.x)/2 + (rng()-0.5)*4;
+        const my = (p.y+q.y)/2 + (rng()-0.5)*4;
+        P(svg, `M${p.x} ${p.y} Q${mx} ${my} ${q.x} ${q.y}`, '#8fbc66', null, 0.4, 0.5);
+      }
+    }
+  }
+}
+
+function venationDichotomous(svg, w, h) {
+  const cx = w/2;
+  const baseY = h - 16;
+  const startY = baseY - 6;
+  const radius = h*0.48;
+  let path = `M${cx-3} ${startY}`;
+  for (let i = 0; i <= 30; i++) {
+    const t = i / 30;
+    const a = -Math.PI*0.85 + t * Math.PI*0.7;
+    const x = cx + Math.cos(a) * radius;
+    const y = startY + Math.sin(a) * radius;
+    path += ` L${x.toFixed(1)} ${y.toFixed(1)}`;
+  }
+  path += ` L${cx+3} ${startY} L${cx} ${baseY} Z`;
+  P(svg, path, '#5a7d3a', 'rgba(124,179,66,0.06)', 1.0, 0.92);
+  L(svg, cx, startY, cx, startY - radius*0.55, '#7cb342', 0.9, 0.7);
+  function fork(x, y, dir, len, depth) {
+    if (depth === 0 || len < 3) return;
+    const dx = Math.cos(dir) * len;
+    const dy = Math.sin(dir) * len;
+    L(svg, x, y, x+dx, y+dy, '#7cb342', 0.5 + depth*0.15, 0.85);
+    fork(x+dx, y+dy, dir - 0.18, len * 0.78, depth-1);
+    fork(x+dx, y+dy, dir + 0.18, len * 0.78, depth-1);
+  }
+  for (let i = 0; i < 5; i++) {
+    const a = -Math.PI*0.5 + (i - 2) * 0.32;
+    fork(cx, startY, a, 14, 5);
+  }
+  L(svg, cx, baseY, cx, h-2, '#5a4a30', 1.6);
+}
+
+// ============================================================
+// HALLÉ-OLDEMAN ARCHITECTURAL MODELS
+// ============================================================
+
+function archRauh(svg, w, h) {
+  const cx = w/2, baseY = h-12, topY = 18;
+  L(svg, cx, baseY, cx, topY, '#5a4a30', 2.6);
+  for (let tier = 0; tier < 6; tier++) {
+    const t = tier / 5;
+    const y = baseY - 28 - t * (baseY - topY - 40);
+    const span = (1 - t * 0.7) * w*0.32;
+    for (const side of [-1, 1]) {
+      const tipY = y - span * 0.4;
+      L(svg, cx, y, cx + side*span, tipY, '#5a4a30', 1.4 - t*0.4);
+      for (let s = 1; s <= 3; s++) {
+        const t2 = s/4;
+        const px = cx + side*span*t2;
+        const py = y + (tipY-y)*t2;
+        L(svg, px, py, px + side*8, py - 12, '#7cb342', 0.7);
+      }
+    }
+  }
+  C(svg, cx, topY, 4, '#7cb342', null);
+}
+
+function archMassart(svg, w, h) {
+  const cx = w/2, baseY = h-12, topY = 18;
+  L(svg, cx, baseY, cx, topY, '#5a4a30', 2.4);
+  const tiers = 7;
+  for (let tier = 0; tier < tiers; tier++) {
+    const t = tier / (tiers-1);
+    const y = baseY - 22 - t * (baseY - topY - 32);
+    const span = (1 - t * 0.6) * w*0.34;
+    for (const side of [-1, 1]) {
+      L(svg, cx, y, cx + side*span, y + 2, '#5a4a30', 1.4 - t*0.3);
+      for (let s = 1; s <= 4; s++) {
+        const px = cx + side*span * s/4;
+        L(svg, px, y, px + side*4, y + 8, '#7cb342', 0.7);
+        L(svg, px, y, px + side*2, y - 4, '#7cb342', 0.6);
+      }
+    }
+  }
+}
+
+function archTroll(svg, w, h) {
+  const rng = seedRandom(0xa01);
+  const cx = w/2, baseY = h-12;
+  drawBranch(svg, {
+    cx, cy: baseY, dir: -90, length: h*0.10, decay: 0.9,
+    angle: 0, branchCount: 1, iterations: 2,
+    width: 2.6, widthDecay: 0.9, color: '#5a4a30', rng
+  });
+  drawBranch(svg, {
+    cx, cy: baseY - h*0.20, dir: -90,
+    length: h*0.12, decay: 0.78, decayJitter: 0.06,
+    angle: 50, angleJitter: 12, branchCount: 3,
+    asymmetry: 0.3, gravityPull: 8,
+    iterations: 5, width: 2.0, widthDecay: 0.66,
+    color: '#5a4a30', leafColor: '#7cb342', leafSize: 3, rng
+  });
+}
+
+function archLeeuwenberg(svg, w, h) {
+  const rng = seedRandom(0xa02);
+  function module_(x, y, dir, len, depth) {
+    if (depth === 0 || len < 4) {
+      C(svg, x + Math.cos(dir*Math.PI/180)*len, y + Math.sin(dir*Math.PI/180)*len, 4, '#c25a48', '#8a3540', 0.6);
+      C(svg, x + Math.cos(dir*Math.PI/180)*len, y + Math.sin(dir*Math.PI/180)*len, 1.6, '#c9a961', null);
+      return;
+    }
+    const nx = x + Math.cos(dir*Math.PI/180)*len;
+    const ny = y + Math.sin(dir*Math.PI/180)*len;
+    L(svg, x, y, nx, ny, '#5a4a30', 1.8 - (4-depth)*0.3);
+    C(svg, nx, ny, 3, '#c25a48', '#8a3540', 0.5);
+    for (let i = 0; i < 3; i++) {
+      const a = dir + (i-1) * 30;
+      module_(nx, ny, a, len*0.78, depth-1);
+    }
+  }
+  module_(w/2, h-12, -90, 28, 3);
+}
+
+function archCorner(svg, w, h) {
+  const rng = seedRandom(0xa03);
+  const cx = w/2, baseY = h-10;
+  L(svg, cx, baseY, cx, h*0.28, '#5a4a30', 4.0);
+  for (let i = 0; i < 8; i++) {
+    const y = baseY - (i+1) * (baseY - h*0.28) / 9;
+    L(svg, cx-4, y, cx+4, y, '#3d2818', 1.0);
+  }
+  const crownY = h*0.28;
+  for (let i = 0; i < 14; i++) {
+    const a = -90 + (i - 6.5) * 14;
+    const len = 36 + rng()*8;
+    const tipX = cx + Math.cos(a*Math.PI/180) * len;
+    const tipY = crownY + Math.sin(a*Math.PI/180) * len;
+    const midX = cx + Math.cos(a*Math.PI/180) * len*0.5 + (a < -90 ? -3 : 3);
+    const midY = crownY + Math.sin(a*Math.PI/180) * len*0.5 - 3;
+    P(svg, `M${cx} ${crownY} Q${midX} ${midY} ${tipX} ${tipY}`, '#5a7d3a', null, 1.4, 0.9);
+    for (let p = 1; p < 6; p++) {
+      const t = p/6;
+      const px = cx + (tipX-cx)*t + (midX-cx)*0.4*Math.sin(t*Math.PI);
+      const py = crownY + (tipY-crownY)*t + (midY-crownY)*0.4*Math.sin(t*Math.PI);
+      const pa = Math.atan2(tipY-crownY, tipX-cx);
+      const perp = pa + Math.PI/2;
+      const blen = 8;
+      L(svg, px, py, px + Math.cos(perp)*blen, py + Math.sin(perp)*blen, '#7cb342', 0.6);
+      L(svg, px, py, px - Math.cos(perp)*blen, py - Math.sin(perp)*blen, '#7cb342', 0.6);
+    }
+  }
+}
+
+function archChampagnat(svg, w, h) {
+  const rng = seedRandom(0xa04);
+  drawBranch(svg, {
+    cx: w/2, cy: h-10, dir: -90, length: h*0.20,
+    decay: 0.78, decayJitter: 0.04,
+    angle: 28, angleJitter: 6, branchCount: 2,
+    asymmetry: 0.2, gravityPull: 25,
+    iterations: 6, width: 2.4, widthDecay: 0.66,
+    color: '#5a4a30', leafColor: '#8fbc66', leafSize: 1.8, rng
+  });
+}
+
+// ============================================================
+// ARBOREAL TYPOLOGIES
+// ============================================================
+
+function speciesPinus(svg, w, h) {
+  const rng = seedRandom(0x4a17);
+  const cx = w/2, baseY = h-12, topY = 18;
+  L(svg, cx, baseY, cx, topY, '#5d8830', 2.2);
+  const whorls = 9;
+  for (let i = 0; i < whorls; i++) {
+    const t = i / (whorls-1);
+    const y = baseY - 24 - t * (baseY - topY - 36);
+    const span = (1 - t*0.88) * (w/2 - 16);
+    const branchesPerSide = 3 + Math.floor(rng()*2);
+    for (const side of [-1, 1]) {
+      for (let b = 1; b <= branchesPerSide; b++) {
+        const off = b/branchesPerSide;
+        const tipX = cx + side*span*off;
+        const tipY = y + 4 + rng()*7;
+        L(svg, cx, y, tipX, tipY, '#5d8830', 1.0);
+        for (let n = 0; n < 4; n++) {
+          const nt = 0.25 + n*0.25;
+          const px = cx + (tipX-cx)*nt;
+          const py = y + (tipY-y)*nt;
+          L(svg, px, py, px + (rng()-0.5)*4, py + 5 + rng()*3, '#7cb342', 0.7);
+        }
+      }
+    }
+  }
+  C(svg, cx, topY, 4, '#7cb342', null);
+}
+
+function speciesQuercus(svg, w, h) {
+  const rng = seedRandom(0x71c2);
+  drawBranch(svg, {
+    cx: w/2, cy: h-10, dir: -90,
+    length: h*0.22, decay: 0.74, decayJitter: 0.10,
+    angle: 32, angleJitter: 12, branchCount: 3,
+    asymmetry: 0.4, iterations: 6,
+    width: 4.5, widthDecay: 0.62,
+    color: '#5a7d3a', leafColor: '#7cb342',
+    leafSize: 4.5, leafOpacity: 0.85, rng
+  });
+}
+
+function speciesBetula(svg, w, h) {
+  const rng = seedRandom(0x39d8);
+  drawBranch(svg, {
+    cx: w/2, cy: h-10, dir: -90,
+    length: h*0.24, decay: 0.78, decayJitter: 0.04,
+    angle: 18, angleJitter: 5, branchCount: 2,
+    asymmetry: 0.15, gravityPull: -3,
+    iterations: 7, width: 2.0, widthDecay: 0.72,
+    color: '#a8b89a', leafColor: '#b5cf80', leafSize: 1.6, rng
+  });
+}
+
+function speciesPopulus(svg, w, h) {
+  const rng = seedRandom(0x5e44);
+  const baseY = h-10;
+  for (let i = 0; i < 4; i++) {
+    const offset = (i - 1.5) / 1.5 * w*0.21;
+    drawBranch(svg, {
+      cx: w/2 + offset, cy: baseY, dir: -90,
+      length: h*0.22 * (0.85 + rng()*0.3),
+      decay: 0.76, angle: 12, angleJitter: 4,
+      branchCount: 2, gravityPull: -4,
+      iterations: 5, width: 1.8, widthDecay: 0.7,
+      color: '#9aa888', leafColor: '#8fbc66', leafSize: 1.4, rng
+    });
+  }
+}
+
+function speciesFicus(svg, w, h) {
+  const rng = seedRandom(0xbb01);
+  const baseY = h-10;
+  const trunkXs = [w*0.5, w*0.32, w*0.7, w*0.42, w*0.58];
+  trunkXs.forEach((tx, i) => {
+    const heightT = i === 0 ? h*0.55 : h*0.42 + rng()*8;
+    L(svg, tx, baseY, tx, baseY-heightT, i === 0 ? '#5a7d3a' : '#7a6840', i === 0 ? 3.6 : 1.6);
+  });
+  drawBranch(svg, {
+    cx: w/2, cy: baseY - h*0.55, dir: -90,
+    length: h*0.10, decay: 0.78, decayJitter: 0.10,
+    angle: 48, angleJitter: 18, branchCount: 3,
+    iterations: 5, width: 2.4, widthDecay: 0.66,
+    color: '#5a7d3a', leafColor: '#7cb342',
+    leafSize: 4, leafOpacity: 0.75, rng
+  });
+  [w*0.32, w*0.7].forEach((tx, idx) => {
+    drawBranch(svg, {
+      cx: tx, cy: baseY - h*0.42, dir: -90 + (idx === 0 ? -10 : 10),
+      length: h*0.07, decay: 0.78,
+      angle: 40, angleJitter: 14, branchCount: 2,
+      iterations: 4, width: 1.4, widthDecay: 0.65,
+      color: '#5a7d3a', leafColor: '#7cb342',
+      leafSize: 3.2, leafOpacity: 0.8, rng: seedRandom(0xbb01+idx)
+    });
+  });
+}
+
+function speciesSalix(svg, w, h) {
+  const rng = seedRandom(0xc71f);
+  const cx = w/2, baseY = h-10;
+  drawBranch(svg, {
+    cx, cy: baseY, dir: -90, length: h*0.20,
+    decay: 0.74, decayJitter: 0.06,
+    angle: 24, angleJitter: 6, branchCount: 2,
+    iterations: 4, width: 3.0, widthDecay: 0.7,
+    color: '#5a7d3a', rng
+  });
+  const rng2 = seedRandom(0xc720);
+  for (let i = 0; i < 60; i++) {
+    const a = (rng2()-0.5) * Math.PI * 1.4;
+    const r = h*0.16 * (0.5 + rng2()*0.6);
+    const ox = cx + Math.sin(a)*r;
+    const oy = baseY - h*0.42 + Math.cos(a)*r*0.5;
+    const drop = 30 + rng2()*65;
+    let px = ox, py = oy;
+    for (let s = 0; s < 6; s++) {
+      const nx = px + (rng2()-0.5)*4;
+      const ny = py + drop/6;
+      L(svg, px, py, nx, ny, '#7cb342', 0.8, 0.9);
+      px = nx; py = ny;
+    }
+    C(svg, px, py, 1.4, '#b5cf80', null, null, 0.9);
+  }
+}
+
+function speciesGinkgo(svg, w, h) {
+  const rng = seedRandom(0x91d2);
+  function fork(x, y, dir, len, depth, w_) {
+    if (depth === 0 || len < 3) {
+      const a = dir * Math.PI/180;
+      const lx = x + Math.cos(a)*4, ly = y + Math.sin(a)*4;
+      C(svg, lx, ly, 3, '#b5cf80', '#7cb342', 0.4, 0.9);
+      return;
+    }
+    const a = dir * Math.PI/180;
+    const nx = x + Math.cos(a)*len;
+    const ny = y + Math.sin(a)*len;
+    L(svg, x, y, nx, ny, '#5a4a30', w_);
+    const angOff = 22 + (rng()-0.5)*8;
+    fork(nx, ny, dir - angOff, len*0.72, depth-1, w_*0.7);
+    fork(nx, ny, dir + angOff, len*0.72, depth-1, w_*0.7);
+  }
+  fork(w/2, h-10, -90, h*0.22, 6, 3.0);
+}
+
+function speciesAcer(svg, w, h) {
+  const rng = seedRandom(0xacde);
+  drawBranch(svg, {
+    cx: w/2, cy: h-10, dir: -90,
+    length: h*0.20, decay: 0.76, decayJitter: 0.06,
+    angle: 26, angleJitter: 8, branchCount: 2,
+    asymmetry: 0.25, iterations: 7,
+    width: 3.2, widthDecay: 0.68,
+    color: '#5a4a30', leafColor: '#a04030',
+    leafSize: 3.2, leafOpacity: 0.85, rng
+  });
+}
+
+function speciesMangrove(svg, w, h) {
+  const rng = seedRandom(0x8a39);
+  const cx = w/2, baseY = h-10;
+  const trunkBaseY = h*0.55;
+  const props = 8;
+  for (let i = 0; i < props; i++) {
+    const a = (i - props/2 + 0.5) / (props/2) * 0.8;
+    const startX = cx + Math.sin(a) * 10;
+    const startY = trunkBaseY + 4;
+    const groundX = cx + a * w*0.35;
+    const groundY = baseY;
+    const ctrlX = (startX + groundX) / 2 + (rng()-0.5)*8;
+    const ctrlY = (startY + groundY) / 2 - 8;
+    P(svg, `M${startX} ${startY} Q${ctrlX} ${ctrlY} ${groundX} ${groundY}`, '#5a4a30', null, 1.6, 0.92);
+  }
+  L(svg, cx, trunkBaseY, cx, trunkBaseY - h*0.10, '#5a4a30', 3.0);
+  drawBranch(svg, {
+    cx, cy: trunkBaseY - h*0.10, dir: -90,
+    length: h*0.10, decay: 0.78, decayJitter: 0.06,
+    angle: 32, angleJitter: 12, branchCount: 3,
+    iterations: 5, width: 2.0, widthDecay: 0.66,
+    color: '#5a7d3a', leafColor: '#7cb342',
+    leafSize: 3.5, leafOpacity: 0.85, rng
+  });
+  L(svg, 0, baseY+2, w, baseY+2, '#4a8a78', 0.6, 0.4);
+  L(svg, 0, baseY+5, w, baseY+5, '#4a8a78', 0.6, 0.3);
+}
+
+// ============================================================
+// UNDERSTORY
+// ============================================================
+function speciesFern(svg, w, h) {
+  const rng = seedRandom(0x33aa);
+  const baseY = h-10;
+  for (let f = 0; f < 3; f++) {
+    const startAngle = -90 + (f-1) * 22;
+    const segs = 22;
+    const len = h*0.04;
+    let px = w/2 + (f-1)*4, py = baseY;
+    let curveAngle = startAngle;
+    const rachisPoints = [[px, py]];
+    for (let s = 0; s < segs; s++) {
+      const taper = 1 - s/segs * 0.3;
+      curveAngle += (f-1)*0.4 + 0.2;
+      const nx = px + Math.cos(curveAngle*Math.PI/180)*len*taper;
+      const ny = py + Math.sin(curveAngle*Math.PI/180)*len*taper;
+      L(svg, px, py, nx, ny, '#5d8830', 1.1);
+      rachisPoints.push([nx, ny]);
+      px = nx; py = ny;
+    }
+    for (let s = 1; s < rachisPoints.length-1; s++) {
+      const [ax, ay] = rachisPoints[s];
+      const [px2, py2] = rachisPoints[s-1];
+      const dx = ax-px2, dy = ay-py2;
+      const perpAng = Math.atan2(dy, dx) + Math.PI/2;
+      const pinnaLen = (segs-s)/segs * 18 + 2;
+      const side = s%2 === 0 ? 1 : -1;
+      const tipX = ax + Math.cos(perpAng)*pinnaLen*side;
+      const tipY = ay + Math.sin(perpAng)*pinnaLen*side;
+      L(svg, ax, ay, tipX, tipY, '#7cb342', 0.7);
+      const sub = 5;
+      for (let q = 1; q <= sub; q++) {
+        const t = q/sub;
+        const bx = ax + (tipX-ax)*t;
+        const by = ay + (tipY-ay)*t;
+        const barbLen = pinnaLen*0.18*(1-t*0.4);
+        const barbAng = perpAng + 0.5*side;
+        L(svg, bx, by, bx + Math.cos(barbAng)*barbLen*side*0.6, by + Math.sin(barbAng)*barbLen*side*0.6, '#8fbc66', 0.5);
+      }
+    }
+    C(svg, px, py, 1.6, '#b5cf80', null);
+  }
+}
+
+function speciesVaccinium(svg, w, h) {
+  const rng = seedRandom(0x88a1);
+  const baseY = h-10;
+  for (let i = 0; i < 5; i++) {
+    const angle = -90 + (i - 2) * 14;
+    const sx = w/2 + (i - 2) * 6;
+    drawBranch(svg, {
+      cx: sx, cy: baseY, dir: angle,
+      length: h*0.16, decay: 0.78, decayJitter: 0.06,
+      angle: 22, angleJitter: 6, branchCount: 2,
+      gravityPull: -2, iterations: 5,
+      width: 1.6, widthDecay: 0.7,
+      color: '#7a5840', leafColor: '#7cb342',
+      leafSize: 1.8, rng: seedRandom(0x88a1+i)
+    });
+  }
+  const rng2 = seedRandom(0x88b0);
+  for (let i = 0; i < 18; i++) {
+    const cx = w*0.2 + rng2()*w*0.6;
+    const cy = baseY - h*0.3 - rng2()*h*0.4;
+    C(svg, cx, cy, 2.4, '#5a6b8c', '#3d4a6a', 0.5, 0.85);
+  }
+}
+
+function speciesHamamelis(svg, w, h) {
+  const rng = seedRandom(0x44df);
+  const baseY = h-10;
+  for (let i = 0; i < 4; i++) {
+    const angle = -90 + (i-1.5) * 22;
+    drawBranch(svg, {
+      cx: w/2, cy: baseY, dir: angle,
+      length: h*0.20, decay: 0.74, decayJitter: 0.10,
+      angle: 35, angleJitter: 14, branchCount: 2,
+      asymmetry: 0.3, iterations: 5,
+      width: 2.2, widthDecay: 0.68,
+      color: '#6a5638', leafColor: '#c9a961',
+      leafSize: 2.0, rng: seedRandom(0x44df + i*7)
+    });
+  }
+}
+
+function speciesRhododendron(svg, w, h) {
+  const rng = seedRandom(0x2af1);
+  const baseY = h-10;
+  drawBranch(svg, {
+    cx: w/2, cy: baseY, dir: -90,
+    length: h*0.13, decay: 0.78, decayJitter: 0.08,
+    angle: 30, angleJitter: 12, branchCount: 3,
+    iterations: 5, width: 1.8, widthDecay: 0.68,
+    color: '#5a4a30', leafColor: '#5a7d3a',
+    leafSize: 4.5, leafOpacity: 0.8, rng
+  });
+  const rng2 = seedRandom(0x2af2);
+  for (let i = 0; i < 6; i++) {
+    const cx = w*0.25 + rng2()*w*0.5;
+    const cy = baseY - h*0.45 - rng2()*h*0.20;
+    for (let p = 0; p < 5; p++) {
+      const a = p * 72 * Math.PI/180;
+      const px = cx + Math.cos(a)*5;
+      const py = cy + Math.sin(a)*5;
+      C(svg, px, py, 3.5, '#b07090', '#8a3540', 0.4, 0.85);
+    }
+    C(svg, cx, cy, 2, '#c9a961', null);
+  }
+}
+
+// ============================================================
+// VINES
+// ============================================================
+function speciesParthenocissus(svg, w, h) {
+  const rng = seedRandom(0xc5c5);
+  const baseY = h-10;
+  for (let r = 0; r < 2; r++) {
+    let px = w*0.4 + r*w*0.2, py = baseY;
+    const segs = 18;
+    for (let s = 0; s < segs; s++) {
+      const t = s/segs;
+      const angle = -90 + Math.sin(s*0.5 + r*2) * 28 + (r === 0 ? -15 : 15);
+      const len = 7 + rng()*3;
+      const nx = px + Math.cos(angle*Math.PI/180)*len;
+      const ny = Math.min(py + Math.sin(angle*Math.PI/180)*len, py-2);
+      L(svg, px, py, nx, ny, '#5a4a30', 1.2 - t*0.5);
+      if (s%3 === 1) {
+        const cx = nx + (rng()-0.5)*5;
+        const cy = ny + (rng()-0.5)*4;
+        L(svg, nx, ny, cx, cy, '#6a5840', 0.7);
+        for (let lf = 0; lf < 5; lf++) {
+          const la = -90 + (lf-2)*32;
+          const ll = 5 + rng()*2;
+          const tx = cx + Math.cos(la*Math.PI/180)*ll;
+          const ty = cy + Math.sin(la*Math.PI/180)*ll;
+          L(svg, cx, cy, tx, ty, '#a04030', 0.9, 0.9);
+          C(svg, tx, ty, 1.6, '#c25a48', null, null, 0.85);
+        }
+      }
+      px = nx; py = ny;
+    }
+  }
+}
+
+function speciesVitis(svg, w, h) {
+  const rng = seedRandom(0x90b1);
+  const baseY = h-10;
+  let px = w*0.5, py = baseY;
+  const segs = 28;
+  for (let s = 0; s < segs; s++) {
+    const t = s/segs;
+    const angle = -90 + Math.sin(s*0.7 + 1.2) * 35 + (rng()-0.5)*15;
+    const len = 6 + rng()*4;
+    const nx = px + Math.cos(angle*Math.PI/180)*len;
+    const ny = Math.min(py + Math.sin(angle*Math.PI/180)*len, py-2);
+    L(svg, px, py, nx, ny, '#7a5840', 1.6 - t*0.8);
+    if (s%3 === 0) C(svg, nx + (rng()-0.5)*6, ny + (rng()-0.5)*4, 4 + rng()*2, '#7cb342', '#5a7d3a', 0.5, 0.85);
+    if (s%5 === 2) {
+      let tx = nx, ty = ny;
+      const dir = rng() > 0.5 ? 1 : -1;
+      for (let c = 0; c < 8; c++) {
+        const a = c * 50 * dir;
+        const r = 1.6;
+        const ntx = tx + Math.cos(a*Math.PI/180)*r;
+        const nty = ty + Math.sin(a*Math.PI/180)*r + 0.5;
+        L(svg, tx, ty, ntx, nty, '#8fbc66', 0.6);
+        tx = ntx; ty = nty;
+      }
+    }
+    if (s === 18) {
+      for (let g = 0; g < 12; g++) {
+        C(svg, nx + (rng()-0.5)*8, ny + 4 + rng()*12, 2.2, '#6a4a6e', '#4a2a4e', 0.4, 0.9);
+      }
+    }
+    px = nx; py = ny;
+  }
+}
+
+function speciesHedera(svg, w, h) {
+  const rng = seedRandom(0xee31);
+  const baseY = h-10;
+  for (let r = 0; r < 4; r++) {
+    let px = w*0.5 + (r-1.5)*10, py = baseY;
+    const segs = 20;
+    for (let s = 0; s < segs; s++) {
+      const angle = -90 + Math.sin(s*0.4 + r)*50 + (r-1.5)*12;
+      const len = 5 + rng()*3;
+      const nx = px + Math.cos(angle*Math.PI/180)*len;
+      const ny = Math.min(py + Math.sin(angle*Math.PI/180)*len, py-1);
+      L(svg, px, py, nx, ny, '#5a4a30', 0.9);
+      if (s%2 === 0) {
+        const lx = nx + (rng()-0.5)*4;
+        const ly = ny + (rng()-0.5)*4;
+        for (let lobe = 0; lobe < 5; lobe++) {
+          const la = lobe*72 + rng()*10;
+          const lr = 3 + rng()*1.5;
+          L(svg, lx, ly, lx + Math.cos(la*Math.PI/180)*lr, ly + Math.sin(la*Math.PI/180)*lr, '#5a7d3a', 0.7, 0.9);
+        }
+        C(svg, lx, ly, 1.6, '#5a7d3a', null, null, 0.8);
+      }
+      px = nx; py = ny;
+    }
+  }
+}
+
+function speciesWisteria(svg, w, h) {
+  const rng = seedRandom(0xa9a9);
+  const baseY = h-10;
+  let px = w*0.5, py = baseY;
+  const segs = 24;
+  const points = [[px, py]];
+  for (let s = 0; s < segs; s++) {
+    const t = s/segs;
+    const angle = -90 + Math.sin(s*0.5)*20;
+    const len = 7;
+    const nx = px + Math.cos(angle*Math.PI/180)*len + Math.sin(s*0.8)*3;
+    const ny = Math.min(py + Math.sin(angle*Math.PI/180)*len, py-3);
+    L(svg, px, py, nx, ny, '#5a4a30', 1.4 - t*0.6);
+    points.push([nx, ny]);
+    px = nx; py = ny;
+  }
+  // pendant flower racemes
+  for (let i = 6; i < points.length; i += 4) {
+    const [ox, oy] = points[i];
+    const racemeLen = 24 + rng()*16;
+    const segments = 8;
+    for (let q = 0; q < segments; q++) {
+      const t2 = q/segments;
+      const cx = ox + (rng()-0.5)*2;
+      const cy = oy + t2 * racemeLen;
+      const sz = 3.5 - t2*1.6;
+      C(svg, cx, cy, sz, '#b07090', '#6a4a6e', 0.4, 0.9);
+      C(svg, cx, cy, sz*0.4, '#6a4a6e', null, null);
+    }
+  }
+}
+
+// ============================================================
+// CACTUS & SUCCULENT
+// ============================================================
+function speciesSaguaro(svg, w, h) {
+  const rng = seedRandom(0x5c41);
+  const cx = w/2, baseY = h-10;
+  const trunkH = h*0.78;
+  const trunkW = w*0.10;
+  P(svg, `M${cx-trunkW} ${baseY} L${cx-trunkW} ${baseY-trunkH+trunkW} Q${cx-trunkW} ${baseY-trunkH} ${cx} ${baseY-trunkH} Q${cx+trunkW} ${baseY-trunkH} ${cx+trunkW} ${baseY-trunkH+trunkW} L${cx+trunkW} ${baseY} Z`, '#3d4a2a', '#5a7d3a', 1.2, 0.95);
+  for (let i = -2; i <= 2; i++) {
+    const x = cx + i * trunkW * 0.4;
+    L(svg, x, baseY, x, baseY-trunkH+4, '#5a7d3a', 0.6, 0.7);
+  }
+  const armBaseY1 = baseY - trunkH*0.55;
+  P(svg, `M${cx-trunkW} ${armBaseY1} Q${cx-trunkW-20} ${armBaseY1+8} ${cx-trunkW-22} ${armBaseY1-12} L${cx-trunkW-22} ${armBaseY1-30} Q${cx-trunkW-22} ${armBaseY1-36} ${cx-trunkW-16} ${armBaseY1-36} Q${cx-trunkW-10} ${armBaseY1-36} ${cx-trunkW-10} ${armBaseY1-30} L${cx-trunkW-10} ${armBaseY1+2} Z`, '#3d4a2a', '#5a7d3a', 1.0, 0.95);
+  const armBaseY2 = baseY - trunkH*0.40;
+  P(svg, `M${cx+trunkW} ${armBaseY2} Q${cx+trunkW+22} ${armBaseY2+10} ${cx+trunkW+24} ${armBaseY2-14} L${cx+trunkW+24} ${armBaseY2-36} Q${cx+trunkW+24} ${armBaseY2-42} ${cx+trunkW+18} ${armBaseY2-42} Q${cx+trunkW+12} ${armBaseY2-42} ${cx+trunkW+12} ${armBaseY2-36} L${cx+trunkW+12} ${armBaseY2+2} Z`, '#3d4a2a', '#5a7d3a', 1.0, 0.95);
+  const allXs = [cx-trunkW*0.7, cx-trunkW*0.2, cx+trunkW*0.2, cx+trunkW*0.7, cx-trunkW-16, cx+trunkW+18];
+  for (const x of allXs) {
+    for (let y = baseY-12; y > baseY-trunkH; y -= 8) {
+      if (rng() > 0.4) {
+        for (let s = 0; s < 4; s++) {
+          const sa = (rng()-0.5) * 0.8;
+          L(svg, x, y, x + Math.cos(sa)*2, y + Math.sin(sa)*2, '#c9a961', 0.4, 0.7);
+        }
+      }
+    }
+  }
+  for (let i = 0; i < 3; i++) {
+    const fx = cx + (i-1)*4;
+    C(svg, fx, baseY-trunkH-3, 2.2, '#d8d4be', '#c9a961', 0.4, 0.9);
+  }
+}
+
+function speciesOpuntia(svg, w, h) {
+  const rng = seedRandom(0x09a1);
+  const baseY = h-10;
+  function drawPad(cx, cy, rotation, sz) {
+    const rx = sz*0.7, ry = sz;
+    E(svg, cx, cy, rx, ry, rotation, '#5a7d3a', '#3d4a2a', 1.0, 0.92);
+    for (let i = 0; i < 14; i++) {
+      const a = i * 137.508 * Math.PI/180;
+      const r = sz*0.08 + Math.sqrt(i) * sz*0.16;
+      const lx = Math.cos(a)*r, ly = Math.sin(a)*r;
+      const cosR = Math.cos(rotation*Math.PI/180);
+      const sinR = Math.sin(rotation*Math.PI/180);
+      const ax = cx + lx*cosR - ly*sinR;
+      const ay = cy + lx*sinR + ly*cosR;
+      if (Math.sqrt(((ax-cx)/rx)**2 + ((ay-cy)/ry)**2) < 0.85) {
+        for (let s = 0; s < 3; s++) {
+          const sa = rng()*Math.PI*2;
+          L(svg, ax, ay, ax + Math.cos(sa)*2.5, ay + Math.sin(sa)*2.5, '#c9a961', 0.4, 0.8);
+        }
+        C(svg, ax, ay, 0.6, '#8b7340', null, null);
+      }
+    }
+  }
+  drawPad(w/2, baseY-22, 0, 22);
+  drawPad(w/2-12, baseY-58, -15, 18);
+  drawPad(w/2+14, baseY-56, 18, 18);
+  drawPad(w/2, baseY-86, 5, 14);
+  drawPad(w/2-18, baseY-88, -25, 12);
+  C(svg, w/2 + 6, baseY-92, 4, '#c9a961', '#a04030', 0.5, 0.95);
+  C(svg, w/2 + 6, baseY-92, 1.5, '#a04030', null);
+}
+
+function speciesAgave(svg, w, h) {
+  const rng = seedRandom(0xa4a4);
+  const cx = w/2, baseY = h-10;
+  const N = 18;
+  for (let i = 0; i < N; i++) {
+    const a = -90 + (i - N/2 + 0.5) * (180/(N+2)) + (rng()-0.5)*4;
+    const len = h*0.55 + (rng()-0.5)*h*0.1;
+    const tipX = cx + Math.cos(a*Math.PI/180)*len;
+    const tipY = baseY + Math.sin(a*Math.PI/180)*len;
+    const px = -Math.sin(a*Math.PI/180), py = Math.cos(a*Math.PI/180);
+    const wd = 7;
+    const midX = (cx + tipX)/2 + px*1;
+    const midY = (baseY + tipY)/2 + py*1;
+    P(svg, `M${cx+px*wd*0.4} ${baseY-2} Q${midX+px*wd*0.6} ${midY} ${tipX} ${tipY} Q${midX-px*wd*0.6} ${midY} ${cx-px*wd*0.4} ${baseY-2} Z`, '#7a8d5a', '#3d4a2a', 0.7, 0.92);
+    L(svg, tipX, tipY, tipX + Math.cos(a*Math.PI/180)*6, tipY + Math.sin(a*Math.PI/180)*6, '#5a4a30', 1.0, 0.95);
+    for (let t = 0.3; t < 0.95; t += 0.18) {
+      const mx = cx + (tipX-cx)*t + px*wd*(1-t)*0.7;
+      const my = baseY + (tipY-baseY)*t + py*wd*(1-t)*0.7;
+      L(svg, mx, my, mx + Math.cos(a*Math.PI/180)*2, my + Math.sin(a*Math.PI/180)*2, '#8b7340', 0.5, 0.8);
+    }
+  }
+}
+
+function speciesSedum(svg, w, h) {
+  const rng = seedRandom(0x5d77);
+  const baseY = h-10;
+  function drawRosette(cx, cy, scale) {
+    const rings = [
+      { count: 8, r: 6*scale, sz: 4*scale, color: '#b8c8a4' },
+      { count: 5, r: 2*scale, sz: 3*scale, color: '#c8d4be' },
+    ];
+    rings.forEach(ring => {
+      for (let i = 0; i < ring.count; i++) {
+        const a = i * 2*Math.PI/ring.count;
+        const x = cx + Math.cos(a)*ring.r;
+        const y = cy + Math.sin(a)*ring.r;
+        const tipX = cx + Math.cos(a)*(ring.r+ring.sz);
+        const tipY = cy + Math.sin(a)*(ring.r+ring.sz);
+        E(svg, (x+tipX)/2, (y+tipY)/2, ring.sz*0.5, ring.sz*0.8, a*180/Math.PI - 90, ring.color, '#5a7d3a', 0.4, 0.9);
+      }
+    });
+    C(svg, cx, cy, 1.2*scale, '#5a7d3a', null);
+  }
+  for (let i = 0; i < 9; i++) {
+    const x = w*0.15 + rng()*w*0.7;
+    const y = baseY - 10 - rng()*h*0.5;
+    const sc = 0.7 + rng()*0.7;
+    drawRosette(x, y, sc);
+  }
+  for (let i = 0; i < 5; i++) {
+    const x = w*0.2 + rng()*w*0.6;
+    const sy = baseY - 15;
+    const fy = sy - 30 - rng()*15;
+    L(svg, x, sy, x, fy, '#7a8d5a', 0.8, 0.9);
+    for (let f = 0; f < 8; f++) {
+      const fa = f * 45 * Math.PI/180;
+      const fr = 4;
+      C(svg, x + Math.cos(fa)*fr, fy + Math.sin(fa)*fr, 1.4, '#d8bb78', '#a04030', 0.3, 0.95);
+    }
+  }
+}
+
+// ============================================================
+// EPIPHYTES
+// ============================================================
+
+// TILLANDSIA IONANTHA — curling silvery rosette
+function speciesTillandsia(svg, w, h) {
+  const rng = seedRandom(0x71a1);
+  const cx = w/2, cy = h*0.55;
+  // host bark
+  L(svg, 0, h-12, w, h-18, '#5a4a30', 6, 0.5);
+  L(svg, 0, h-8, w, h-14, '#3d2818', 4, 0.4);
+  // vestigial holdfasts (no real roots)
+  for (let i = 0; i < 5; i++) {
+    const hx = cx + (rng()-0.5)*16;
+    const hy = cy + 8 + rng()*4;
+    L(svg, hx, hy, hx + (rng()-0.5)*4, h-12, '#a89060', 0.4, 0.5);
+  }
+  // phyllotactic rosette of curling leaves
+  const N = 26;
+  for (let i = 0; i < N; i++) {
+    const a = i * 137.508 * Math.PI/180;
+    const baseR = 2 + Math.sqrt(i)*1.2;
+    const bx = cx + Math.cos(a)*baseR;
+    const by = cy + Math.sin(a)*baseR;
+    const len = 22 + rng()*10;
+    const curlDir = i % 2 === 0 ? 1 : -1;
+    const segs = 9;
+    let px = bx, py = by;
+    let dir = a;
+    for (let s = 0; s < segs; s++) {
+      const t = s / segs;
+      const slen = len/segs * (1 - t*0.4);
+      dir += 0.16 * curlDir + 0.04;
+      const nx = px + Math.cos(dir)*slen;
+      const ny = py + Math.sin(dir)*slen;
+      const wd = 1.8 * (1 - t*0.7);
+      const tipBlush = i < 6 && t > 0.7;
+      const color = tipBlush ? '#c25a48' : (t < 0.3 ? '#9aae88' : '#b8c2a8');
+      L(svg, px, py, nx, ny, color, wd, 0.92);
+      px = nx; py = ny;
+    }
+  }
+  // central inflorescence — Tillandsia ionantha turns red and spikes when blooming
+  L(svg, cx, cy-2, cx, cy-16, '#a04030', 1.4, 0.95);
+  for (let i = 0; i < 4; i++) {
+    const fa = i * Math.PI/2;
+    const fr = 3;
+    E(svg, cx + Math.cos(fa)*fr, cy-12 + Math.sin(fa)*fr, 2, 4, fa*180/Math.PI, '#a04030', '#8a3540', 0.4, 0.95);
+  }
+  // tubular violet flower
+  C(svg, cx, cy-18, 2.5, '#6a4a6e', '#3d2840', 0.5, 0.95);
+  C(svg, cx, cy-18, 1.0, '#c9a961', null, null);
+}
+
+// TILLANDSIA USNEOIDES — Spanish moss pendant strands
+function speciesSpanishMoss(svg, w, h) {
+  const rng = seedRandom(0x533a);
+  // host branch
+  L(svg, 0, 14, w, 18, '#5a4a30', 5, 0.85);
+  L(svg, 0, 10, w, 14, '#3d2818', 3, 0.7);
+  for (let i = 0; i < 12; i++) {
+    C(svg, rng()*w, 12 + rng()*6, 0.8, '#3d2818', null, null, 0.7);
+  }
+  // pendant strands
+  const strands = 38;
+  for (let s = 0; s < strands; s++) {
+    const ox = rng() * w;
+    const oy = 16 + rng() * 4;
+    const length = h * 0.55 + rng() * h * 0.35;
+    let px = ox, py = oy;
+    const segs = 24;
+    for (let i = 0; i < segs; i++) {
+      const t = i / segs;
+      const drift = (rng() - 0.5) * 1.8;
+      const sway = Math.sin(t * 8 + s) * 1.2;
+      const nx = px + drift + sway;
+      const ny = py + length / segs;
+      L(svg, px, py, nx, ny, '#9aae88', 0.5 + (1-t)*0.4, 0.85);
+      if (i % 2 === 1) {
+        const perpAng = Math.atan2(ny-py, nx-px) + Math.PI/2;
+        const side = rng() > 0.5 ? 1 : -1;
+        const hairLen = 1.5 + rng()*1;
+        L(svg, nx, ny, nx + Math.cos(perpAng)*hairLen*side, ny + Math.sin(perpAng)*hairLen*side, '#b8c2a8', 0.3, 0.7);
+      }
+      px = nx; py = ny;
+    }
+    C(svg, px, py, 0.6, '#b8c2a8', null, null, 0.7);
+  }
+}
+
+// PLATYCERIUM — staghorn fern, dichotomous antler fronds
+function speciesStaghorn(svg, w, h) {
+  const rng = seedRandom(0x57a6);
+  const cx = w/2, cy = h*0.58;
+  // host trunk
+  L(svg, w*0.5, 0, w*0.5, h, '#5a4a30', 14, 0.45);
+  L(svg, w*0.5 - 6, 0, w*0.5 - 6, h, '#3d2818', 1, 0.6);
+  L(svg, w*0.5 + 6, 0, w*0.5 + 6, h, '#3d2818', 1, 0.6);
+  // shield fronds (rounded basal)
+  for (let i = 0; i < 5; i++) {
+    const offsetY = i * 4;
+    const sz = 28 - i * 2;
+    P(svg, `M${cx-sz} ${cy+offsetY} Q${cx-sz*0.7} ${cy-sz*0.5+offsetY} ${cx} ${cy-sz*0.6+offsetY} Q${cx+sz*0.7} ${cy-sz*0.5+offsetY} ${cx+sz} ${cy+offsetY} Z`, i < 2 ? '#7cb342' : '#8b7340', '#5a4a30', 0.6, 0.85);
+  }
+  // antler (foliar) fronds — dichotomous
+  function antler(x, y, dir, len, depth, w_) {
+    if (depth === 0 || len < 4) {
+      C(svg, x + Math.cos(dir*Math.PI/180)*4, y + Math.sin(dir*Math.PI/180)*4, 2.2, '#9aae88', '#5a7d3a', 0.4, 0.9);
+      return;
+    }
+    const a = dir * Math.PI/180;
+    const midX = x + Math.cos(a)*len*0.5 + Math.sin(a)*2;
+    const midY = y + Math.sin(a)*len*0.5 - Math.cos(a)*2;
+    const nx = x + Math.cos(a)*len;
+    const ny = y + Math.sin(a)*len;
+    P(svg, `M${x} ${y} Q${midX} ${midY} ${nx} ${ny}`, '#9aae88', null, w_, 0.85);
+    const dropL = 6 + rng()*6;
+    const dropR = -2 + rng()*4;
+    antler(nx, ny, dir - 22 + dropR, len*0.7, depth-1, w_*0.78);
+    antler(nx, ny, dir + 22 + dropL, len*0.7, depth-1, w_*0.78);
+  }
+  antler(cx - 8, cy - 4, -110, 18, 4, 5);
+  antler(cx + 8, cy - 4, -70, 20, 4, 5.5);
+  antler(cx - 14, cy + 2, -130, 16, 3, 4);
+  antler(cx + 14, cy + 2, -50, 17, 3, 4);
+}
+
+// PHALAENOPSIS ORCHID — strap leaves, aerial roots, flower spike
+function speciesOrchid(svg, w, h) {
+  const rng = seedRandom(0x0c1d);
+  const cx = w/2, cy = h*0.55;
+  // host bark
+  L(svg, 0, h-10, w, h-14, '#5a4a30', 6, 0.5);
+  // 4 broad strap leaves arching
+  const leaves = 4;
+  for (let i = 0; i < leaves; i++) {
+    const a = -90 + (i - 1.5) * 50 + (rng()-0.5)*8;
+    const len = 30 + rng()*8;
+    const curve = (a < -90 ? -1 : 1) * 14;
+    const tipX = cx + Math.cos(a*Math.PI/180)*len + curve;
+    const tipY = cy + Math.sin(a*Math.PI/180)*len + 8;
+    const midX = cx + Math.cos(a*Math.PI/180)*len*0.5 + curve*0.5;
+    const midY = cy + Math.sin(a*Math.PI/180)*len*0.5 + 2;
+    const px1 = -Math.sin(a*Math.PI/180), py1 = Math.cos(a*Math.PI/180);
+    const wd = 6;
+    P(svg, `M${cx+px1*wd*0.7} ${cy+py1*wd*0.7} Q${midX+px1*wd*0.5} ${midY+py1*wd*0.5} ${tipX} ${tipY} Q${midX-px1*wd*0.5} ${midY-py1*wd*0.5} ${cx-px1*wd*0.7} ${cy-py1*wd*0.7} Z`, '#5a7d3a', '#3d4a2a', 0.6, 0.92);
+    P(svg, `M${cx} ${cy} Q${midX} ${midY} ${tipX} ${tipY}`, '#8fbc66', null, 0.5, 0.7);
+  }
+  // dangling aerial roots — silvery-green, photosynthetic
+  for (let i = 0; i < 7; i++) {
+    const ox = cx + (rng()-0.5)*14;
+    const oy = cy + 4 + rng()*3;
+    let px = ox, py = oy;
+    const segs = 14;
+    for (let s = 0; s < segs; s++) {
+      const t = s/segs;
+      const drift = Math.sin(s*0.5 + i)*1.4;
+      const nx = px + drift;
+      const ny = py + 4;
+      L(svg, px, py, nx, ny, '#b8c2a8', 1.8 - t*0.6, 0.85);
+      px = nx; py = ny;
+    }
+    C(svg, px, py, 1.4, '#7cb342', null, null, 0.95);
+  }
+  // arching flower spike
+  const stemPath = [[cx, cy], [cx + 18, cy - 8], [cx + 36, cy - 16], [cx + 52, cy - 12], [cx + 64, cy - 4]];
+  for (let i = 0; i < stemPath.length-1; i++) {
+    L(svg, stemPath[i][0], stemPath[i][1], stemPath[i+1][0], stemPath[i+1][1], '#7cb342', 1.0, 0.92);
+  }
+  const flowerPositions = [stemPath[1], stemPath[2], stemPath[3], stemPath[4]];
+  flowerPositions.forEach((pos, idx) => {
+    const [fx, fy] = pos;
+    const sz = 5.5 - idx*0.5;
+    for (let p = 0; p < 5; p++) {
+      const pa = p * 72 * Math.PI/180 - Math.PI/2;
+      const ppx = fx + Math.cos(pa)*sz*0.7;
+      const ppy = fy + Math.sin(pa)*sz*0.7;
+      E(svg, ppx, ppy, sz*0.65, sz*0.85, pa*180/Math.PI + 90, '#d8bb78', '#a04030', 0.4, 0.92);
+    }
+    // labellum (lip)
+    C(svg, fx, fy + sz*0.3, sz*0.5, '#a04030', '#6a2a2a', 0.4, 0.95);
+    C(svg, fx, fy, sz*0.3, '#c9a961', null, null);
+  });
+}
+
+// ============================================================
+// INFLORESCENCE
+// ============================================================
+function inflRaceme(svg, w, h) {
+  const cx = w/2, baseY = h-14, topY = 14;
+  L(svg, cx, baseY, cx, topY, '#5a7d3a', 1.6);
+  for (let i = 0; i < 7; i++) {
+    const t = i/6;
+    const y = baseY - t*(baseY-topY);
+    const side = i%2 === 0 ? -1 : 1;
+    const px = cx + side*16;
+    L(svg, cx, y, px, y, '#5a7d3a', 1);
+    C(svg, px, y, 4, '#a04030', '#c9a961', 1.2);
+    C(svg, px, y, 1.6, '#c9a961', null);
+  }
+}
+
+function inflUmbel(svg, w, h) {
+  const cx = w/2, baseY = h-12;
+  L(svg, cx, baseY, cx, h*0.45, '#5a7d3a', 1.6);
+  const cy = h*0.45;
+  for (let i = 0; i < 8; i++) {
+    const a = -90 + (i - 3.5) * 22;
+    const r = 22 + (i%3)*4;
+    const tx = cx + Math.cos(a*Math.PI/180)*r;
+    const ty = cy + Math.sin(a*Math.PI/180)*r;
+    L(svg, cx, cy, tx, ty, '#5a7d3a', 1);
+    C(svg, tx, ty, 4.4, '#a04030', '#c9a961', 1.2);
+    C(svg, tx, ty, 1.6, '#c9a961', null);
+  }
+}
+
+function inflSpike(svg, w, h) {
+  const cx = w/2;
+  const top = h*0.12, bot = h-14;
+  L(svg, cx, bot, cx, top, '#5a7d3a', 1.4);
+  const n = 9;
+  for (let i = 0; i < n; i++) {
+    const t = i/(n-1);
+    const y = bot - t*(bot-top);
+    C(svg, cx, y, 5.2, '#3a6a5a', '#5a8a78', 1.0, 0.95);
+  }
+}
+
+function inflCapitulum(svg, w, h) {
+  const cx = w/2, cy = h*0.42;
+  L(svg, cx, h-14, cx, cy+14, '#5a7d3a', 1.6);
+  for (let i = 0; i < 10; i++) {
+    const a = i * 36;
+    const r = 24;
+    const tx = cx + Math.cos(a*Math.PI/180)*r;
+    const ty = cy + Math.sin(a*Math.PI/180)*r;
+    C(svg, tx, ty, 4.5, '#c9a961', '#8b7340', 0.8, 0.95);
+  }
+  C(svg, cx, cy, 13, '#5a7d3a', null);
+  for (let i = 0; i < 30; i++) {
+    const a = i * 137.5;
+    const rr = Math.sqrt(i/30)*11;
+    const px = cx + Math.cos(a*Math.PI/180)*rr;
+    const py = cy + Math.sin(a*Math.PI/180)*rr;
+    C(svg, px, py, 1.4, '#7cb342', null);
+  }
+}
+
+function inflPanicle(svg, w, h) {
+  const cx = w/2, baseY = h-14, topY = 14;
+  L(svg, cx, baseY, cx, topY, '#5a7d3a', 1.6);
+  const ribs = 8;
+  for (let i = 0; i < ribs; i++) {
+    const t = i/(ribs-1);
+    const y = baseY - 8 - t*(baseY-topY-12);
+    const side = i%2 === 0 ? -1 : 1;
+    const reach = 20 - t*8;
+    const tx = cx + side*reach;
+    const ty = y - reach*0.3;
+    L(svg, cx, y, tx, ty, '#5a7d3a', 1);
+    for (let s = 1; s <= 3; s++) {
+      const t2 = s/4;
+      const px = cx + (tx-cx)*t2;
+      const py = y + (ty-y)*t2;
+      const subReach = 6;
+      const sx = px + side * subReach;
+      const sy = py - 4;
+      L(svg, px, py, sx, sy, '#5a7d3a', 0.7);
+      C(svg, sx, sy, 2, '#c25a48', '#c9a961', 0.5, 0.95);
+    }
+    C(svg, tx, ty, 2.2, '#c25a48', '#c9a961', 0.5, 0.95);
+  }
+}
+
+function inflCorymb(svg, w, h) {
+  const cx = w/2, baseY = h-14;
+  L(svg, cx, baseY, cx, h*0.5, '#5a7d3a', 1.6);
+  // pedicels of varying length so all flowers reach same height (signature corymb feature)
+  const n = 9;
+  const flowerY = h*0.30;
+  for (let i = 0; i < n; i++) {
+    const t = i/(n-1);
+    const branchY = h*0.5 + t*8;
+    const side = (t-0.5)*2;
+    const tx = cx + side * 28;
+    L(svg, cx, branchY, tx, flowerY, '#5a7d3a', 1);
+    C(svg, tx, flowerY, 4, '#d8bb78', '#a04030', 0.5, 0.95);
+    C(svg, tx, flowerY, 1.4, '#a04030', null);
+  }
+}
+
+function inflCatkin(svg, w, h) {
+  const rng = seedRandom(0xca7c);
+  const cx = w/2;
+  L(svg, cx-10, 14, cx-10, 30, '#5a4a30', 1.6);
+  const catkinXs = [cx-20, cx, cx+20];
+  catkinXs.forEach((kx, idx) => {
+    L(svg, cx-10, 30, kx, 38, '#5a4a30', 1.0);
+    const len = 35 + idx*4;
+    for (let i = 0; i < 28; i++) {
+      const t = i/27;
+      const y = 38 + t*len;
+      const r = 6 - Math.abs(t-0.5)*4 + (rng()-0.5)*1;
+      for (let j = 0; j < 6; j++) {
+        const a = j * 60 * Math.PI/180 + i*0.4;
+        const fx = kx + Math.cos(a)*r;
+        const fy = y;
+        C(svg, fx, fy, 1.2, '#c9a961', '#8b7340', 0.3, 0.85);
+      }
+    }
+    L(svg, kx, 38, kx, 38+len, '#7a8d5a', 0.6, 0.6);
+  });
+}
+
+function inflCyme(svg, w, h) {
+  function cyme(x, y, dir, len, depth) {
+    C(svg, x, y, 4 - (4-depth)*0.6, '#b07090', '#6a4a6e', 0.5, 0.95);
+    if (depth === 0 || len < 5) return;
+    for (let i = 0; i < 2; i++) {
+      const a = (dir + (i === 0 ? -32 : 32)) * Math.PI/180;
+      const nx = x + Math.cos(a)*len;
+      const ny = y + Math.sin(a)*len;
+      L(svg, x, y, nx, ny, '#5a7d3a', 0.8 + depth*0.2);
+      cyme(nx, ny, (i === 0 ? dir-32 : dir+32), len*0.7, depth-1);
+    }
+  }
+  L(svg, w/2, h-14, w/2, h*0.55, '#5a7d3a', 1.6);
+  cyme(w/2, h*0.55, -90, 20, 3);
+}
+
+// ============================================================
+// ROOTS — same recursion, gravity vector flipped
+// ============================================================
+function rootTaproot(svg, w, h) {
+  const rng = seedRandom(0xa11);
+  const cx = w/2, topY = 14;
+  drawBranch(svg, {
+    cx, cy: topY, dir: 90, length: h*0.20,
+    decay: 0.86, decayJitter: 0.04,
+    angle: 18, angleJitter: 5, branchCount: 1,
+    iterations: 5, width: 3.0, widthDecay: 0.85,
+    color: '#8b7340', rng
+  });
+  for (let s = 0; s < 5; s++) {
+    const sy = topY + (s+1) * h*0.13;
+    drawBranch(svg, {
+      cx, cy: sy, dir: s%2 ? 0 : 180,
+      length: h*0.10, decay: 0.72,
+      angle: 28, angleJitter: 14, branchCount: 2,
+      gravityPull: 4, iterations: 4,
+      width: 1.0, widthDecay: 0.7,
+      color: '#a89060', rng: seedRandom(0xa12+s)
+    });
+  }
+}
+
+function rootFibrous(svg, w, h) {
+  const rng = seedRandom(0xb22);
+  const cx = w/2, topY = 14;
+  const n = 16;
+  for (let i = 0; i < n; i++) {
+    const a = (i - n/2 + 0.5) * (160/n);
+    drawBranch(svg, {
+      cx, cy: topY, dir: 90+a,
+      length: h*0.10 + rng()*h*0.04,
+      decay: 0.78, angle: 22, angleJitter: 10,
+      branchCount: 2, gravityPull: 3,
+      iterations: 4, width: 1.2, widthDecay: 0.75,
+      color: '#a89060', rng: seedRandom(0xb22+i)
+    });
+  }
+}
+
+function rootLateral(svg, w, h) {
+  const rng = seedRandom(0xc33);
+  const cx = w/2, topY = 14;
+  drawBranch(svg, {
+    cx, cy: topY, dir: 90, length: h*0.10,
+    decay: 0.6, angle: 8, branchCount: 1,
+    iterations: 3, width: 2.4, widthDecay: 0.85,
+    color: '#8b7340', rng
+  });
+  const lats = 7;
+  for (let i = 0; i < lats; i++) {
+    drawBranch(svg, {
+      cx, cy: topY + h*0.12,
+      dir: i < lats/2 ? 178 + (rng()-0.5)*16 : 2 + (rng()-0.5)*16,
+      length: h*0.13, decay: 0.78, decayJitter: 0.05,
+      angle: 24, angleJitter: 14, branchCount: 2,
+      gravityPull: 4, iterations: 5,
+      width: 1.4, widthDecay: 0.72,
+      color: '#a89060', rng: seedRandom(0xc33+i)
+    });
+  }
+}
+
+function rootAdventitious(svg, w, h) {
+  const rng = seedRandom(0xd44);
+  const topY = 6;
+  const origins = [w*0.25, w*0.4, w*0.5, w*0.6, w*0.75];
+  origins.forEach((ox, i) => {
+    L(svg, ox, 0, ox, topY+4, '#7a6840', 1.4);
+    drawBranch(svg, {
+      cx: ox, cy: topY+4, dir: 90,
+      length: h*0.16 * (0.8 + rng()*0.4),
+      decay: 0.78, decayJitter: 0.06,
+      angle: 22, angleJitter: 10, branchCount: 2,
+      gravityPull: 5, iterations: 4,
+      width: 1.6, widthDecay: 0.75,
+      color: '#a89060', rng: seedRandom(0xd44+i)
+    });
+  });
+}
+
+function rootRhizomatous(svg, w, h) {
+  const rng = seedRandom(0xe55);
+  const topY = 12;
+  for (let dir = 0; dir < 2; dir++) {
+    let px = w/2, py = topY+6;
+    const sign = dir === 0 ? 1 : -1;
+    for (let s = 0; s < 8; s++) {
+      const len = 14 + rng()*6;
+      const angle = (rng()-0.5)*14;
+      const nx = px + sign*Math.cos(angle*Math.PI/180)*len;
+      const ny = py + Math.sin(angle*Math.PI/180)*len;
+      L(svg, px, py, nx, ny, '#8b7340', 2.0);
+      drawBranch(svg, {
+        cx: nx, cy: ny, dir: 90,
+        length: h*0.06, decay: 0.72,
+        angle: 18, angleJitter: 8, branchCount: 2,
+        iterations: 3, width: 1.0, widthDecay: 0.7,
+        color: '#a89060', rng: seedRandom(0xe55+dir*100+s)
+      });
+      L(svg, nx, ny, nx, ny-6, '#7cb342', 1.2);
+      C(svg, nx, ny-6, 1.6, '#b5cf80', null);
+      px = nx; py = ny;
+    }
+  }
+}
+
+function rootButtress(svg, w, h) {
+  const rng = seedRandom(0xb01a);
+  const cx = w/2, topY = 8;
+  drawBranch(svg, {
+    cx, cy: topY+8, dir: 90, length: h*0.18,
+    decay: 0.85, angle: 12, branchCount: 1,
+    iterations: 4, width: 2.6, widthDecay: 0.85,
+    color: '#8b7340', rng
+  });
+  const flares = 5;
+  for (let i = 0; i < flares; i++) {
+    const a = i * (360/flares) + 18;
+    if (a > 90 && a < 270) continue;
+    const dir = a;
+    const len = h*0.16;
+    const tipX = cx + Math.cos(dir*Math.PI/180)*len;
+    const tipY = topY + 4 + Math.sin(dir*Math.PI/180)*len*0.3;
+    P(svg, `M${cx-3} ${topY} L${cx+3} ${topY} L${tipX+2} ${tipY+3} Q${tipX} ${tipY+5} ${tipX-2} ${tipY+3} Z`, '#7a6840', '#5a4a30', 0.6, 0.92);
+    drawBranch(svg, {
+      cx: tipX, cy: tipY, dir: dir + 30,
+      length: h*0.10, decay: 0.74, decayJitter: 0.06,
+      angle: 22, angleJitter: 10, branchCount: 2,
+      gravityPull: 5, iterations: 4,
+      width: 1.0, widthDecay: 0.7,
+      color: '#a89060', rng: seedRandom(0xb01a+i)
+    });
+  }
+}
+
+// ============================================================
+// MYCORRHIZAL NETWORKS
+// ============================================================
+function myceliumEcto(svg, w, h) {
+  const rng = seedRandom(0xff01);
+  const cx = w/2, cy = h/2;
+  L(svg, cx, 12, cx, h-12, '#8b7340', 2.4, 0.95);
+  // hyphal sheath
+  for (let i = 0; i < 80; i++) {
+    const t = rng();
+    const y = 12 + t*(h-24);
+    const offset = (rng()-0.5) * 8;
+    L(svg, cx + offset, y, cx + (rng()-0.5)*4, y + (rng()-0.5)*3, '#9aae88', 0.6, 0.7);
+  }
+  // long radiating hyphae via DLA
+  const seeds = [];
+  for (let i = 0; i < 20; i++) {
+    const t = rng();
+    const y = 12 + t*(h-24);
+    const side = rng() > 0.5 ? 1 : -1;
+    seeds.push({x: cx + side*4, y, parent: null});
+  }
+  dla(svg, {
+    cx, cy, particles: 200, radius: w*0.45,
+    drawColor: '#9aae88', lineWidth: 0.5, opacity: 0.7,
+    rng, seedPoints: seeds
+  });
+  // mushroom fruiting body
+  P(svg, `M${cx-12} 8 Q${cx} -2 ${cx+12} 8 L${cx+8} 12 L${cx+2} 16 L${cx-2} 16 L${cx-8} 12 Z`, '#a04030', '#6a2a2a', 0.6, 0.95);
+  L(svg, cx, 12, cx, 18, '#d8d4be', 1.4, 0.95);
+}
+
+function myceliumArbuscular(svg, w, h) {
+  const rng = seedRandom(0xff02);
+  const cx = w/2;
+  // root cell wall pattern
+  for (let i = 0; i < 8; i++) {
+    const y = 16 + i * (h-32) / 8;
+    L(svg, cx-14, y, cx+14, y, '#5a4a30', 0.5, 0.7);
+  }
+  L(svg, cx-14, 16, cx-14, h-16, '#5a4a30', 0.7, 0.85);
+  L(svg, cx+14, 16, cx+14, h-16, '#5a4a30', 0.7, 0.85);
+  // arbuscules INSIDE cells (tree-like fractal structures)
+  for (let i = 0; i < 8; i++) {
+    const cellCenterY = 20 + i * (h-32)/8;
+    const cellCenterX = cx + (rng()-0.5)*8;
+    function arbuscule(x, y, dir, len, depth) {
+      if (depth === 0 || len < 1.5) return;
+      const a = dir * Math.PI/180;
+      const nx = x + Math.cos(a)*len;
+      const ny = y + Math.sin(a)*len;
+      L(svg, x, y, nx, ny, '#9aae88', 0.4, 0.85);
+      arbuscule(nx, ny, dir-25, len*0.7, depth-1);
+      arbuscule(nx, ny, dir+25, len*0.7, depth-1);
+      arbuscule(nx, ny, dir, len*0.6, depth-1);
+    }
+    arbuscule(cellCenterX, cellCenterY, -90, 4, 4);
+  }
+  // external hyphae extending out
+  for (let i = 0; i < 12; i++) {
+    const startY = 16 + rng()*(h-32);
+    const side = rng() > 0.5 ? 1 : -1;
+    let px = cx + side*14;
+    let py = startY;
+    let dir = side > 0 ? 0 : 180;
+    for (let s = 0; s < 18; s++) {
+      const a = (dir + (rng()-0.5)*60) * Math.PI/180;
+      const nx = px + Math.cos(a)*4;
+      const ny = py + Math.sin(a)*4;
+      if (nx < 0 || nx > w) break;
+      L(svg, px, py, nx, ny, '#9aae88', 0.4, 0.7);
+      px = nx; py = ny;
+    }
+    C(svg, px, py, 1.6, '#c9a961', '#8b7340', 0.3, 0.9);
+  }
+}
+
+function myceliumLichen(svg, w, h) {
+  const rng = seedRandom(0xff03);
+  const cx = w/2, cy = h/2;
+  dla(svg, {
+    cx, cy, particles: 500, radius: Math.min(w,h)*0.42,
+    drawColor: '#9aae88', lineWidth: 0.5, opacity: 0.85, rng
+  });
+  C(svg, cx, cy, 3, '#7cb342', null, null, 0.95);
+  // apothecia (cup-shaped fruiting bodies)
+  for (let i = 0; i < 6; i++) {
+    const a = rng() * Math.PI * 2;
+    const r = Math.min(w,h)*0.15 + rng() * Math.min(w,h)*0.20;
+    const x = cx + Math.cos(a)*r;
+    const y = cy + Math.sin(a)*r;
+    C(svg, x, y, 2.2, '#a04030', '#6a2a2a', 0.5, 0.9);
+    C(svg, x, y, 1.0, '#5a2020', null, null);
+  }
+}
+
+// ============================================================
+// NATIVE/INVASIVE PAIR
+// ============================================================
+function spartinaCanopy(svg, w, h) {
+  const rng = seedRandom(0xf01);
+  const baseY = h-10;
+  for (let i = 0; i < 24; i++) {
+    const ox = w*0.1 + (i/24)*w*0.8 + (rng()-0.5)*8;
+    const ht = h*0.55 + rng()*h*0.3;
+    const arc = (rng()-0.5)*18;
+    let px = ox, py = baseY;
+    for (let s = 0; s < 6; s++) {
+      const t = (s+1)/6;
+      const nx = ox + arc*t;
+      const ny = baseY - ht*t;
+      L(svg, px, py, nx, ny, '#7cb342', 1.0 - t*0.4, 0.92);
+      px = nx; py = ny;
+    }
+    if (rng() > 0.7) C(svg, px, py, 1.6, '#c9a961', null, null, 0.9);
+  }
+}
+function spartinaRoots(svg, w, h) {
+  const rng = seedRandom(0xf02);
+  const topY = 12;
+  for (let i = 0; i < 4; i++) {
+    const ry = topY + 8 + i*14;
+    let px = w*0.05, py = ry;
+    for (let s = 0; s < 14; s++) {
+      const nx = px + (w*0.9/14);
+      const ny = py + (rng()-0.5)*4;
+      L(svg, px, py, nx, ny, '#8b7340', 1.4 - i*0.2, 0.92);
+      if (s%2 === 1) {
+        let rpx = nx, rpy = ny;
+        const rlen = h*0.10 - i*3;
+        for (let q = 0; q < 4; q++) {
+          const rny = rpy + rlen/4 + (rng()-0.5)*2;
+          const rnx = rpx + (rng()-0.5)*3;
+          L(svg, rpx, rpy, rnx, rny, '#a89060', 0.7, 0.8);
+          rpx = rnx; rpy = rny;
+        }
+      }
+      if (i === 0 && s%3 === 1) {
+        L(svg, nx, ny, nx, ny-8, '#7cb342', 1.0, 0.9);
+        C(svg, nx, ny-8, 1.5, '#b5cf80', null, null, 0.9);
+      }
+      px = nx; py = ny;
+    }
+  }
+}
+function phragmitesCanopy(svg, w, h) {
+  const rng = seedRandom(0xf03);
+  const baseY = h-10;
+  for (let i = 0; i < 38; i++) {
+    const ox = w*0.05 + (i/38)*w*0.9 + (rng()-0.5)*6;
+    const ht = h*0.75 + rng()*h*0.18;
+    let px = ox, py = baseY;
+    for (let s = 0; s < 7; s++) {
+      const t = (s+1)/7;
+      const nx = ox + (rng()-0.5)*3;
+      const ny = baseY - ht*t;
+      L(svg, px, py, nx, ny, '#a8a060', 0.9, 0.88);
+      px = nx; py = ny;
+    }
+    if (rng() > 0.5) {
+      const headSize = 14 + rng()*6;
+      for (let p = 0; p < 8; p++) {
+        const a = -90 + (p-3.5)*14;
+        const tlen = headSize*(0.7 + rng()*0.4);
+        L(svg, px, py, px + Math.cos(a*Math.PI/180)*tlen, py + Math.sin(a*Math.PI/180)*tlen, '#c9a961', 0.6, 0.85);
+      }
+    }
+  }
+}
+function phragmitesRoots(svg, w, h) {
+  const rng = seedRandom(0xf04);
+  const topY = 10;
+  for (let i = 0; i < 6; i++) {
+    const ry = topY + 6 + i*11;
+    let px = w*0.02, py = ry;
+    for (let s = 0; s < 16; s++) {
+      const nx = px + (w*0.96/16);
+      const ny = py + (rng()-0.5)*3;
+      L(svg, px, py, nx, ny, '#a04030', 1.4 - i*0.12, 0.9);
+      if (s%2 === 0 && i < 5) L(svg, nx, ny, nx + (rng()-0.5)*4, ny+11, '#a89060', 0.7, 0.7);
+      if (s%3 === 1) {
+        for (let q = 0; q < 3; q++) {
+          L(svg, nx, ny, nx + (rng()-0.5)*8, ny + 5 + rng()*6, '#a89060', 0.5, 0.7);
+        }
+      }
+      if (i === 0 && s%2 === 0) L(svg, nx, ny, nx, ny-9, '#a8a060', 0.9, 0.85);
+      px = nx; py = ny;
+    }
+  }
+}
+
+// ============================================================
+// CURIOSA — REACTIVE FORMS
+// ============================================================
+// Plants modeled as little machines. Mimosa folds. Nepenthes digests.
+// Phragmites annexes. Behavior is grammar in motion.
+
+// MIMOSA PUDICA — sensitive plant. Bipinnate compound leaves
+// that visibly fold via CSS animation (the "shy" response).
+function speciesMimosa(svg, w, h) {
+  const rng = seedRandom(0xb01b);
+  const cx = w / 2;
+  const baseY = h - 12;
+  const stemTop = baseY - h * 0.62;
+  // central stem
+  L(svg, cx, baseY, cx, stemTop, '#7a8d5a', 1.6);
+  // 5 compound leaves spreading from stem nodes
+  const leafConfigs = [
+    { y: 0.18, side: -1, length: w * 0.34, angle: -22 },
+    { y: 0.32, side:  1, length: w * 0.36, angle:  22 },
+    { y: 0.46, side: -1, length: w * 0.32, angle: -18 },
+    { y: 0.58, side:  1, length: w * 0.28, angle:  18 },
+    { y: 0.70, side: -1, length: w * 0.22, angle: -12 },
+  ];
+  leafConfigs.forEach((cfg, ci) => {
+    const startX = cx;
+    const startY = baseY - h * cfg.y;
+    const dirRad = cfg.angle * Math.PI / 180;
+    const endX = startX + Math.cos(dirRad - Math.PI / 2) * cfg.length;
+    const endY = startY + Math.sin(dirRad - Math.PI / 2) * cfg.length;
+    // rachis
+    L(svg, startX, startY, endX, endY, '#5a7d3a', 1.0);
+    // node ring at attachment
+    C(svg, startX, startY, 1.4, '#5a4a30', null, null, 0.85);
+    // leaflets along rachis (paired bipinnate-style)
+    const segs = 13;
+    for (let i = 1; i <= segs; i++) {
+      const t = i / (segs + 1);
+      const px = startX + (endX - startX) * t;
+      const py = startY + (endY - startY) * t;
+      const taper = Math.sin(t * Math.PI) * 0.85 + 0.15;
+      const leafLen = 5.5 * taper;
+      const leafW = 1.8 * taper;
+      // perpendicular to rachis
+      const rachAng = Math.atan2(endY - startY, endX - startX);
+      const perpAng = rachAng + Math.PI / 2;
+      for (const dir of [1, -1]) {
+        const offset = 1.5;
+        const lx = px + Math.cos(perpAng) * (offset + leafLen * 0.4) * dir;
+        const ly = py + Math.sin(perpAng) * (offset + leafLen * 0.4) * dir;
+        const rotDeg = (rachAng + Math.PI / 2 * dir) * 180 / Math.PI;
+        const el = E(svg, lx, ly, leafLen, leafW, rotDeg, '#7cb342', '#5a7d3a', 0.4, 0.92);
+        el.classList.add('mimosa-leaflet');
+        // staggered animation delay so the fold ripples down each leaf
+        const delay = (ci * 0.18) + (i * 0.06);
+        el.style.animationDelay = delay + 's';
+      }
+    }
+    // tip pair
+    const tipPerpAng = Math.atan2(endY - startY, endX - startX);
+    const tipEl = E(svg, endX + Math.cos(tipPerpAng) * 3, endY + Math.sin(tipPerpAng) * 3, 4.5, 1.6,
+                    tipPerpAng * 180 / Math.PI, '#7cb342', '#5a7d3a', 0.4, 0.92);
+    tipEl.classList.add('mimosa-leaflet');
+    tipEl.style.animationDelay = (ci * 0.18 + 0.85) + 's';
+  });
+  // pink globular flower (puffball) on top
+  const flowerY = stemTop - 2;
+  // filament stalks radiating outward
+  for (let i = 0; i < 36; i++) {
+    const a = (i * 10) * Math.PI / 180;
+    const r = 11 + (i % 4) * 1.4;
+    const fx = cx + Math.cos(a) * r;
+    const fy = flowerY + Math.sin(a) * r;
+    L(svg, cx, flowerY, fx, fy, '#d8a8c0', 0.5, 0.85);
+    C(svg, fx, fy, 0.9, '#b07090', null, null, 0.95);
+  }
+  C(svg, cx, flowerY, 5, '#b07090', '#8a3540', 0.6, 0.95);
+  C(svg, cx, flowerY, 2, '#c9a961', null, null, 0.95);
+  // soil hatch
+  for (let i = 0; i < 14; i++) {
+    L(svg, w * 0.1 + i * w * 0.057, baseY + 1, w * 0.1 + i * w * 0.057 + 4, baseY + 4, '#5a4a30', 0.6, 0.5);
+  }
+}
+
+// NEPENTHES — pitcher plant. Modified leaf as digestive trap.
+// "Vegan cultivar" descriptor is the user's joke and gets honored.
+function speciesNepenthes(svg, w, h) {
+  const rng = seedRandom(0xb02c);
+  const cx = w / 2;
+  const baseY = h - 12;
+  // host substrate (epiphytic on a branch / trellis)
+  L(svg, w * 0.08, h * 0.18, w * 0.92, h * 0.16, '#5a4a30', 4, 0.5);
+  L(svg, w * 0.08, h * 0.20, w * 0.92, h * 0.18, '#3d2818', 1.5, 0.7);
+  // basal rosette of strap leaves at top (origin)
+  const rosetteY = h * 0.22;
+  for (let i = 0; i < 6; i++) {
+    const a = (i - 2.5) * 22;
+    const len = 28 + rng() * 6;
+    const tipX = cx - 24 + Math.cos((90 + a) * Math.PI / 180) * len;
+    const tipY = rosetteY + Math.abs(Math.sin((90 + a) * Math.PI / 180)) * len * 0.6;
+    const midX = (cx - 24 + tipX) / 2 + (a * 0.3);
+    const midY = (rosetteY + tipY) / 2;
+    P(svg, `M${cx - 24} ${rosetteY} Q${midX} ${midY} ${tipX} ${tipY}`, '#5a7d3a', null, 4, 0.8);
+    P(svg, `M${cx - 24} ${rosetteY} Q${midX} ${midY} ${tipX} ${tipY}`, '#7cb342', null, 1.2, 0.95);
+  }
+  // tendril hanging down from a leaf, supporting the pitcher
+  const pitcherX = cx + 16;
+  const pitcherTop = h * 0.42;
+  const pitcherBot = h * 0.86;
+  // tendril (curling)
+  const tStart = { x: cx + 6, y: rosetteY + 10 };
+  let tx = tStart.x, ty = tStart.y;
+  for (let s = 0; s < 12; s++) {
+    const t = s / 12;
+    const drift = Math.sin(s * 0.5) * 4;
+    const nx = tStart.x + drift + (pitcherX - tStart.x) * t;
+    const ny = tStart.y + (pitcherTop - tStart.y) * t;
+    L(svg, tx, ty, nx, ny, '#7cb342', 1.0, 0.9);
+    tx = nx; ty = ny;
+  }
+  // pitcher body (gourd-shaped)
+  const pw = 15;
+  P(svg, `M${pitcherX - pw + 3} ${pitcherTop + 8}
+          L${pitcherX - pw - 1} ${pitcherTop + 28}
+          Q${pitcherX - pw - 5} ${pitcherBot - 18} ${pitcherX - pw + 1} ${pitcherBot - 4}
+          Q${pitcherX} ${pitcherBot + 4} ${pitcherX + pw - 1} ${pitcherBot - 4}
+          Q${pitcherX + pw + 5} ${pitcherBot - 18} ${pitcherX + pw + 1} ${pitcherTop + 28}
+          L${pitcherX + pw - 3} ${pitcherTop + 8} Z`,
+    '#5a8a48', '#3d4a2a', 1.2, 0.92);
+  // red lip / peristome
+  E(svg, pitcherX, pitcherTop + 8, pw - 1, 4, 0, '#a04030', '#6a2a2a', 1.2, 0.95);
+  E(svg, pitcherX, pitcherTop + 8, pw - 4, 2, 0, '#c25a48', null, null, 0.95);
+  // hood (operculum)
+  P(svg, `M${pitcherX - pw + 2} ${pitcherTop + 6}
+          Q${pitcherX - pw + 4} ${pitcherTop - 14} ${pitcherX - 3} ${pitcherTop - 16}
+          Q${pitcherX + 6} ${pitcherTop - 14} ${pitcherX + pw - 2} ${pitcherTop + 6}`,
+    '#6a2a2a', '#a04030', 1.0, 0.92);
+  // hood underside texture
+  for (let i = 0; i < 5; i++) {
+    const yy = pitcherTop - 8 + i * 2;
+    L(svg, pitcherX - pw + 4 + i, yy, pitcherX + pw - 4 - i, yy, '#5a2020', 0.4, 0.6);
+  }
+  // veining on pitcher body (red mottling)
+  for (let i = 0; i < 9; i++) {
+    const yy = pitcherTop + 16 + i * 5;
+    const wave = Math.sin(i * 1.3) * 3;
+    L(svg, pitcherX - pw + 2, yy + wave, pitcherX + pw - 2, yy - wave, '#6a2a2a', 0.5, 0.7);
+  }
+  // wing ridges (front of pitcher)
+  P(svg, `M${pitcherX - 1} ${pitcherTop + 10} Q${pitcherX - 4} ${pitcherTop + 30} ${pitcherX - 1} ${pitcherBot - 6}`, '#3d4a2a', null, 0.8, 0.85);
+  P(svg, `M${pitcherX + 1} ${pitcherTop + 10} Q${pitcherX + 4} ${pitcherTop + 30} ${pitcherX + 1} ${pitcherBot - 6}`, '#3d4a2a', null, 0.8, 0.85);
+  // tendril attaches to back of hood
+  L(svg, tx, ty, pitcherX + 2, pitcherTop - 12, '#7cb342', 0.9, 0.92);
+  // a fly approaching the hood (sad joke)
+  const flyX = pitcherX + 28, flyY = pitcherTop - 4;
+  C(svg, flyX, flyY, 1.4, '#3d2818', null, null, 0.85);
+  L(svg, flyX - 2, flyY - 2, flyX - 5, flyY - 4, '#5a6b54', 0.4, 0.7);
+  L(svg, flyX + 2, flyY - 2, flyX + 5, flyY - 4, '#5a6b54', 0.4, 0.7);
+}
+
+// PHRAGMITES AUSTRALIS — single iconic stem with full plumose head.
+// Different framing from the comparison: this is the showcase.
+function speciesPhragmitesAlone(svg, w, h) {
+  const rng = seedRandom(0xb03d);
+  const cx = w / 2;
+  const baseY = h - 12;
+  const stemH = h * 0.62;
+  // tall jointed stem
+  const segs = 7;
+  let px = cx, py = baseY;
+  for (let s = 0; s < segs; s++) {
+    const t = (s + 1) / segs;
+    const ny = baseY - stemH * t;
+    const nx = cx + (rng() - 0.5) * 1.5;
+    L(svg, px, py, nx, ny, '#a89060', 2.4 - t * 1.2);
+    // node ring
+    C(svg, nx, ny, 2.2, '#7a6840', null, null, 0.95);
+    // leaves at nodes
+    if (s > 0 && s < segs - 1) {
+      const side = s % 2 === 0 ? 1 : -1;
+      const leafLen = 38 - s * 3;
+      const leafBaseAng = 30 + (rng() - 0.5) * 10;
+      const ang = leafBaseAng * side;
+      const tipX = nx + Math.cos((-90 + ang) * Math.PI / 180 + Math.PI / 2) * leafLen * side;
+      const tipY = ny + leafLen * 0.45;
+      const midX = (nx + tipX) / 2 + side * 4;
+      const midY = (ny + tipY) / 2 - 2;
+      P(svg, `M${nx} ${ny} Q${midX} ${midY} ${tipX} ${tipY}`, '#a8a060', null, 1.6, 0.92);
+      // leaf blade thinning
+      P(svg, `M${nx - side * 2} ${ny} Q${midX - side * 1} ${midY + 1} ${tipX} ${tipY + 1}`, '#a8a060', null, 0.8, 0.7);
+    }
+    px = nx; py = ny;
+  }
+  // plumose flowering head
+  const headBase = py;
+  const headTop = py - 64;
+  // central rachis
+  L(svg, px, headBase, px, headTop, '#a89060', 1.4);
+  // panicle branches — fluffy and feathery
+  const branches = 32;
+  for (let i = 0; i < branches; i++) {
+    const t = i / branches;
+    const branchY = headBase - t * 60;
+    const ang = -90 + (rng() - 0.5) * 110;
+    const len = 16 + rng() * 12 + (1 - t) * 8;
+    const tipX = px + Math.cos(ang * Math.PI / 180) * len;
+    const tipY = branchY + Math.sin(ang * Math.PI / 180) * len;
+    L(svg, px, branchY, tipX, tipY, '#c9a961', 0.5, 0.85);
+    // hairy florets along branch (silvery hairs)
+    const florets = 4;
+    for (let j = 1; j <= florets; j++) {
+      const ft = j / (florets + 1);
+      const fx = px + (tipX - px) * ft;
+      const fy = branchY + (tipY - branchY) * ft;
+      // hairs radiating
+      for (let k = 0; k < 4; k++) {
+        const ha = (k - 1.5) * 35;
+        const hl = 3 + rng() * 1.5;
+        L(svg, fx, fy,
+          fx + Math.cos((ang + ha) * Math.PI / 180) * hl,
+          fy + Math.sin((ang + ha) * Math.PI / 180) * hl,
+          '#d8d4be', 0.3, 0.7);
+      }
+    }
+    // tip glume
+    C(svg, tipX, tipY, 0.9, '#d8d4be', null, null, 0.85);
+  }
+  // tag the rhizomatous note: invasive root suggestion at base
+  for (let i = 0; i < 3; i++) {
+    const dir = i - 1;
+    L(svg, cx, baseY, cx + dir * 14, baseY + 4, '#a04030', 1.2, 0.7);
+  }
+}
+
+
+// Demonstrates that parametric trees are dynamic, not static.
+// Same grammar, varied parameters → growth stages and seasons.
+// ============================================================
+
+// Palette per season — leaf color cycles, branch tone constant
+const SEASON_PALETTES = {
+  spring: { leaf: '#b5cf80', leafOpacity: 0.92, leafSize: 2.8, branch: '#5a4a30', accent: '#d8d4be', label: 'spring · bud break' },
+  summer: { leaf: '#5a7d3a', leafOpacity: 1.0,  leafSize: 4.2, branch: '#5a4a30', accent: null,      label: 'summer · canopy full' },
+  fall:   { leaf: '#c25a48', leafOpacity: 1.0,  leafSize: 4.0, branch: '#5a4a30', accent: '#c9a961', label: 'autumn · turning' },
+  winter: { leaf: null,      leafOpacity: 0,    leafSize: 0,   branch: '#5a4a30', accent: null,      label: 'winter · dormant' },
+};
+
+// Generic Quercus draw at any iteration depth and season
+function drawQuercus(svg, w, h, opts = {}) {
+  const { iterations = 6, seedNum = 0x71c2, scale = 1.0, season = 'summer', tagLeaves = false } = opts;
+  const rng = seedRandom(seedNum);
+  const pal = SEASON_PALETTES[season];
+  // For winter, draw branches but no leaves
+  drawBranch(svg, {
+    cx: w/2, cy: h-10, dir: -90,
+    length: h * 0.22 * scale,
+    decay: 0.74, decayJitter: 0.10,
+    angle: 32, angleJitter: 12, branchCount: 3,
+    asymmetry: 0.4, iterations,
+    width: 4.5 * scale, widthDecay: 0.62, minWidth: 0.5,
+    color: pal.branch,
+    leafColor: pal.leaf,
+    leafSize: pal.leafSize, leafOpacity: pal.leafOpacity,
+    rng
+  });
+  // Tag leaves with class for animation
+  if (tagLeaves) {
+    svg.querySelectorAll('circle').forEach(c => c.classList.add('leaf'));
+  }
+  // Spring: blossoms scattered (small white flowers — oaks have catkins, simplified here)
+  if (pal.accent && season === 'spring') {
+    const rng2 = seedRandom(seedNum + 7);
+    for (let i = 0; i < 18; i++) {
+      const x = w * 0.25 + rng2() * w * 0.5;
+      const y = h * 0.30 + rng2() * h * 0.45;
+      C(svg, x, y, 1.4, pal.accent, null, null, 0.85);
+    }
+  }
+  // Fall: amber accents
+  if (pal.accent && season === 'fall') {
+    const rng2 = seedRandom(seedNum + 13);
+    svg.querySelectorAll('circle').forEach(c => {
+      if (rng2() < 0.18) c.setAttribute('fill', pal.accent);
+    });
+  }
+}
+
+// === Growth stage specimens ===
+// Stage 0: Acorn (seed) — single iconic acorn
+function quercusStage_acorn(svg, w, h) {
+  const cx = w/2, cy = h*0.55;
+  // acorn body (ovoid)
+  E(svg, cx, cy + 6, 12, 16, 0, '#8b7340', '#5a4a30', 1.0, 0.95);
+  // acorn cap (textured top)
+  P(svg, `M${cx-13} ${cy-6} Q${cx-13} ${cy-12} ${cx} ${cy-13} Q${cx+13} ${cy-12} ${cx+13} ${cy-6} Q${cx+10} ${cy-2} ${cx} ${cy-3} Q${cx-10} ${cy-2} ${cx-13} ${cy-6} Z`, '#5a4a30', '#3d2818', 1.0, 0.95);
+  // cap texture pattern (phyllotactic dots)
+  for (let i = 0; i < 14; i++) {
+    const a = i * 137.508 * Math.PI/180;
+    const r = Math.sqrt(i) * 2.2;
+    const x = cx + Math.cos(a) * r;
+    const y = (cy - 8) + Math.sin(a) * r * 0.5;
+    if (Math.abs(x - cx) < 12) C(svg, x, y, 0.7, '#3d2818', null, null, 0.9);
+  }
+  // tiny stem on cap
+  L(svg, cx, cy-13, cx, cy-18, '#3d2818', 1.4);
+  // soil line
+  L(svg, 0, h-10, w, h-10, '#5a4a30', 0.6, 0.5);
+  // hint of root emerging
+  L(svg, cx, cy + 22, cx, h-12, '#8b7340', 1.6, 0.8);
+}
+
+// Stage 1: Seedling — first leaves
+function quercusStage_seedling(svg, w, h) {
+  const cx = w/2, baseY = h-12;
+  // tiny stem
+  L(svg, cx, baseY, cx, baseY-22, '#7a8d5a', 1.4);
+  // 2 cotyledons
+  E(svg, cx-5, baseY-22, 4, 2.5, -20, '#b5cf80', '#7cb342', 0.5, 0.95);
+  E(svg, cx+5, baseY-22, 4, 2.5, 20, '#b5cf80', '#7cb342', 0.5, 0.95);
+  // first true leaf above cotyledons
+  E(svg, cx, baseY-32, 4, 6, 0, '#7cb342', '#5a7d3a', 0.5, 0.95);
+  // taproot below
+  L(svg, cx, baseY, cx, baseY+18, '#8b7340', 1.4, 0.85);
+  L(svg, cx, baseY+10, cx-4, baseY+18, '#a89060', 0.7);
+  L(svg, cx, baseY+12, cx+4, baseY+19, '#a89060', 0.7);
+  // soil line
+  L(svg, 0, baseY, w, baseY, '#5a4a30', 0.6, 0.5);
+}
+
+// Stage 2/3/4: drawQuercus at varying iterations
+function quercusStage_sapling(svg, w, h) {
+  drawQuercus(svg, w, h, { iterations: 3, scale: 0.7, seedNum: 0x71c3, season: 'summer' });
+}
+function quercusStage_young(svg, w, h) {
+  drawQuercus(svg, w, h, { iterations: 5, scale: 0.85, seedNum: 0x71c4, season: 'summer' });
+}
+function quercusStage_mature(svg, w, h) {
+  drawQuercus(svg, w, h, { iterations: 7, scale: 1.0, seedNum: 0x71c5, season: 'summer' });
+}
+
+// === Seasonal specimens — same n=7 mature tree, different leaf state ===
+function quercusSeason_spring(svg, w, h) {
+  drawQuercus(svg, w, h, { iterations: 7, seedNum: 0x71c5, season: 'spring' });
+}
+function quercusSeason_summer(svg, w, h) {
+  drawQuercus(svg, w, h, { iterations: 7, seedNum: 0x71c5, season: 'summer' });
+}
+function quercusSeason_fall(svg, w, h) {
+  drawQuercus(svg, w, h, { iterations: 7, seedNum: 0x71c5, season: 'fall' });
+}
+function quercusSeason_winter(svg, w, h) {
+  drawQuercus(svg, w, h, { iterations: 7, seedNum: 0x71c5, season: 'winter' });
+}
+
+// === Animated showcase — full tree with tagged leaves ===
+function quercusAnimated(svg, w, h) {
+  drawQuercus(svg, w, h, { iterations: 7, seedNum: 0x71c5, season: 'summer', tagLeaves: true });
+  // After draw, set per-line stagger delays for branchDraw animation
+  const lines = svg.querySelectorAll('line');
+  lines.forEach((line, i) => {
+    // animation reveals branches over the first ~16% of the 12s loop
+    // Stagger by index → approximates DFS traversal depth → root-first growth
+    const delay = (i / lines.length) * 1.6;
+    line.style.animationDelay = delay + 's';
+  });
+  const leaves = svg.querySelectorAll('circle.leaf');
+  leaves.forEach((leaf, i) => {
+    // small per-leaf stagger so they don't all appear at once
+    const delay = (i / leaves.length) * 0.5;
+    leaf.style.animationDelay = delay + 's';
+  });
+}
+
+
+// New label schema:
+//   primary    = the prominent name in caps (common name OR algorithm name)
+//   binomial   = italic Latin binomial (only for species)
+//   descriptor = italic description (only for non-species, replaces binomial)
+//   meta       = parametric notation
+//   formula    = optional L-system rule, displayed below meta with separator
+// Backward-compatibility: if entry uses old `label`/`common` schema, it still renders.
+function makeSpecimen(parent, opts) {
+  const {
+    label, common = '',
+    primary, binomial, descriptor,
+    meta = '', formula = '',
+    drawFn,
+    badge = null, badgeClass = '',
+    cls = '', vbW = 200, vbH = 240,
+    animClass = ''
+  } = opts;
+  const div = document.createElement('div');
+  div.className = `specimen ${cls}`;
+  if (badge) {
+    const b = document.createElement('div');
+    b.className = `badge ${badgeClass}`;
+    b.textContent = badge;
+    div.appendChild(b);
+  }
+  const canvas = document.createElement('div');
+  canvas.className = 'canvas';
+  const svg = svgEl(vbW, vbH);
+  if (animClass) svg.classList.add(animClass);
+  canvas.appendChild(svg);
+  div.appendChild(canvas);
+
+  // Build label
+  const labelEl = document.createElement('div');
+  labelEl.className = 'label';
+  // resolve fields with back-compat
+  const _primary = primary || label || '';
+  const _binomial = binomial || '';
+  const _descriptor = descriptor || (common && !binomial ? common : '');
+  let labelHtml = `<span class="primary">${_primary}</span>`;
+  if (_binomial) labelHtml += `<span class="binomial">${_binomial}</span>`;
+  else if (_descriptor) labelHtml += `<span class="descriptor">${_descriptor}</span>`;
+  labelEl.innerHTML = labelHtml;
+  div.appendChild(labelEl);
+
+  if (meta || formula) {
+    const metaEl = document.createElement('div');
+    metaEl.className = 'meta';
+    let metaHtml = meta;
+    if (formula) metaHtml += `<span class="formula">${formula}</span>`;
+    metaEl.innerHTML = metaHtml;
+    div.appendChild(metaEl);
+  }
+  parent.appendChild(div);
+  drawFn(svg, vbW, vbH);
+  return div;
+}
+
+// ============================================================
+// POPULATE
+// ============================================================
+
+// === ITERATION ===
+const iterRow = document.getElementById('iter-row');
+[1, 2, 3, 4, 5].forEach(n => {
+  const cell = document.createElement('div');
+  cell.className = 'iter-cell';
+  cell.innerHTML = `<div class="iter-num">n = ${n} <span class="arrow">${n < 5 ? '→' : ''}</span></div>`;
+  const canvas = document.createElement('div');
+  canvas.className = 'canvas';
+  const svg = svgEl(160, 160);
+  canvas.appendChild(svg);
+  cell.appendChild(canvas);
+  const meta = document.createElement('div');
+  meta.className = 'meta';
+  meta.textContent = n === 1 ? 'axiom · stem' : (n === 5 ? 'canopy · leafed' : `iterate · 2^${n-1} tips`);
+  cell.appendChild(meta);
+  iterRow.appendChild(cell);
+  speciesIteration(svg, 160, 160, n);
+  // Tag for growing animation. Cells cascade left-to-right (n=1 first → n=5 last)
+  // creating a wave effect as the audience reads across.
+  const cellOffset = (n - 1) * 0.45;            // base delay per cell
+  const lines = svg.querySelectorAll('line');
+  lines.forEach((line, i) => {
+    line.classList.add('iter-stroke');
+    const innerStagger = (i / Math.max(lines.length, 1)) * 0.7;
+    line.style.animationDelay = (cellOffset + innerStagger) + 's';
+  });
+  const circles = svg.querySelectorAll('circle');
+  circles.forEach((c, i) => {
+    c.classList.add('iter-leaf');
+    c.style.animationDelay = (cellOffset + 0.8 + (i / Math.max(circles.length, 1)) * 0.4) + 's';
+  });
+});
+
+// === HERO ANIMATION ===
+// Featured Quercus rubra annual cycle, top of page. Same animation
+// system as the in-section showcase but renders into the hero canvas.
+(function renderHero() {
+  const heroCanvas = document.getElementById('hero-anim-canvas');
+  if (!heroCanvas) return;
+  const heroSvg = svgEl(480, 380);
+  heroSvg.classList.add('animated-tree');
+  heroCanvas.appendChild(heroSvg);
+  quercusAnimated(heroSvg, 480, 380);
+})();
+
+// === QUERCUS RUBRA · LIFECYCLE POPULATION ===
+// Five growth stages, four seasons, one animated showcase.
+// Demonstrates the same grammar runs forward in time —
+// not a static snapshot, a parametric organism.
+const growth = document.getElementById('growth-stages');
+makeSpecimen(growth, { primary: 'ACORN', binomial: 'Quercus rubra · seed', meta: 'stage 0 · n = 0 · dormant embryo', badge: 'lifecycle', badgeClass: 'lifecycle', drawFn: quercusStage_acorn, cls: 'tall', vbW: 180, vbH: 260 });
+makeSpecimen(growth, { primary: 'SEEDLING', binomial: 'Quercus rubra', meta: 'stage 1 · n = 1 · cotyledons + first true leaf', badge: 'lifecycle', badgeClass: 'lifecycle', drawFn: quercusStage_seedling, cls: 'tall', vbW: 180, vbH: 260 });
+makeSpecimen(growth, { primary: 'SAPLING', binomial: 'Quercus rubra', meta: 'stage 2 · n = 3 · θ = 32° · 27 tips', badge: 'lifecycle', badgeClass: 'lifecycle', drawFn: quercusStage_sapling, cls: 'tall', vbW: 180, vbH: 260 });
+makeSpecimen(growth, { primary: 'YOUNG TREE', binomial: 'Quercus rubra', meta: 'stage 3 · n = 5 · 243 tips · ~ 12 yr', badge: 'lifecycle', badgeClass: 'lifecycle', drawFn: quercusStage_young, cls: 'tall', vbW: 180, vbH: 260 });
+makeSpecimen(growth, { primary: 'MATURE', binomial: 'Quercus rubra', meta: 'stage 4 · n = 7 · 2187 tips · ~ 60 yr', badge: 'lifecycle', badgeClass: 'lifecycle', drawFn: quercusStage_mature, cls: 'tall', vbW: 180, vbH: 260 });
+
+const seasonal = document.getElementById('seasonal-cycle');
+makeSpecimen(seasonal, { primary: 'SPRING', descriptor: 'bud break · pale green leaves', meta: 'leafColor = #b5cf80 · size = 2.8 · accent: catkin-white', badge: 'lifecycle', badgeClass: 'lifecycle', drawFn: quercusSeason_spring, cls: 'tall', vbW: 200, vbH: 280 });
+makeSpecimen(seasonal, { primary: 'SUMMER', descriptor: 'canopy full · deep green', meta: 'leafColor = #5a7d3a · size = 4.2 · maximum LAI', badge: 'lifecycle', badgeClass: 'lifecycle', drawFn: quercusSeason_summer, cls: 'tall', vbW: 200, vbH: 280 });
+makeSpecimen(seasonal, { primary: 'AUTUMN', descriptor: 'turning · crimson + amber', meta: 'leafColor = #c25a48 · 18% amber overlay', badge: 'lifecycle', badgeClass: 'lifecycle', drawFn: quercusSeason_fall, cls: 'tall', vbW: 200, vbH: 280 });
+makeSpecimen(seasonal, { primary: 'WINTER', descriptor: 'dormant · bare branches', meta: 'leafColor = null · branches only · structural skeleton', badge: 'lifecycle', badgeClass: 'lifecycle', drawFn: quercusSeason_winter, cls: 'tall', vbW: 200, vbH: 280 });
+
+const showcase = document.getElementById('animated-showcase');
+makeSpecimen(showcase, { primary: 'QUERCUS RUBRA · ANNUAL CYCLE', binomial: 'Quercus rubra', meta: '12-second loop · grow → 4 seasons → reset · pure CSS keyframes', formula: 'animate(stroke-dashoffset, leaf.fill, leaf.opacity)', badge: 'animated', badgeClass: 'lifecycle', drawFn: quercusAnimated, animClass: 'animated-tree', cls: 'tall lifecycle', vbW: 480, vbH: 360 });
+makeSpecimen(showcase, { primary: 'NOTES · for landscape architects', descriptor: 'why this matters', meta: 'Most parametric tree libraries (Lumion, Forest Pack, Speedtree) ship STATIC meshes — one tree, fixed at one age, one season. VVIM voxels are GRAMMARS — turn the parameter knobs and the tree ages, season-shifts, responds to drought stress, simulates wind sway, retroactively models 50 years of canopy growth on a site. The same encoding that produced this animation produces a 3D mesh, a DXF, an ArcGIS feature, or a real-time GH preview.', drawFn: (svg, w, h) => {
+  // Render a parameter knob diagram instead of a tree
+  const cx = w/2, cy = h/2;
+  const knobs = [
+    { label: 'n (age)', val: 0.85, color: '#7cb342' },
+    { label: 'θ (angle)', val: 0.55, color: '#7cb342' },
+    { label: 'γ (gravity)', val: 0.30, color: '#a04030' },
+    { label: 'leaf hue', val: 0.75, color: '#c25a48' },
+    { label: 'leaf size', val: 0.85, color: '#5a7d3a' },
+    { label: 'season', val: 0.50, color: '#c9a961' },
+  ];
+  knobs.forEach((k, i) => {
+    const row = i;
+    const y = 36 + row * 42;
+    // label
+    const t = document.createElementNS(NS, 'text');
+    t.setAttribute('x', 24);
+    t.setAttribute('y', y);
+    t.setAttribute('fill', '#a8b8a4');
+    t.setAttribute('font-family', "'JetBrains Mono', monospace");
+    t.setAttribute('font-size', '11');
+    t.setAttribute('letter-spacing', '0.08em');
+    t.textContent = k.label;
+    svg.appendChild(t);
+    // track
+    const trackY = y + 8;
+    L(svg, 130, trackY, w - 24, trackY, '#3d4a39', 1.5);
+    // fill
+    L(svg, 130, trackY, 130 + (w - 154) * k.val, trackY, k.color, 2.5, 0.95);
+    // knob
+    C(svg, 130 + (w - 154) * k.val, trackY, 5, k.color, '#0a1410', 1.5, 0.95);
+  });
+  // axis label at top
+  const t = document.createElementNS(NS, 'text');
+  t.setAttribute('x', 24);
+  t.setAttribute('y', 22);
+  t.setAttribute('fill', '#c4b5e0');
+  t.setAttribute('font-family', "'Cormorant Garamond', serif");
+  t.setAttribute('font-style', 'italic');
+  t.setAttribute('font-size', '15');
+  t.textContent = 'parameter manifold · all dimensions live';
+  svg.appendChild(t);
+}, cls: 'tall lifecycle', vbW: 480, vbH: 360 });
+
+// === ALGORITHMIC FAMILIES ===
+const algo = document.getElementById('algo-families');
+makeSpecimen(algo, { primary: 'L-SYSTEM', descriptor: 'recursive substitution grammar', meta: 'θ = 25° · n = 6 · branchCount = 2', formula: 'F → F[+F][−F]F', badge: 'algorithm', badgeClass: 'algorithm', drawFn: algoLSystem, cls: 'tall', vbW: 220, vbH: 300 });
+makeSpecimen(algo, { primary: 'PHYLLOTAXIS', descriptor: 'golden angle distribution', meta: 'n = 220 · scale c = 6.5 · Fibonacci spirals emerge', formula: 'r(n) = c√n · θ = n · 137.508°', badge: 'algorithm', badgeClass: 'algorithm', drawFn: algoPhyllotaxis, cls: 'tall', vbW: 220, vbH: 300 });
+makeSpecimen(algo, { primary: 'VORONOI · derivative', descriptor: 'cellular venation network', meta: 'point set + k-NN graph · approximate dual edges', formula: 'edge(p, q) iff q ∈ kNN(p)', badge: 'algorithm', badgeClass: 'algorithm', drawFn: algoVoronoi, cls: 'tall', vbW: 220, vbH: 300 });
+makeSpecimen(algo, { primary: 'SPACE COLONIZATION', descriptor: 'attractor-driven growth', meta: 'Runions / Palubicki · 220 attractors · iter = 90', formula: 'd(n, a) < r_inf → grow toward a', badge: 'algorithm', badgeClass: 'algorithm', drawFn: algoSpaceCol, cls: 'tall', vbW: 220, vbH: 300 });
+makeSpecimen(algo, { primary: 'DIFFUSION-LIMITED AGGREGATION', descriptor: 'lichen / dendrite formation', meta: 'random walk · stick-on-contact · 320 particles', formula: 'P(stick) = 1 if d ≤ ε', badge: 'algorithm', badgeClass: 'algorithm', drawFn: algoDLA, cls: 'tall', vbW: 220, vbH: 300 });
+makeSpecimen(algo, { primary: 'REACTION-DIFFUSION', descriptor: 'Turing pattern', meta: 'inhibitor-activator · packed spots · ~ 600 cells', formula: '∂u/∂t = D∇²u + f(u, v)', badge: 'algorithm', badgeClass: 'algorithm', drawFn: algoReactionDiff, cls: 'tall', vbW: 220, vbH: 300 });
+
+// === PHYLLOTAXIS ===
+const phy = document.getElementById('phyllotaxis');
+makeSpecimen(phy, { primary: 'SUNFLOWER', binomial: 'Helianthus annuus', meta: '280 seeds · 21/34 parastichies · disc Ø ≈ 0.46h', formula: 'r(n) = c√n · θ(n) = n · 137.508°', drawFn: speciesHelianthus, cls: 'tall', vbW: 220, vbH: 300 });
+makeSpecimen(phy, { primary: 'PINE CONE', binomial: 'Pinus strobus · cone', meta: '90 scales · 8/13 parastichies · ovoid envelope', badge: 'native', badgeClass: 'native', drawFn: speciesPineCone, cls: 'tall', vbW: 220, vbH: 300 });
+makeSpecimen(phy, { primary: 'PINEAPPLE', binomial: 'Ananas comosus', meta: 'cylindrical phyllotaxis · 13/21 · crown leaves = 12', badge: 'tropical', badgeClass: 'tropical', drawFn: speciesAnanas, cls: 'tall', vbW: 220, vbH: 300 });
+makeSpecimen(phy, { primary: 'ROMANESCO', binomial: 'Brassica oleracea · botrytis', meta: '<span class="num">recursive</span> phyllotaxis · self-similar at depth = 2', drawFn: speciesRomanesco, cls: 'tall', vbW: 220, vbH: 300 });
+makeSpecimen(phy, { primary: 'SPIRAL ALOE', binomial: 'Aloe polyphylla', meta: 'perfect 5-spiral · marginal teeth · n = 50 leaves', badge: 'arid', badgeClass: 'arid', drawFn: speciesAloe, cls: 'tall', vbW: 220, vbH: 300 });
+makeSpecimen(phy, { primary: 'HEN-AND-CHICKS', binomial: 'Echeveria sp.', meta: '4 nested rings · count 14 / 11 / 8 / 5 · Fibonacci', badge: 'arid', badgeClass: 'arid', drawFn: speciesEcheveria, cls: 'tall', vbW: 220, vbH: 300 });
+
+// === VENATION ===
+const ven = document.getElementById('venation');
+makeSpecimen(ven, { primary: 'PINNATE', descriptor: 'feather-veined', meta: 'midrib + alternating ribs · n = 9', formula: 'F → F[+S][−S] (S = side-rib)', drawFn: venationPinnate, vbW: 180, vbH: 260 });
+makeSpecimen(ven, { primary: 'PALMATE', descriptor: 'maple-type', meta: '5 main veins from base · radial', drawFn: venationPalmate, vbW: 180, vbH: 260 });
+makeSpecimen(ven, { primary: 'PARALLEL', descriptor: 'monocot', meta: 'lily / grass · 9 parallel ribs', drawFn: venationParallel, vbW: 180, vbH: 260 });
+makeSpecimen(ven, { primary: 'RETICULATE', descriptor: 'dicot net', meta: 'primary veins + reticulated mesh', drawFn: venationReticulate, vbW: 180, vbH: 260 });
+makeSpecimen(ven, { primary: 'DICHOTOMOUS', descriptor: 'Ginkgo · ancient', meta: 'every fork = 2 equal · no anastomosis', formula: 'F → F[+F][−F]', drawFn: venationDichotomous, vbW: 180, vbH: 260 });
+
+// === ARCHITECTURAL ===
+const arch = document.getElementById('architectural');
+makeSpecimen(arch, { primary: "RAUH'S MODEL", descriptor: 'monopodial · orthotropic', meta: 'rhythmic tiers · all axes upward · exemplar: Pinus, Sequoia', formula: 'F → F[whorl]F · all branches +γ', drawFn: archRauh, cls: 'tall', vbW: 220, vbH: 320 });
+makeSpecimen(arch, { primary: "MASSART'S MODEL", descriptor: 'monopodial · plagiotropic', meta: 'horizontal whorls · exemplar: Araucaria', formula: 'F → F[whorl₀]F · branches at 0°', drawFn: archMassart, cls: 'tall', vbW: 220, vbH: 320 });
+makeSpecimen(arch, { primary: "TROLL'S MODEL", descriptor: 'plagiotropic throughout', meta: 'umbrella crown · exemplar: Leguminosae, Acacia', drawFn: archTroll, cls: 'tall', vbW: 220, vbH: 320 });
+makeSpecimen(arch, { primary: "LEEUWENBERG'S MODEL", descriptor: 'sympodial · terminal flower', meta: 'each module ends in flower then forks · exemplar: Manihot', formula: 'F → F·★[F][F][F] (★ = terminal flower)', drawFn: archLeeuwenberg, cls: 'tall', vbW: 220, vbH: 320 });
+makeSpecimen(arch, { primary: "CORNER'S MODEL", descriptor: 'unbranched · monocaulous', meta: 'single trunk · terminal crown · exemplar: Palmae', drawFn: archCorner, cls: 'tall', vbW: 220, vbH: 320 });
+makeSpecimen(arch, { primary: "CHAMPAGNAT'S MODEL", descriptor: 'sympodial · weeping habit', meta: 'pendant secondary axes · gravity bias γ = +25°', formula: 'F → F[+F]F[−F] · γ_pull = +25°', drawFn: archChampagnat, cls: 'tall', vbW: 220, vbH: 320 });
+
+// === ARBOREAL ===
+const arboreal = document.getElementById('arboreal');
+makeSpecimen(arboreal, { primary: 'EASTERN WHITE PINE', binomial: 'Pinus strobus', meta: 'monopodial · whorled · θ = 18° · 9 tiers · conical envelope', formula: 'F → F[whorl(k)]F · k = 6 ± 1', badge: 'native', badgeClass: 'native', drawFn: speciesPinus, cls: 'tall', vbW: 220, vbH: 300 });
+makeSpecimen(arboreal, { primary: 'RED OAK', binomial: 'Quercus rubra', meta: 'sympodial · b = 3 · θ = 32° · σ = 0.40 · n = 6', formula: 'F → F[+F][−F][≈F] · jitter ε ∈ [−12°, +12°]', badge: 'native', badgeClass: 'native', drawFn: speciesQuercus, cls: 'tall', vbW: 220, vbH: 300 });
+makeSpecimen(arboreal, { primary: 'PAPER BIRCH', binomial: 'Betula papyrifera', meta: 'monopodial · θ = 18° · γ = −3° · n = 7 · ascending crown', badge: 'native', badgeClass: 'native', drawFn: speciesBetula, cls: 'tall', vbW: 220, vbH: 300 });
+makeSpecimen(arboreal, { primary: 'QUAKING ASPEN', binomial: 'Populus tremuloides', meta: 'clonal · k = 4 stems from one rhizome · θ = 12° · γ = −4°', badge: 'native', badgeClass: 'native', drawFn: speciesPopulus, cls: 'tall', vbW: 220, vbH: 300 });
+makeSpecimen(arboreal, { primary: 'BANYAN', binomial: 'Ficus benghalensis', meta: 'sympodial · 5 aerial trunks · θ = 48° · n = 5', badge: 'tropical', badgeClass: 'tropical', drawFn: speciesFicus, cls: 'tall', vbW: 220, vbH: 300 });
+makeSpecimen(arboreal, { primary: 'WEEPING WILLOW', binomial: 'Salix babylonica', meta: '60 pendant strands · γ = +90° · gravity-dominant', badge: 'introduced', badgeClass: 'introduced', drawFn: speciesSalix, cls: 'tall', vbW: 220, vbH: 300 });
+makeSpecimen(arboreal, { primary: 'GINKGO', binomial: 'Ginkgo biloba', meta: '<span class="num">dichotomous</span> · b = 2 equal forks · n = 6 · living fossil', formula: 'F → F[+F][−F] · |+| = |−| (equal split)', badge: 'introduced', badgeClass: 'introduced', drawFn: speciesGinkgo, cls: 'tall', vbW: 220, vbH: 300 });
+makeSpecimen(arboreal, { primary: 'RED MAPLE', binomial: 'Acer rubrum', meta: 'opposite branching · θ = 26° · n = 7 · crimson canopy', badge: 'native', badgeClass: 'native', drawFn: speciesAcer, cls: 'tall', vbW: 220, vbH: 300 });
+makeSpecimen(arboreal, { primary: 'RED MANGROVE', binomial: 'Rhizophora mangle', meta: '8 prop roots · stilted · brackish-tolerant', badge: 'tropical', badgeClass: 'tropical', drawFn: speciesMangrove, cls: 'tall', vbW: 220, vbH: 300 });
+
+// === UNDERSTORY ===
+const understory = document.getElementById('understory');
+makeSpecimen(understory, { primary: 'WOOD FERN', binomial: 'Dryopteris sp.', meta: 'pinnate · 22 segs · 3 fronds', formula: 'F → F[+P]F[−P] · P = pinna', badge: 'native', badgeClass: 'native', drawFn: speciesFern, vbW: 180, vbH: 260 });
+makeSpecimen(understory, { primary: 'HIGHBUSH BLUEBERRY', binomial: 'Vaccinium corymbosum', meta: 'multi-stem · k = 5 · θ = 22° · γ = −2°', badge: 'native', badgeClass: 'native', drawFn: speciesVaccinium, vbW: 180, vbH: 260 });
+makeSpecimen(understory, { primary: 'WITCH HAZEL', binomial: 'Hamamelis virginiana', meta: 'vase-form · k = 4 · θ = 35° · σ = 0.30', badge: 'native', badgeClass: 'native', drawFn: speciesHamamelis, vbW: 180, vbH: 260 });
+makeSpecimen(understory, { primary: 'AZALEA', binomial: 'Rhododendron sp.', meta: 'rounded · b = 3 · θ = 30° · 5-petal trumpet flowers', drawFn: speciesRhododendron, vbW: 180, vbH: 260 });
+
+// === VINES ===
+const vines = document.getElementById('vines');
+makeSpecimen(vines, { primary: 'VIRGINIA CREEPER', binomial: 'Parthenocissus quinquefolia', meta: '5-leaflet palmate · adhesive disks · 18 segs · 2 runners', badge: 'native', badgeClass: 'native', drawFn: speciesParthenocissus, vbW: 200, vbH: 280 });
+makeSpecimen(vines, { primary: 'WILD GRAPE', binomial: 'Vitis sp.', meta: 'tendril spirals · 28 segs · stochastic θ ∈ [−35°, +35°]', formula: 'F → F[T(±)] · T = curling tendril', drawFn: speciesVitis, vbW: 200, vbH: 280 });
+makeSpecimen(vines, { primary: 'ENGLISH IVY', binomial: 'Hedera helix', meta: 'mat-forming · 4 runners · 5-lobed leaves · θ = ±50°', badge: 'invasive', badgeClass: 'invasive', drawFn: speciesHedera, vbW: 200, vbH: 280 });
+makeSpecimen(vines, { primary: 'CHINESE WISTERIA', binomial: 'Wisteria sinensis', meta: 'twining stem · pendant racemes · 24 segs', badge: 'introduced', badgeClass: 'introduced', drawFn: speciesWisteria, vbW: 200, vbH: 280 });
+
+// === CURIOSA · REACTIVE FORMS ===
+const curiosa = document.getElementById('curiosa');
+makeSpecimen(curiosa, { primary: 'SENSITIVE PLANT', binomial: 'Mimosa pudica', meta: 'bipinnate compound · ~ 130 leaflets · pulvinus-driven seismonastic response · folds in seconds when touched', formula: 'fold(t) when stimulus(τ) → restore over ~ 10 min', badge: 'animated · shy', badgeClass: 'lifecycle', drawFn: speciesMimosa, cls: 'tall', vbW: 220, vbH: 300 });
+makeSpecimen(curiosa, { primary: 'PITCHER PLANT', binomial: 'Nepenthes alata', descriptor: 'vegan cultivar · prefers CO₂ (jk)', meta: 'leaf modified into digestive trap · peristome · operculum · 6 strap leaves · prey: arthropods', badge: 'carnivorous', badgeClass: 'invasive', drawFn: speciesNepenthes, cls: 'tall', vbW: 220, vbH: 300 });
+makeSpecimen(curiosa, { primary: 'COMMON REED', binomial: 'Phragmites australis', meta: 'jointed stem · 7 nodes · plumose panicle · 32 branches · displaces native Spartina · 3-meter rhizome reach', formula: 'expands clonally · suppresses k(competitors) → 0', badge: 'invasive', badgeClass: 'invasive', drawFn: speciesPhragmitesAlone, cls: 'tall', vbW: 220, vbH: 300 });
+
+// === ARID ===
+const arid = document.getElementById('arid');
+makeSpecimen(arid, { primary: 'SAGUARO', binomial: 'Carnegiea gigantea', meta: 'columnar · 5 ribs · 2 lateral arms · phyllotactic areoles', formula: 'areoles: r(n) = c√n · θ = 137.508°', badge: 'arid', badgeClass: 'arid', drawFn: speciesSaguaro, cls: 'tall', vbW: 200, vbH: 320 });
+makeSpecimen(arid, { primary: 'PRICKLY PEAR', binomial: 'Opuntia sp.', meta: 'cladode chain · areoles φ = 137.508° · 5 pads', badge: 'arid', badgeClass: 'arid', drawFn: speciesOpuntia, cls: 'tall', vbW: 200, vbH: 320 });
+makeSpecimen(arid, { primary: 'CENTURY PLANT', binomial: 'Agave americana', meta: 'rosette · 18 spike-leaves · marginal teeth', badge: 'arid', badgeClass: 'arid', drawFn: speciesAgave, cls: 'tall', vbW: 200, vbH: 320 });
+makeSpecimen(arid, { primary: 'STONECROP', binomial: 'Sedum sp.', meta: 'mat of nested rosettes · umbel inflorescences', drawFn: speciesSedum, cls: 'tall', vbW: 200, vbH: 320 });
+
+// === EPIPHYTES ===
+const epi = document.getElementById('epiphytes');
+makeSpecimen(epi, { primary: 'AIR PLANT', binomial: 'Tillandsia ionantha', meta: 'phyllotactic rosette · n = 26 · curling silver leaves · vestigial holdfasts', formula: 'r(n) = c√n · θ = 137.508° + per-leaf curl', badge: 'epiphyte', badgeClass: 'epiphyte', drawFn: speciesTillandsia, cls: 'tall', vbW: 200, vbH: 300 });
+makeSpecimen(epi, { primary: 'SPANISH MOSS', binomial: 'Tillandsia usneoides', meta: '38 pendant strands · filamentous · γ = +90°', badge: 'epiphyte', badgeClass: 'epiphyte', drawFn: speciesSpanishMoss, cls: 'tall', vbW: 200, vbH: 300 });
+makeSpecimen(epi, { primary: 'STAGHORN FERN', binomial: 'Platycerium bifurcatum', meta: '<span class="num">dichotomous</span> antler fronds + shield-fronds', formula: 'F → F[+F][−F] (dichotomous splitting)', badge: 'epiphyte', badgeClass: 'epiphyte', drawFn: speciesStaghorn, cls: 'tall', vbW: 200, vbH: 300 });
+makeSpecimen(epi, { primary: 'MOTH ORCHID', binomial: 'Phalaenopsis sp.', meta: '4 strap leaves · 7 aerial roots · 4 blooms · arching spike', badge: 'epiphyte', badgeClass: 'epiphyte', drawFn: speciesOrchid, cls: 'tall', vbW: 220, vbH: 300 });
+
+// === INFLORESCENCE ===
+const infl = document.getElementById('inflorescence');
+makeSpecimen(infl, { primary: 'RACEME', descriptor: 'alternating · indeterminate', meta: 'n = 7 florets · pedicels equal length', formula: 'F → A·F[+L][−L]·F (L = floret)', drawFn: inflRaceme, vbW: 160, vbH: 260 });
+makeSpecimen(infl, { primary: 'UMBEL', descriptor: 'central radiance', meta: '8 rays · isotropic · all from one point', drawFn: inflUmbel, vbW: 160, vbH: 260 });
+makeSpecimen(infl, { primary: 'SPIKE', descriptor: 'sessile vertical', meta: '9 stacked florets · zero pedicels', drawFn: inflSpike, vbW: 160, vbH: 260 });
+makeSpecimen(infl, { primary: 'CAPITULUM', descriptor: 'composite head', meta: 'φ = 137.508° · disc + ray florets', formula: 'r(n) = c√n · θ(n) = n · 137.508°', drawFn: inflCapitulum, vbW: 160, vbH: 260 });
+makeSpecimen(infl, { primary: 'PANICLE', descriptor: 'compound branched', meta: 'recursive raceme · 8 primary branches', drawFn: inflPanicle, vbW: 160, vbH: 260 });
+makeSpecimen(infl, { primary: 'CORYMB', descriptor: 'flat-topped', meta: 'unequal pedicels · all flowers reach same height', drawFn: inflCorymb, vbW: 160, vbH: 260 });
+makeSpecimen(infl, { primary: 'CATKIN', descriptor: 'pendant ament', meta: 'gravity-aided pollen · birch / willow · 3 catkins', drawFn: inflCatkin, vbW: 160, vbH: 260 });
+makeSpecimen(infl, { primary: 'CYME', descriptor: 'determinate', meta: 'recursive bifurcation · depth = 3 · terminal flower first', drawFn: inflCyme, vbW: 160, vbH: 260 });
+
+// === ROOTS ===
+const roots = document.getElementById('roots');
+makeSpecimen(roots, { primary: 'TAPROOT', descriptor: 'Quercus · Daucus', meta: 'b = 1 · γ = +90° · 5 laterals · F⁻¹ inversion', formula: 'F → F[+r][−r] · γ_pull = +(reversed)', drawFn: rootTaproot, cls: 'root tall', vbW: 200, vbH: 280 });
+makeSpecimen(roots, { primary: 'FIBROUS', descriptor: 'Poaceae · Spartina', meta: '16-fan · isotropic · shallow horizon', drawFn: rootFibrous, cls: 'root tall', vbW: 200, vbH: 280 });
+makeSpecimen(roots, { primary: 'LATERAL', descriptor: 'Pinus · Acer', meta: '7 horizontal · short stub · wide spread', drawFn: rootLateral, cls: 'root tall', vbW: 200, vbH: 280 });
+makeSpecimen(roots, { primary: 'ADVENTITIOUS', descriptor: 'Ficus · aerial', meta: '5 origins above-stem · pendant', drawFn: rootAdventitious, cls: 'root tall', vbW: 200, vbH: 280 });
+makeSpecimen(roots, { primary: 'RHIZOMATOUS', descriptor: 'Phragmites · Bambusoideae', meta: 'horizontal stem · 8 nodes · resprouting', drawFn: rootRhizomatous, cls: 'root tall', vbW: 200, vbH: 280 });
+makeSpecimen(roots, { primary: 'BUTTRESS', descriptor: 'tropical · Ceiba', meta: '5 flares · above-soil ridges · structural', drawFn: rootButtress, cls: 'root tall', vbW: 200, vbH: 280 });
+
+// === MYCELIUM ===
+const myc = document.getElementById('mycelium');
+makeSpecimen(myc, { primary: 'ECTOMYCORRHIZAL', descriptor: 'sheath + Hartig net', meta: 'DLA hyphae · pine / oak symbiont · fruits visibly', formula: 'P(stick) = 1 if d ≤ ε  ·  symbiont ⇄ host', badge: 'algorithm', badgeClass: 'algorithm', drawFn: myceliumEcto, cls: 'tall', vbW: 220, vbH: 320 });
+makeSpecimen(myc, { primary: 'ARBUSCULAR', descriptor: 'intracellular', meta: 'arbuscules inside root cells · external hyphae + spores', badge: 'algorithm', badgeClass: 'algorithm', drawFn: myceliumArbuscular, cls: 'tall', vbW: 220, vbH: 320 });
+makeSpecimen(myc, { primary: 'LICHEN COLONY', descriptor: 'fungus + alga', meta: '<span class="num">pure DLA</span> · 500 particles · radial · apothecia', badge: 'algorithm', badgeClass: 'algorithm', drawFn: myceliumLichen, cls: 'tall', vbW: 220, vbH: 320 });
+
+// === COMPARISON ===
+const cmp = document.getElementById('comparison');
+function makeFullStack(parent, opts) {
+  const { primary, binomial, descriptor, meta, formula, badge, badgeClass, canopyFn, rootFn } = opts;
+  const div = document.createElement('div');
+  div.className = 'specimen full';
+  if (badge) {
+    const b = document.createElement('div');
+    b.className = `badge ${badgeClass}`;
+    b.textContent = badge;
+    div.appendChild(b);
+  }
+  const stack = document.createElement('div');
+  stack.className = 'canvas-stack';
+  const canopy = document.createElement('div');
+  canopy.className = 'canopy';
+  const csvg = svgEl(360, 220);
+  canopy.appendChild(csvg);
+  stack.appendChild(canopy);
+  const div2 = document.createElement('div');
+  div2.className = 'divider';
+  stack.appendChild(div2);
+  const rootsDiv = document.createElement('div');
+  rootsDiv.className = 'roots';
+  const rsvg = svgEl(360, 220);
+  rootsDiv.appendChild(rsvg);
+  stack.appendChild(rootsDiv);
+  div.appendChild(stack);
+  // Label
+  const labelEl = document.createElement('div');
+  labelEl.className = 'label';
+  let labelHtml = `<span class="primary">${primary}</span>`;
+  if (binomial) labelHtml += `<span class="binomial">${binomial}</span>`;
+  if (descriptor) labelHtml += `<span class="descriptor">${descriptor}</span>`;
+  labelEl.innerHTML = labelHtml;
+  div.appendChild(labelEl);
+  if (meta || formula) {
+    const m = document.createElement('div');
+    m.className = 'meta';
+    let metaHtml = meta || '';
+    if (formula) metaHtml += `<span class="formula">${formula}</span>`;
+    m.innerHTML = metaHtml;
+    div.appendChild(m);
+  }
+  parent.appendChild(div);
+  canopyFn(csvg, 360, 220);
+  rootFn(rsvg, 360, 220);
+}
+makeFullStack(cmp, { primary: 'SMOOTH CORDGRASS', binomial: 'Spartina alterniflora', descriptor: 'marsh keystone', meta: 'narrow blades · seasonal seed · moderate rhizome density · sediment-binding', badge: 'native · keystone', badgeClass: 'native', canopyFn: spartinaCanopy, rootFn: spartinaRoots });
+makeFullStack(cmp, { primary: 'COMMON REED', binomial: 'Phragmites australis', descriptor: 'monoculture-forming', meta: 'plumose seedhead · taller blades · 6-layer rhizome mat · displaces Spartina', badge: 'invasive', badgeClass: 'invasive', canopyFn: phragmitesCanopy, rootFn: phragmitesRoots });
+</script>
 </body>
 </html>
