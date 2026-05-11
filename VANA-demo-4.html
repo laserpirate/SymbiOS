@@ -363,10 +363,12 @@ nav{flex-shrink:0;min-height:48px;display:flex;align-items:center;justify-conten
 }
 
 @media(max-width:640px){
+  nav{padding:0 .8rem;gap:.4rem}
+  .ns{display:none}
   .stats{grid-template-columns:repeat(3,1fr)}
   .g2,.g2b,.g2c{grid-template-columns:1fr}
   .na{display:none}
-  .tab{padding:.26rem .5rem;font-size:.48rem}
+  .tab{padding:.24rem .42rem;font-size:.46rem}
   #concept .hero-block { grid-template-columns: 1fr; }
   #concept .etymology-row { grid-template-columns: 1fr; }
   #concept .specimens-row { grid-template-columns: 1fr 1fr; }
@@ -891,6 +893,85 @@ function speciesOakIter(svg, w, h) {
 // DASHBOARD PANEL RENDERERS — lifted verbatim from dashboard-v2
 // ═══════════════════════════════════════════════════════════════════════
 
+
+// ─── LUNAR: CALENDAR ──────────────────────────────────────────────────
+(function(){
+  const svg=document.getElementById('lunar-cal');
+  if(!svg) return;
+  const CW=76,H=185;
+  LUNAR.forEach((lu,i)=>{
+    const x=i*CW,g=el('g');
+    g.style.cursor='pointer';
+    g.appendChild(el('rect',{x,y:0,width:CW,height:H,fill:'#0d160c',stroke:'#1a2a19','stroke-width':.5}));
+    g.appendChild(el('rect',{x,y:0,width:CW,height:4,fill:lu.sc,opacity:.6}));
+    g.appendChild(svgMoon(x+CW/2,30,lu.phase,16));
+    g.appendChild(el('text',{x:x+CW/2,y:55,'text-anchor':'middle',fill:'#3a5a38','font-size':8,'font-family':'DM Mono','letter-spacing':'.1em'},MONTHS[i]));
+    g.appendChild(el('text',{x:x+CW/2,y:68,'text-anchor':'middle',fill:lu.event.includes('✦')?'#f0e8a0':'#3a5a38','font-size':lu.event.includes('✦')?7:6.5,'font-family':'DM Mono'},lu.event.replace(' ✦','')));
+    g.appendChild(el('text',{x:x+CW/2,y:80,'text-anchor':'middle',fill:'#2a4a28','font-size':7,'font-family':'serif'},lu.thai));
+    g.appendChild(el('text',{x:x+CW/2,y:93,'text-anchor':'middle',fill:lu.sc,'font-size':5.5,'font-family':'DM Mono','letter-spacing':'.06em',opacity:.7},lu.season));
+    BLOOM_SP.forEach((bs,bi)=>{
+      const active=bs.months.includes(i);
+      g.appendChild(el('circle',{cx:x+10+bi*13,cy:108,r:active?4:2.5,fill:active?bs.c:'#1a2a19',stroke:active?bs.c:'#1e2e1d','stroke-width':.5,opacity:active?.8:.4}));
+    });
+    g.appendChild(el('text',{x:x+CW/2,y:124,'text-anchor':'middle',fill:'#1e3a1c','font-size':6,'font-family':'DM Mono'},`${Math.round(lu.phase*100)}% ilum.`));
+    g.appendChild(el('rect',{x:x+4,y:132,width:CW-8,height:3,rx:1.5,fill:'#1a2a19'}));
+    const tw=Math.round((.5+.5*Math.sin(lu.phase*2*Math.PI))*(CW-8));
+    g.appendChild(el('rect',{x:x+4,y:132,width:tw,height:3,rx:1.5,fill:'#4a9ad8',opacity:.6}));
+    g.appendChild(el('text',{x:x+CW/2,y:143,'text-anchor':'middle',fill:'#2a3a5a','font-size':5,'font-family':'DM Mono'},'TIDE'));
+    g.addEventListener('mouseenter',()=>g.querySelector('rect').setAttribute('fill','#111a10'));
+    g.addEventListener('mouseleave',()=>g.querySelector('rect').setAttribute('fill','#0d160c'));
+    svg.appendChild(g);
+  });
+  BLOOM_SP.forEach((bs,i)=>{
+    svg.appendChild(el('circle',{cx:10+i*CW+i*6,cy:H-14,r:4,fill:bs.c,opacity:.7}));
+    svg.appendChild(el('text',{x:10+i*CW+i*6+8,y:H-14,'dominant-baseline':'central',fill:bs.c,'font-size':7,'font-family':'DM Mono','font-style':'italic',opacity:.8},bs.s));
+  });
+})();
+
+// ─── LUNAR: CULTURAL EVENTS ───────────────────────────────────────────
+(function(){
+  const events=[
+    {mo:"FEB",ev:"Makha Bucha",th:"มาฆบูชา",note:"Full moon. 1,250 monks gather without summons. Candle procession at dusk. Plumeria in late bloom."},
+    {mo:"APR",ev:"Songkran",th:"สงกรานต์",note:"Regional New Year, water festival. Gardens cleaned and blessed. Coconut flower water."},
+    {mo:"MAY",ev:"Visakha Bucha",th:"วิสาขบูชา",note:"Full moon. Birth, enlightenment and death of the Buddha. Pandanus and Plumeria fragrant."},
+    {mo:"JUL",ev:"Asanha Bucha",th:"อาสาฬหบูชา",note:"Full moon. First teaching of the Buddha. Heliconia at peak bloom."},
+    {mo:"NOV",ev:"Loi Krathong",th:"ลอยกระทง",note:"Full moon. Banana leaf floats on waterways. Most poetic night of the year."},
+    {mo:"DEC",ev:"Winter Solstice",th:"ครีษมายัน",note:"Cool season arrives. Plumeria dormant. Garden design season begins."},
+  ];
+  const cont=document.getElementById('cultural-events');
+  if(!cont) return;
+  cont.innerHTML=events.map(f=>`
+    <div class="ev">
+      <div class="ev-row">
+        <span class="ev-mo">${f.mo}</span>
+        <span class="ev-name">✦ ${f.ev}</span>
+        <span class="ev-thai">${f.th}</span>
+      </div>
+      <div class="ev-note">${f.note}</div>
+    </div>`).join('');
+})();
+
+// ─── LUNAR: MOON REFERENCE ────────────────────────────────────────────
+(function(){
+  const svg=document.getElementById('moon-ref');
+  if(!svg) return;
+  const phases=[
+    {phase:0,   label:"New Moon",       sub:"Planting · New projects",    y:22},
+    {phase:.125,label:"Waxing Crescent",sub:"First growth · Establishment",y:60},
+    {phase:.25, label:"First Quarter",  sub:"Rapid growth · Irrigation",  y:98},
+    {phase:.375,label:"Waxing Gibbous", sub:"Expansion · Fertilize",      y:136},
+    {phase:.5,  label:"Full Moon",      sub:"Peak bloom · Harvest",       y:174},
+    {phase:.625,label:"Waning Gibbous", sub:"Maintenance · Pruning",      y:212},
+    {phase:.75, label:"Last Quarter",   sub:"Root focus · Mulch",         y:250},
+    {phase:.875,label:"Waning Crescent",sub:"Rest · Compost",             y:288},
+  ];
+  phases.forEach(ph=>{
+    svg.appendChild(svgMoon(18,ph.y,ph.phase,11));
+    svg.appendChild(el('text',{x:36,y:ph.y-4,'dominant-baseline':'central',fill:'#c8c0b0','font-size':8.5,'font-family':'DM Mono'},ph.label));
+    svg.appendChild(el('text',{x:36,y:ph.y+7,'dominant-baseline':'central',fill:'#3a5a38','font-size':7,'font-family':'DM Mono'},ph.sub));
+    svg.appendChild(el('line',{x1:36,y1:ph.y+15,x2:276,y2:ph.y+15,stroke:'#1a2a19','stroke-width':.4}));
+  });
+})();
 
 // ─── ECO SERVICES: CHORD ──────────────────────────────────────────────
 (function(){
