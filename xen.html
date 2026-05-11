@@ -483,6 +483,26 @@ p.lede .greek { font-style: normal; }
   .etymology-row { grid-template-columns: 1fr; }
   .tagline { font-size: 26px; }
 }
+@media (max-width: 640px) {
+  header.top {
+    position: relative;
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 10px 14px;
+  }
+  .brand { font-size: 17px; letter-spacing: 0.12em; }
+  .brand .module { display: none; }
+  nav.tabs {
+    gap: 10px;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    justify-content: flex-start;
+  }
+  nav.tabs a { padding: 3px 0; }
+  nav.tabs a.active { padding: 3px 7px; }
+  .author { display: none; }
+  footer.coda { flex-direction: column; gap: 16px; }
+}
 .iter-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--line-strong); }
 .iter-cell { background: var(--bg); padding: 20px; display: flex; flex-direction: column; min-height: 260px; }
 .iter-cell .iter-num { font-size: 11px; letter-spacing: 0.20em; color: var(--lavender); margin-bottom: 6px; font-weight: 500; }
@@ -539,7 +559,7 @@ footer.coda .parent-line .pipe {
 <header class="top">
   <div class="brand"><a class="brand-link" href="index.html#concept">VA·NA</a> <span class="module">SymbiOS™ · Module 02 · XÉN expanded</span></div>
   <nav class="tabs">
-    <a href="index.html#concept">CONCEPT</a><a href="index.html#symbios">SYMBIOS</a><a href="index.html#lunar">LUNAR</a><a href="index.html#maintenance">MAINTENANCE</a><a href="index.html#field-data">FIELD DATA / IoT</a><a href="index.html#eco-services">ECO SERVICES</a><a href="xen.html" class="active">XÉN</a>
+    <a href="index.html#concept">CONCEPT</a><a href="index.html#lunar">LUNAR</a><a href="index.html#eco-services">ECO SERVICES</a><a href="xen.html" class="active">XÉN</a>
   </nav>
   <div class="author">Marko Manriquez</div>
 </header>
